@@ -111,7 +111,7 @@ public class Window {
             // Poll events
             glfwPollEvents();
 
-            Player.get().update(dt);
+//            Player.get().update(dt);
 
             // TODO renders
             glClearColor(148.0f / 255.0f, 242.0f / 255.0f, 1.0f, 1.0f);
