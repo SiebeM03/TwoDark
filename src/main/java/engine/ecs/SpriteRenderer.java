@@ -15,6 +15,7 @@ public class SpriteRenderer extends Component {
     public SpriteRenderer(Vector4f color) {
         this.color = color;
         this.sprite = new Sprite(null);
+        this.isDirty = true;
     }
 
     public SpriteRenderer(Sprite sprite) {

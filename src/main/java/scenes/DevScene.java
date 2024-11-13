@@ -4,10 +4,10 @@ import engine.ecs.*;
 import engine.graphics.Camera;
 import engine.util.AssetPool;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 public class DevScene extends Scene {
 
-    private GameObject obj1;
     private SpriteSheet sprites;
 
     @Override
@@ -17,11 +17,25 @@ public class DevScene extends Scene {
 
         sprites = AssetPool.getSpriteSheet("assets/images/testSprites.png");
 
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(128, 128)));
+        GameObject obj3 = new GameObject("Object 3",
+                new Transform(new Vector2f(150, 120), new Vector2f(128, 128)),
+                -1);
+        obj3.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        obj3.getComponent(SpriteRenderer.class).setColor(new Vector4f(0, 1, 0, 0.7f));
+        this.addGameObjectToScene(obj3);
+
+        GameObject obj1 = new GameObject("Object 1",
+                new Transform(new Vector2f(100, 100), new Vector2f(128, 128)),
+                2);
         obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        obj1.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 0, 0, 0.8f));
         this.addGameObjectToScene(obj1);
 
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(128, 128)));
+
+        GameObject obj2 = new GameObject("Object 2",
+                new Transform(new Vector2f(400, 100), new Vector2f(128, 128)),
+                0
+        );
         obj2.addComponent(new SpriteRenderer(sprites.getSprite(3)));
         this.addGameObjectToScene(obj2);
     }
@@ -34,21 +48,8 @@ public class DevScene extends Scene {
     }
 
 
-    private int spriteIndex = 0;
-    private float spriteFlipTime = 0.2f;
-    private float spriteFlipTimeLeft = 0.0f;
-
     @Override
     public void update(float dt) {
-        spriteFlipTimeLeft -= dt;
-        if (spriteFlipTimeLeft <= 0) {
-            spriteFlipTimeLeft = spriteFlipTime;
-            spriteIndex++;
-            if (spriteIndex > 3) {
-                spriteIndex = 0;
-            }
-            obj1.getComponent(SpriteRenderer.class).setSprite(sprites.getSprite(spriteIndex));
-        }
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
