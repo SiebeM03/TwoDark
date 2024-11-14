@@ -21,12 +21,13 @@ public class KeyListener {
     public static void setupCallbacks() {
         long window = Window.getGlfwWindow();
 
-        glfwSetKeyCallback(window, (w, keycode, scancode, action, mods) -> {
-            switch (action) {
-                case GLFW_PRESS -> get().keyPressed[keycode] = true;
-                case GLFW_RELEASE -> get().keyPressed[keycode] = false;
-            }
-        });
+        glfwSetKeyCallback(window, KeyListener::keyCallback);
+    }
+    public static void keyCallback(long window, int keycode, int scancode, int action, int mods) {
+        switch (action) {
+            case GLFW_PRESS -> get().keyPressed[keycode] = true;
+            case GLFW_RELEASE -> get().keyPressed[keycode] = false;
+        }
     }
 
     public static boolean isKeyPressed(int keyCode) {

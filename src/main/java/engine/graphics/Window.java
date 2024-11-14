@@ -2,6 +2,7 @@ package engine.graphics;
 
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
+import engine.util.ImGuiLayer;
 import game.Player;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -19,11 +20,12 @@ public class Window {
     private int width, height;
     private String title;
     private long glfwWindow;
+    private ImGuiLayer imGuiLayer;
 
-    //    private static int monitorWidth = 2560;
-//    private static int monitorHeight = 1440;
-    private static int monitorWidth = 500;
-    private static int monitorHeight = 500;
+    private static int monitorWidth = 1920;
+    private static int monitorHeight = 1080;
+//    private static int monitorWidth = 500;
+//    private static int monitorHeight = 500;
 
     private static Window window = null;
 
@@ -98,6 +100,9 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+        this.imGuiLayer = new ImGuiLayer(glfwWindow);
+        this.imGuiLayer.initImGui();
+
         Window.changeScene(0);
     }
 
@@ -124,6 +129,7 @@ public class Window {
                 currentScene.update(dt);
             }
 
+            this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
 
             endTime = (float) glfwGetTime();

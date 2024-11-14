@@ -32,33 +32,38 @@ public class MouseListener {
     public static void setupCallbacks() {
         long window = Window.getGlfwWindow();
 
-        glfwSetCursorPosCallback(window, (w, xPos, yPos) -> {
-            get().lastX = get().xPos;
-            get().lastY = get().yPos;
-            get().xPos = xPos;
-            get().yPos = yPos;
-        });
+        glfwSetCursorPosCallback(window, MouseListener::mousePosCallback);
 
-        glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
-            if (action == GLFW_PRESS) {
-                get().mouseButtonsDown++;
+        glfwSetMouseButtonCallback(window, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(window, MouseListener::mouseScrollCallback);
+    }
 
-                if (button < get().mouseButtonPressed.length) {
-                    get().mouseButtonPressed[button] = true;
-                }
-            } else if (action == GLFW_RELEASE) {
-                get().mouseButtonsDown--;
+    public static void mousePosCallback(long window, double xPos, double yPos) {
+        get().lastX = get().xPos;
+        get().lastY = get().yPos;
+        get().xPos = xPos;
+        get().yPos = yPos;
+    }
 
-                if (button < get().mouseButtonPressed.length) {
-                    get().mouseButtonPressed[button] = false;
-                }
+    public static void mouseButtonCallback(long window, int button, int action, int mods) {
+        if (action == GLFW_PRESS) {
+            get().mouseButtonsDown++;
+
+            if (button < get().mouseButtonPressed.length) {
+                get().mouseButtonPressed[button] = true;
             }
-        });
+        } else if (action == GLFW_RELEASE) {
+            get().mouseButtonsDown--;
 
-        glfwSetScrollCallback(window, (w, xOffset, yOffset) -> {
-            get().scrollX = (float) xOffset;
-            get().scrollY = (float) yOffset;
-        });
+            if (button < get().mouseButtonPressed.length) {
+                get().mouseButtonPressed[button] = false;
+            }
+        }
+    }
+
+    public static void mouseScrollCallback(long window, double xOffset, double yOffset) {
+        get().scrollX = (float) xOffset;
+        get().scrollY = (float) yOffset;
     }
 
     public static void clearMouseInput() {

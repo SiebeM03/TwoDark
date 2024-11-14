@@ -4,7 +4,6 @@ import engine.ecs.SpriteRenderer;
 import engine.graphics.Shader;
 import engine.graphics.Window;
 import engine.util.AssetPool;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -76,7 +75,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-        // Enable the buffer attribute points (telling how our vertex is built)
+        // Enable the buffer attribute pointers (telling how our vertex is built)
         glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
         glEnableVertexAttribArray(0);
 
@@ -199,7 +198,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
             // Load texture id
             vertices[offset + 8] = texId;
 
-
             offset += VERTEX_SIZE;
         }
     }
@@ -225,10 +223,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
         // Triangle 1
         elements[offsetArrayIndex] = offset + 3;
         elements[offsetArrayIndex + 1] = offset + 2;
-        elements[offsetArrayIndex + 2] = offset;
+        elements[offsetArrayIndex + 2] = offset + 0;
 
         // Triangle 2
-        elements[offsetArrayIndex + 3] = offset;
+        elements[offsetArrayIndex + 3] = offset + 0;
         elements[offsetArrayIndex + 4] = offset + 2;
         elements[offsetArrayIndex + 5] = offset + 1;
     }
@@ -250,7 +248,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     }
 
     @Override
-    public int compareTo(@NotNull RenderBatch o) {
-        return Integer.compare(this.zIndex, o.zIndex);
+    public int compareTo(RenderBatch o) {
+        return Integer.compare(this.zIndex, o.zIndex());
     }
 }
