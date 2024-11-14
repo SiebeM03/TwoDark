@@ -49,3 +49,5 @@ lib/
 *.dylib
 *.dll
 *.ini
+
+level.txt

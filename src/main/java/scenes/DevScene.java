@@ -5,7 +5,6 @@ import engine.graphics.Camera;
 import engine.util.AssetPool;
 import imgui.ImGui;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 public class DevScene extends Scene {
 
@@ -15,20 +14,18 @@ public class DevScene extends Scene {
     public void init() {
         loadResources();
         this.camera = new Camera(new Vector2f());
+        if (levelLoaded) return;
 
         sprites = AssetPool.getSpriteSheet("assets/images/testSprites.png");
-
-        GameObject obj3 = new GameObject("Object 3",
-                new Transform(new Vector2f(150, 120), new Vector2f(128, 128)),
-                -1);
-        obj3.addComponent(new SpriteRenderer(sprites.getSprite(0)));
-        obj3.getComponent(SpriteRenderer.class).setColor(new Vector4f(0, 1, 0, 0.7f));
-        this.addGameObjectToScene(obj3);
 
         GameObject obj1 = new GameObject("Object 1",
                 new Transform(new Vector2f(100, 100), new Vector2f(128, 128)),
                 2);
-        obj1.addComponent(new SpriteRenderer(new Vector4f(1, 0, 0, 1)));
+        SpriteRenderer obj1SpriteRenderer = new SpriteRenderer();
+        Sprite obj1Sprite = new Sprite();
+        obj1Sprite.setTexture(AssetPool.getTexture("assets/images/tile.png"));
+        obj1SpriteRenderer.setSprite(obj1Sprite);
+        obj1.addComponent(obj1SpriteRenderer);
         this.addGameObjectToScene(obj1);
         this.activeGameObject = obj1;
 
@@ -36,7 +33,11 @@ public class DevScene extends Scene {
                 new Transform(new Vector2f(400, 100), new Vector2f(128, 128)),
                 0
         );
-        obj2.addComponent(new SpriteRenderer(sprites.getSprite(3)));
+        SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
+        Sprite obj2Sprite = new Sprite();
+        obj2Sprite.setTexture(AssetPool.getTexture("assets/images/tile.png"));
+        obj2SpriteRenderer.setSprite(obj2Sprite);
+        obj2.addComponent(obj2SpriteRenderer);
         this.addGameObjectToScene(obj2);
     }
 

@@ -1,7 +1,7 @@
 package engine.ecs;
 
 public abstract class Component {
-    public GameObject gameObject;
+    public transient GameObject gameObject = null;
 
     public void start() {
 

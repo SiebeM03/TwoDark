@@ -22,6 +22,8 @@ dependencies {
     implementation "io.github.spair:imgui-java-natives-windows:$imguiVersion"
     runtimeOnly "io.github.spair:imgui-java-natives-windows:$imguiVersion"
 
+    // GSON stuff
+    implementation 'com.google.code.gson:gson:2.11.0'
 
     // LWJGL stuff
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")

@@ -113,6 +113,7 @@ public class Window {
 
         Player.get().init();
 
+        currentScene.load();
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round(1 / dt) + " FPS");
 
@@ -136,6 +137,8 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+
+        currentScene.saveExit();
     }
 
     public static void changeScene(int newScene) {
