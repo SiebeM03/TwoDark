@@ -2,8 +2,10 @@ package scenes;
 
 import engine.ecs.*;
 import engine.graphics.Camera;
+import engine.listeners.MouseListener;
 import engine.util.AssetPool;
 import imgui.ImGui;
+import imgui.ImVec2;
 import org.joml.Vector2f;
 
 public class DevScene extends Scene {
@@ -14,12 +16,11 @@ public class DevScene extends Scene {
     public void init() {
         loadResources();
         this.camera = new Camera(new Vector2f());
+        this.sprites = AssetPool.getSpriteSheet("assets/images/spritesheets/resourceObjectSprites.png");
         if (levelLoaded) {
             this.activeGameObject = gameObjects.get(0);
             return;
         }
-
-        sprites = AssetPool.getSpriteSheet("assets/images/testSprites.png");
 
         GameObject obj1 = new GameObject("Object 1",
                 new Transform(new Vector2f(100, 100), new Vector2f(128, 128)),
@@ -48,15 +49,17 @@ public class DevScene extends Scene {
     public void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
 
+
+        AssetPool.addSpriteSheet("assets/images/spritesheets/resourceObjectSprites.png",
+                new SpriteSheet(AssetPool.getTexture("assets/images/spritesheets/resourceObjectSprites.png"), 200, 200, 3, 0));
+
+
         AssetPool.getTexture("assets/images/tile.png");
-
-        AssetPool.addSpriteSheet("assets/images/testSprites.png",
-                new SpriteSheet(AssetPool.getTexture("assets/images/testSprites.png"), 64, 64, 4, 0));
     }
-
 
     @Override
     public void update(float dt) {
+        MouseListener.getOrthoY();
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
@@ -67,8 +70,38 @@ public class DevScene extends Scene {
 
     @Override
     public void imgui() {
-        ImGui.begin("Test window");
-        ImGui.text("Some random text");
+        ImGui.begin("Resource objects");
+
+        ImVec2 windowPos = new ImVec2();
+        ImGui.getWindowPos(windowPos);
+        ImVec2 windowSize = new ImVec2();
+        ImGui.getWindowSize(windowSize);
+        ImVec2 itemSpacing = new ImVec2();
+        ImGui.getStyle().getItemSpacing(itemSpacing);
+
+        float windowX2 = windowPos.x + windowSize.x;
+        for (int i = 0; i < sprites.size(); i++) {
+            Sprite sprite = sprites.getSprite(i);
+            float spriteWidth = sprite.getWidth() / 2;
+            float spriteHeight = sprite.getHeight() / 2;
+            int id = sprite.getTexId();
+            Vector2f[] texCoords = sprite.getTexCoords();
+
+            ImGui.pushID(i);
+            if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+                System.out.println("Resource object " + i + " clicked");
+            }
+            ImGui.popID();
+
+            ImVec2 lastButtonPos = new ImVec2();
+            ImGui.getItemRectMax(lastButtonPos);
+            float lastButtonX2 = lastButtonPos.x;
+            float nextButtonX2 = lastButtonX2 + itemSpacing.x + spriteWidth;
+            if (i + 1 < sprites.size() && nextButtonX2 < windowX2) {
+                ImGui.sameLine();
+            }
+        }
+
         ImGui.end();
     }
 }
