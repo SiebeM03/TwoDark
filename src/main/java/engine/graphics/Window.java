@@ -113,7 +113,6 @@ public class Window {
 
         Player.get().init();
 
-        currentScene.load();
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round(1 / dt) + " FPS");
 
@@ -143,20 +142,16 @@ public class Window {
 
     public static void changeScene(int newScene) {
         switch (newScene) {
-            case 0 -> {
-                currentScene = new DevScene();
-                currentScene.init();
-                currentScene.start();
-            }
-            case 1 -> {
-                currentScene = new HomeScene();
-                currentScene.init();
-                currentScene.start();
-            }
+            case 0 -> currentScene = new DevScene();
+            case 1 -> currentScene = new HomeScene();
             default -> {
                 assert false : "Unknown scene: '" + newScene + "'";
             }
         }
+
+        currentScene.load();
+        currentScene.init();
+        currentScene.start();
     }
 
 
