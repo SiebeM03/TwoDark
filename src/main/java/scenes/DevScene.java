@@ -14,7 +14,10 @@ public class DevScene extends Scene {
     public void init() {
         loadResources();
         this.camera = new Camera(new Vector2f());
-        if (levelLoaded) return;
+        if (levelLoaded) {
+            this.activeGameObject = gameObjects.get(0);
+            return;
+        }
 
         sprites = AssetPool.getSpriteSheet("assets/images/testSprites.png");
 
@@ -26,6 +29,7 @@ public class DevScene extends Scene {
         obj1Sprite.setTexture(AssetPool.getTexture("assets/images/tile.png"));
         obj1SpriteRenderer.setSprite(obj1Sprite);
         obj1.addComponent(obj1SpriteRenderer);
+        obj1.addComponent(new RigidBody());
         this.addGameObjectToScene(obj1);
         this.activeGameObject = obj1;
 
@@ -43,6 +47,8 @@ public class DevScene extends Scene {
 
     public void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
+
+        AssetPool.getTexture("assets/images/tile.png");
 
         AssetPool.addSpriteSheet("assets/images/testSprites.png",
                 new SpriteSheet(AssetPool.getTexture("assets/images/testSprites.png"), 64, 64, 4, 0));
