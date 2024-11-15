@@ -1,9 +1,9 @@
-# ARK: Idle Evolution
+# Idle Ark
 
 **Game Type:** Idle / Incremental Game  
 **Inspiration:** Based on ARK: Survival Evolved
 
-ARK: Idle Evolution is an incremental idle game where players gather resources, unlock new tools, tame dinosaurs, and
+Idle Ark is an incremental idle game where players gather resources, unlock new tools, tame dinosaurs, and
 gather blueprints to build and survive in a prehistoric world. Players will level up, increase efficiency, and manage
 their progression strategy as they unlock and enhance their tools and dinosaurs for maximum resource generation and
 combat effectiveness.
