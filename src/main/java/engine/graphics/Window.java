@@ -4,12 +4,16 @@ import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
 import engine.util.ImGuiLayer;
 import game.Player;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import scenes.DevScene;
 import scenes.HomeScene;
 import scenes.Scene;
+
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -80,6 +84,7 @@ public class Window {
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
+        setupMonitor();
 
         MouseListener.setupCallbacks();
         KeyListener.setupCallbacks();
@@ -104,6 +109,24 @@ public class Window {
         this.imGuiLayer.initImGui();
 
         Window.changeScene(0);
+    }
+
+
+    /**
+     * Sets up the game window on the secondary monitor.
+     *
+     * <p>This method is <b>development only</b>.</p>
+     */
+    private void setupMonitor() {
+        PointerBuffer monitors = glfwGetMonitors();
+        assert monitors != null : "Error: No monitors found";
+        long monitor = monitors.get(monitors.limit() - 1);
+
+        GLFWVidMode mode = glfwGetVideoMode(monitor);
+        assert mode != null : "Error: Video mode is null";
+
+        glfwSetWindowMonitor(glfwWindow, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+        glfwFocusWindow(glfwWindow);
     }
 
     public void loop() {
@@ -131,6 +154,11 @@ public class Window {
 
             this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
+
+            // Close on escape press
+            if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
+                glfwSetWindowShouldClose(glfwWindow, true);
+            }
 
             endTime = (float) glfwGetTime();
             dt = endTime - beginTime;

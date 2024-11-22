@@ -49,10 +49,8 @@ public class DevScene extends Scene {
     public void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
 
-
         AssetPool.addSpriteSheet("assets/images/spritesheets/resourceObjectSprites.png",
                 new SpriteSheet(AssetPool.getTexture("assets/images/spritesheets/resourceObjectSprites.png"), 200, 200, 3, 0));
-
 
         AssetPool.getTexture("assets/images/tile.png");
     }

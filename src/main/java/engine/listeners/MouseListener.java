@@ -99,7 +99,6 @@ public class MouseListener {
         tmp.mul(Window.getScene().camera().getInverseProjection()).mul(Window.getScene().camera().getInverseView());
         currentY = tmp.y;
 
-        System.out.println(currentY);
         return currentY;
     }
 
