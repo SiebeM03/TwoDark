@@ -1,7 +1,7 @@
 package engine.graphics.renderer;
 
 import engine.ecs.GameObject;
-import engine.ecs.SpriteRenderer;
+import engine.ecs.components.SpriteRenderer;
 
 import java.util.ArrayList;
 import java.util.Collections;

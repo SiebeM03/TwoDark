@@ -2,7 +2,7 @@ package engine.util;
 
 import engine.ecs.GameObject;
 import engine.ecs.Sprite;
-import engine.ecs.SpriteRenderer;
+import engine.ecs.components.SpriteRenderer;
 import engine.ecs.Transform;
 import org.joml.Vector2f;
 

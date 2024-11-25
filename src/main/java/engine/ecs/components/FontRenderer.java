@@ -1,4 +1,6 @@
-package engine.ecs;
+package engine.ecs.components;
+
+import engine.ecs.Component;
 
 public class FontRenderer extends Component {
 

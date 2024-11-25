@@ -1,6 +1,9 @@
-package engine.ecs;
+package engine.ecs.components;
 
 
+import engine.ecs.Component;
+import engine.ecs.Sprite;
+import engine.ecs.Transform;
 import engine.graphics.renderer.Texture;
 import imgui.ImGui;
 import org.joml.Vector2f;

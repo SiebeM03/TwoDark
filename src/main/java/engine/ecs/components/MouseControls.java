@@ -1,5 +1,7 @@
-package engine.ecs;
+package engine.ecs.components;
 
+import engine.ecs.Component;
+import engine.ecs.GameObject;
 import engine.graphics.Window;
 import engine.listeners.MouseListener;
 

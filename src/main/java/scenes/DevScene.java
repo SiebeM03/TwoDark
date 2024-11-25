@@ -1,6 +1,9 @@
 package scenes;
 
 import engine.ecs.*;
+import engine.ecs.components.MouseControls;
+import engine.ecs.components.RigidBody;
+import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Camera;
 import engine.util.AssetPool;
 import engine.util.Prefabs;

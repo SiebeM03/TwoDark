@@ -8,6 +8,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public abstract class Component {
+    /**
+     * Global counter that keeps track of the amount of ID's that have been generated for Components.
+     */
+    private static int ID_COUNTER = 0;
+    /**
+     * A unique UID that is given to each instance of the Component class (or subclasses).
+     *
+     * @implNote Equals -1 when no actual UID is given yet to the component.
+     */
+    private int uid = -1;
+
+    /**
+     * The GameObject to which the component is added.
+     */
     public transient GameObject gameObject = null;
 
     public void start() {
@@ -72,5 +86,24 @@ public abstract class Component {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public void generateId() {
+        if (this.uid == -1) {
+            this.uid = ID_COUNTER++;
+        }
+    }
+
+    public int getUid() {
+        return this.uid;
+    }
+
+    /**
+     * Make sure ID_COUNTER is not zero after loading levels. This prevents new Components to get a UID that is already taken by another Component.
+     *
+     * @param maxId The maximum ID that is currently in use by a Component.
+     */
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
     }
 }

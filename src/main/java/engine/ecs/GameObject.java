@@ -4,24 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
+    /**
+     * Global counter that keeps track of the amount of ID's that have been generated for GameObjects.
+     */
+    private static int ID_COUNTER = 0;
+    /**
+     * A unique UID that is given to each instance of the GameObject class (or subclasses).
+     *
+     * @implNote Equals -1 when no actual UID is given yet to the component.
+     */
+    private int uid = -1;
 
     private String name;
     private List<Component> components;
     public Transform transform;
     private int zIndex;
 
-    public GameObject(String name) {
-        this.name = name;
-        this.components = new ArrayList<>();
-        this.transform = new Transform();
-        this.zIndex = 0;
-    }
-
     public GameObject(String name, Transform transform, int zIndex) {
         this.name = name;
         this.components = new ArrayList<>();
         this.transform = transform;
         this.zIndex = zIndex;
+
+        this.uid = ID_COUNTER++;
     }
 
     public <T extends Component> T getComponent(Class<T> componentClass) {
@@ -39,6 +44,10 @@ public class GameObject {
         return null;
     }
 
+    public List<Component> getAllComponents() {
+        return this.components;
+    }
+
     public <T extends Component> void removeComponent(Class<T> componentClass) {
         for (int i = 0; i < components.size(); i++) {
             Component c = components.get(i);
@@ -50,6 +59,7 @@ public class GameObject {
     }
 
     public void addComponent(Component c) {
+        c.generateId();
         this.components.add(c);
         c.gameObject = this;
     }
@@ -74,5 +84,18 @@ public class GameObject {
 
     public int zIndex() {
         return this.zIndex;
+    }
+
+    public int getUid() {
+        return this.uid;
+    }
+
+    /**
+     * Make sure ID_COUNTER is not zero after loading levels. This prevents new GameObjects to get a UID that is already taken by another GameObject.
+     *
+     * @param maxId The maximum ID that is currently in use by a GameObject.
+     */
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
     }
 }

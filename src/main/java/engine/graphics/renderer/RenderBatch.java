@@ -1,6 +1,6 @@
 package engine.graphics.renderer;
 
-import engine.ecs.SpriteRenderer;
+import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Shader;
 import engine.graphics.Window;
 import engine.util.AssetPool;

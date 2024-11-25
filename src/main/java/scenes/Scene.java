@@ -104,10 +104,30 @@ public abstract class Scene {
         }
 
         if (!inFile.equals("")) {
+            int maxGoId = -1;
+            int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for (int i = 0; i < objs.length; i++) {
-                addGameObjectToScene(objs[i]);
+            for (GameObject go : objs) {
+                addGameObjectToScene(go);
+
+                for (Component c : go.getAllComponents()) {
+                    if (c.getUid() > maxCompId) {
+                        maxCompId = c.getUid();
+                    }
+                }
+                if (go.getUid() > maxGoId) {
+                    maxGoId = go.getUid();
+                }
             }
+
+            // Update the ID_COUNTER values for GameObject and Component
+            maxGoId++;
+            maxCompId++;
+            System.out.println("Max go: " + maxGoId);
+            System.out.println("Max comp: " + maxCompId);
+            GameObject.init(maxGoId);
+            Component.init(maxCompId);
+
             this.levelLoaded = true;
         }
     }
