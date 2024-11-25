@@ -123,8 +123,6 @@ public abstract class Scene {
             // Update the ID_COUNTER values for GameObject and Component
             maxGoId++;
             maxCompId++;
-            System.out.println("Max go: " + maxGoId);
-            System.out.println("Max comp: " + maxCompId);
             GameObject.init(maxGoId);
             Component.init(maxCompId);
 
