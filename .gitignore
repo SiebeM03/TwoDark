@@ -50,6 +50,6 @@ lib/
 *.dll
 *.ini
 
-level.txt
+*.txt
 *.mdj
 game2/

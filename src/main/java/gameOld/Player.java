@@ -1,14 +1,14 @@
-package game;
+package gameOld;
 
 import engine.listeners.KeyListener;
 import engine.util.Debouncer;
-import game.resources.Metal;
-import game.resources.Resource;
-import game.resources.Stone;
-import game.resources.Wood;
-import game.tools.Axe;
-import game.tools.Pickaxe;
-import game.tools.Tool;
+import gameOld.resources.Metal;
+import gameOld.resources.Resource;
+import gameOld.resources.Stone;
+import gameOld.resources.Wood;
+import gameOld.tools.Axe;
+import gameOld.tools.Pickaxe;
+import gameOld.tools.Tool;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;

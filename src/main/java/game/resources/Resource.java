@@ -1,23 +1,21 @@
 package game.resources;
 
+import engine.ecs.Sprite;
+
 public abstract class Resource {
-    private double quantity;
-    private double ratePerSecond = 1;
+    public double amount;
+    private double baseGain;
 
-    public void update(float dt) {
-        quantity += ratePerSecond * dt;
-    }
+    /**
+     * Get the index of the sprite in the sprite sheet
+     */
+    public abstract int getSpriteIndex();
 
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "(" + ratePerSecond + "/s): " + quantity;
-    }
+    public abstract Sprite getSprite();
 
-    public double getRatePerSecond() {
-        return ratePerSecond;
-    }
+    public abstract double calculateGain();
 
-    public void setRatePerSecond(double ratePerSecond) {
-        this.ratePerSecond = Math.round(ratePerSecond * 1000.0) / 1000.0;
+    public void click() {
+
     }
 }

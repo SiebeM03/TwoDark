@@ -1,15 +1,15 @@
-package game.tools;
+package gameOld.tools;
 
-import game.resources.Resource;
+import gameOld.resources.Resource;
 
-public class Axe extends Tool {
+public class Pickaxe extends Tool {
 
-    public Axe(Resource... affectedResources) {
+    public Pickaxe(Resource... affectedResources) {
         super(affectedResources);
     }
 
     public double getBonus(int level) {
-        double bonus = 0.1 * level + 1;
+        double bonus = 0.2 * level + 1;
         return Math.round(bonus * 10.0) / 10.0;
     }
 

@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import engine.ecs.Component;
 import engine.ecs.GameObject;
+import engine.ecs.serialization.GameManagerSerializer;
 import engine.graphics.Camera;
 import engine.graphics.renderer.Renderer;
 import engine.ecs.serialization.ComponentSerializer;
 import engine.ecs.serialization.GameObjectSerializer;
+import game.GameManager;
 import imgui.ImGui;
 
 import java.io.FileWriter;
@@ -78,12 +80,17 @@ public abstract class Scene {
                             .setPrettyPrinting()
                             .registerTypeAdapter(Component.class, new ComponentSerializer())
                             .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
+                            .registerTypeAdapter(GameManager.class, new GameManagerSerializer())
                             .create();
 
         try {
             FileWriter writer = new FileWriter("level.txt");
             writer.write(gson.toJson(this.gameObjects));
             writer.close();
+
+             writer = new FileWriter("data.txt");
+             writer.write(gson.toJson(GameManager.get()));
+             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,19 +101,20 @@ public abstract class Scene {
                             .setPrettyPrinting()
                             .registerTypeAdapter(Component.class, new ComponentSerializer())
                             .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
+                            .registerTypeAdapter(GameManager.class, new GameManagerSerializer())
                             .create();
-        String inFile = "";
+        String levelFile = "";
 
         try {
-            inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
+            levelFile = new String(Files.readAllBytes(Paths.get("level.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (!inFile.equals("")) {
+        if (!levelFile.equals("")) {
             int maxGoId = -1;
             int maxCompId = -1;
-            GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
+            GameObject[] objs = gson.fromJson(levelFile, GameObject[].class);
             for (GameObject go : objs) {
                 addGameObjectToScene(go);
 
@@ -125,7 +133,24 @@ public abstract class Scene {
             maxCompId++;
             GameObject.init(maxGoId);
             Component.init(maxCompId);
+        }
 
+
+        String dataFile = "";
+        try {
+            dataFile = new String(Files.readAllBytes(Paths.get("data.txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (!dataFile.equals("")) {
+            System.out.println(dataFile);
+
+        } else {
+            GameManager.get().init();
+        }
+
+        if (!levelFile.equals("") && !dataFile.equals("")) {
             this.levelLoaded = true;
         }
     }

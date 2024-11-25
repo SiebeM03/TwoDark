@@ -1,5 +1,5 @@
-package game.resources;
+package gameOld.resources;
 
-public class Stone extends Resource {
+public class Metal  extends Resource {
     private String texture = "assets/images/resources/stone.png";
 }

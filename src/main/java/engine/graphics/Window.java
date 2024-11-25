@@ -4,7 +4,6 @@ import engine.graphics.renderer.DebugDraw;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
 import engine.util.ImGuiLayer;
-import game.Player;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -13,8 +12,6 @@ import org.lwjgl.opengl.GL;
 import scenes.DevScene;
 import scenes.HomeScene;
 import scenes.Scene;
-
-import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -135,15 +132,11 @@ public class Window {
         float endTime;
         float dt = -1.0f;
 
-        Player.get().init();
-
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round(1 / dt) + " FPS");
 
             // Poll events
             glfwPollEvents();
-
-//            Player.get().update(dt);
 
             DebugDraw.beginFrame();
 
