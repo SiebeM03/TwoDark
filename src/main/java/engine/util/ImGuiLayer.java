@@ -118,7 +118,6 @@ public class ImGuiLayer {
                 button == GLFW_MOUSE_BUTTON_4 && action != GLFW_RELEASE,
                 button == GLFW_MOUSE_BUTTON_5 && action != GLFW_RELEASE
         });
-
         if (!io.getWantCaptureMouse() && io.getMouseDown(1)) {
             ImGui.setWindowFocus(null);
         }

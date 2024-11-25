@@ -2,8 +2,8 @@ package scenes;
 
 import engine.ecs.*;
 import engine.graphics.Camera;
-import engine.listeners.MouseListener;
 import engine.util.AssetPool;
+import engine.util.Prefabs;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
@@ -11,6 +11,7 @@ import org.joml.Vector2f;
 public class DevScene extends Scene {
 
     private SpriteSheet sprites;
+    MouseControls mouseControls = new MouseControls();
 
     @Override
     public void init() {
@@ -57,7 +58,7 @@ public class DevScene extends Scene {
 
     @Override
     public void update(float dt) {
-        MouseListener.getOrthoY();
+        mouseControls.update(dt);
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
@@ -87,7 +88,9 @@ public class DevScene extends Scene {
 
             ImGui.pushID(i);
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
-                System.out.println("Resource object " + i + " clicked");
+                GameObject obj = Prefabs.generateSpriteObject(sprite, spriteWidth, spriteHeight);
+                // Attach object to mouse cursor
+                mouseControls.pickupObject(obj);
             }
             ImGui.popID();
 

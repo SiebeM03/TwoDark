@@ -23,10 +23,13 @@ public class KeyListener {
 
         glfwSetKeyCallback(window, KeyListener::keyCallback);
     }
+
     public static void keyCallback(long window, int keycode, int scancode, int action, int mods) {
-        switch (action) {
-            case GLFW_PRESS -> get().keyPressed[keycode] = true;
-            case GLFW_RELEASE -> get().keyPressed[keycode] = false;
+        if (keycode < get().keyPressed.length && keycode >= 0) {
+            switch (action) {
+                case GLFW_PRESS -> get().keyPressed[keycode] = true;
+                case GLFW_RELEASE -> get().keyPressed[keycode] = false;
+            }
         }
     }
 
