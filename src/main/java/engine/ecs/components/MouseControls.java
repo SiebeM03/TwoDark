@@ -22,7 +22,6 @@ public class MouseControls extends Component {
     @Override
     public void update(float dt) {
         if (holdingObject != null) {
-            //  TODO: Center object on mouse
             holdingObject.transform.position.x = MouseListener.getOrthoX() - (holdingObject.transform.scale.x / 2);
             holdingObject.transform.position.y = MouseListener.getOrthoY() - (holdingObject.transform.scale.y / 2);
 

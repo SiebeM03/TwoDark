@@ -1,5 +1,6 @@
 package engine.graphics;
 
+import engine.graphics.renderer.DebugDraw;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
 import engine.util.ImGuiLayer;
@@ -144,11 +145,14 @@ public class Window {
 
 //            Player.get().update(dt);
 
+            DebugDraw.beginFrame();
+
             // TODO renders
             glClearColor(148.0f / 255.0f, 242.0f / 255.0f, 1.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if (dt >= 0) {
+                DebugDraw.draw();
                 currentScene.update(dt);
             }
 
