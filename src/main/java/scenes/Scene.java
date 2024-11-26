@@ -2,14 +2,14 @@ package scenes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import engine.ecs.Component;
 import engine.ecs.GameObject;
-import engine.ecs.serialization.GameManagerSerializer;
+import engine.ecs.serialization.*;
 import engine.graphics.Camera;
 import engine.graphics.renderer.Renderer;
-import engine.ecs.serialization.ComponentSerializer;
-import engine.ecs.serialization.GameObjectSerializer;
 import game.GameManager;
+import game.resources.Resource;
 import imgui.ImGui;
 
 import java.io.FileWriter;
@@ -27,6 +27,9 @@ public abstract class Scene {
     protected List<GameObject> gameObjects = new ArrayList<>();
 
     protected GameObject activeGameObject = null;
+    /**
+     * A boolean that shows whether GameObjects have been read from a file. This can be used to prevent scenes from initializing GameObjects that have already been created by reading the file.
+     */
     protected boolean levelLoaded = false;
 
     public Scene() {
@@ -80,7 +83,7 @@ public abstract class Scene {
                             .setPrettyPrinting()
                             .registerTypeAdapter(Component.class, new ComponentSerializer())
                             .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
-                            .registerTypeAdapter(GameManager.class, new GameManagerSerializer())
+                            .registerTypeAdapter(Resource.class, new ResourceSerializer())
                             .create();
 
         try {
@@ -88,9 +91,10 @@ public abstract class Scene {
             writer.write(gson.toJson(this.gameObjects));
             writer.close();
 
-             writer = new FileWriter("data.txt");
-             writer.write(gson.toJson(GameManager.get()));
-             writer.close();
+            List<Resource> resources = GameManager.get().getResourceManager().getResources();
+            writer = new FileWriter("data.txt");
+            writer.write(gson.toJson(new Data(resources)));
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,8 +105,24 @@ public abstract class Scene {
                             .setPrettyPrinting()
                             .registerTypeAdapter(Component.class, new ComponentSerializer())
                             .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
-                            .registerTypeAdapter(GameManager.class, new GameManagerSerializer())
+                            .registerTypeAdapter(Resource.class, new ResourceSerializer())
                             .create();
+
+        loadGameObjectsAndComponents(gson);
+        loadGameData(gson);
+    }
+
+    /**
+     * <ol>
+     * <li>Loads all GameObjects and Components from level.txt</li>
+     * <li>Adds all Components to the corresponding GameObject</li>
+     * <li>Adds all GameObjects to the scene</li>
+     * </ol>
+     *
+     * @param gson GsonBuilder that has registered a GameObject and Component type adapter
+     * @return true if the file was read, false if the file was empty.
+     */
+    private boolean loadGameObjectsAndComponents(Gson gson) {
         String levelFile = "";
 
         try {
@@ -133,9 +153,21 @@ public abstract class Scene {
             maxCompId++;
             GameObject.init(maxGoId);
             Component.init(maxCompId);
+
+            this.levelLoaded = true;
+            return true;
+        } else {
+            return false;
         }
+    }
 
-
+    /**
+     * Loads all game data from data.txt and initializes GameManager with the loaded data.
+     *
+     * @param gson GsonBuilder that has registered a Resource type adapter
+     * @return true if the file was read, false if the file was empty.
+     */
+    private boolean loadGameData(Gson gson) {
         String dataFile = "";
         try {
             dataFile = new String(Files.readAllBytes(Paths.get("data.txt")));
@@ -143,15 +175,20 @@ public abstract class Scene {
             e.printStackTrace();
         }
 
+        // Initialize GameManager instance
+        GameManager gameManager = GameManager.get();
+
         if (!dataFile.equals("")) {
-            System.out.println(dataFile);
-
+            // Load Data record
+            Data data = gson.fromJson(dataFile, Data.class);
+            // Initialize ResourceManager and pass the loaded Resource objects to it
+            gameManager.initResourceManager();
+            gameManager.getResourceManager().setResources(data.resources());
+            return true;
         } else {
-            GameManager.get().init();
-        }
-
-        if (!levelFile.equals("") && !dataFile.equals("")) {
-            this.levelLoaded = true;
+            // Initialize ResourceManager and keep the default Resource objects
+            gameManager.initResourceManager();
+            return false;
         }
     }
 }

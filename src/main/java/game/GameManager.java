@@ -6,6 +6,9 @@ public class GameManager {
     private static GameManager instance;
     private ResourceManager resourceManager;
 
+    /**
+     * @return Returns GameManager instance, creates instance if none was found.
+     */
     public static GameManager get() {
         if (instance == null) {
             instance = new GameManager();
@@ -13,13 +16,12 @@ public class GameManager {
         return instance;
     }
 
-    public void init() {
+    public void initResourceManager() {
         resourceManager = new ResourceManager();
         resourceManager.init();
     }
 
     public ResourceManager getResourceManager() {
-        if (resourceManager == null) init();
         return resourceManager;
     }
 }

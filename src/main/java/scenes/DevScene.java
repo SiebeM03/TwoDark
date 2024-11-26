@@ -26,13 +26,15 @@ public class DevScene extends Scene {
         this.camera = new Camera(new Vector2f());
         this.sprites = AssetPool.getSpriteSheet("assets/images/spritesheets/resourceObjectSprites.png");
         this.resourceManager = GameManager.get().getResourceManager();
-        resourceManager.addResourceGameObjectsToScene();
 
         if (levelLoaded) {
             this.activeGameObject = gameObjects.get(0);
             return;
         }
 
+        this.resourceManager.addResourceGameObjectsToScene();
+
+        /*
         GameObject obj1 = new GameObject("Object 1",
                 new Transform(new Vector2f(100, 100), new Vector2f(128, 128)),
                 2);
@@ -42,8 +44,8 @@ public class DevScene extends Scene {
         obj1SpriteRenderer.setSprite(obj1Sprite);
         obj1.addComponent(obj1SpriteRenderer);
         obj1.addComponent(new RigidBody());
-        // this.addGameObjectToScene(obj1);
-        // this.activeGameObject = obj1;
+        this.addGameObjectToScene(obj1);
+        this.activeGameObject = obj1;
 
         GameObject obj2 = new GameObject("Object 2",
                 new Transform(new Vector2f(400, 100), new Vector2f(128, 128)),
@@ -54,7 +56,8 @@ public class DevScene extends Scene {
         obj2Sprite.setTexture(AssetPool.getTexture("assets/images/tile.png"));
         obj2SpriteRenderer.setSprite(obj2Sprite);
         obj2.addComponent(obj2SpriteRenderer);
-        // this.addGameObjectToScene(obj2);
+        this.addGameObjectToScene(obj2);
+        */
     }
 
     public void loadResources() {

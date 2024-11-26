@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ResourceManager {
     private List<Resource> resources;
-    private Resource selectedResource;
+    private transient Resource selectedResource;
 
     public void init() {
         resources = new ArrayList<>();
@@ -26,6 +26,10 @@ public class ResourceManager {
 
     public List<Resource> getResources() {
         return resources;
+    }
+
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
     }
 
     public void addResourceGameObjectsToScene() {
@@ -90,7 +94,7 @@ public class ResourceManager {
             ImGui.text("Select a resource first");
         } else {
             ImGui.text(selectedResource.getClass().getSimpleName());
-            ImGui.text(selectedResource.amount + "");
+            ImGui.text(selectedResource.getAmount() + "");
         }
         ImGui.end();
     }

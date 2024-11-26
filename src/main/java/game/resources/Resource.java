@@ -18,4 +18,12 @@ public abstract class Resource {
     public void click() {
 
     }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public double getBaseGain() {
+        return baseGain;
+    }
 }

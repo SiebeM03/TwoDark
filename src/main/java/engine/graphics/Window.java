@@ -74,11 +74,11 @@ public class Window {
         // Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
 
-        // Create the window
-        glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
+
+        glfwWindow = glfwCreateWindow(monitorWidth, monitorHeight, this.title, NULL, NULL);
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
@@ -118,12 +118,20 @@ public class Window {
     private void setupMonitor() {
         PointerBuffer monitors = glfwGetMonitors();
         assert monitors != null : "Error: No monitors found";
+
+        // Select the secondary monitor (last monitor in the list)
         long monitor = monitors.get(monitors.limit() - 1);
 
+        // Get the video mode of the selected monitor
         GLFWVidMode mode = glfwGetVideoMode(monitor);
         assert mode != null : "Error: Video mode is null";
 
-        glfwSetWindowMonitor(glfwWindow, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+        int[] x = new int[1];
+        int[] y = new int[1];
+        glfwGetMonitorPos(monitor, x, y);
+
+        glfwSetWindowPos(glfwWindow, x[0], y[0]);
+        glfwSetWindowSize(glfwWindow, mode.width(), mode.height());
         glfwFocusWindow(glfwWindow);
     }
 
@@ -141,7 +149,7 @@ public class Window {
             DebugDraw.beginFrame();
 
             // TODO renders
-            glClearColor(148.0f / 255.0f, 242.0f / 255.0f, 1.0f, 1.0f);
+            glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if (dt >= 0) {
