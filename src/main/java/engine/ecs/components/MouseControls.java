@@ -7,6 +7,9 @@ import engine.listeners.MouseListener;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
+/**
+ * A class for dragging and dropping GameObjects from an ImGui window into the scene.
+ */
 public class MouseControls extends Component {
     GameObject holdingObject = null;
 

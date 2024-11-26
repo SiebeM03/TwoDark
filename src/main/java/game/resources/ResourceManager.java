@@ -5,6 +5,7 @@ import engine.ecs.Sprite;
 import engine.ecs.Transform;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Window;
+import engine.util.Settings;
 import game.resources.types.*;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class ResourceManager {
     private List<Resource> resources;
-    private transient Resource selectedResource;
+    private Resource selectedResource;
 
     public void init() {
         resources = new ArrayList<>();
@@ -32,6 +33,10 @@ public class ResourceManager {
         this.resources = resources;
     }
 
+    /**
+     * Creates a game object for every Resource in {@link #resources} and configures all sprites and their renderers.
+     * Each game object is also added to the scene.
+     */
     public void addResourceGameObjectsToScene() {
         for (int i = 0; i < resources.size(); i++) {
             Resource resource = resources.get(i);
@@ -41,8 +46,8 @@ public class ResourceManager {
 
             Vector2f scale = new Vector2f(resourceSprite.getWidth(), resourceSprite.getHeight());
             Vector2f position = new Vector2f(
-                    (float) 1024 / 2 - scale.x / 2 + (i - 1) * 200,
-                    (float) 576 / 2 - scale.y / 2
+                    (float) (Settings.PROJECTION_WIDTH - scale.x) / 2 + (i - 1) * 200,
+                    (float) (Settings.PROJECTION_HEIGHT - scale.y) / 2
             );
 
             GameObject resourceObject = new GameObject(resource.getClass().getName(), new Transform(position, scale), 1);
