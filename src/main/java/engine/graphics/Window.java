@@ -1,6 +1,6 @@
 package engine.graphics;
 
-import engine.graphics.renderer.DebugDraw;
+import engine.graphics.debug.DebugDraw;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
 import engine.util.ImGuiLayer;
