@@ -2,6 +2,7 @@ package scenes;
 
 import engine.ecs.*;
 import engine.ecs.components.MouseControls;
+import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Camera;
 import engine.util.AssetPool;
 import game.GameManager;
@@ -25,7 +26,9 @@ public class DevScene extends Scene {
         this.resourceManager = GameManager.get().getResourceManager();
 
         if (levelLoaded) {
-            this.activeGameObject = gameObjects.get(0);
+            if (gameObjects.size() > 0) {
+                this.activeGameObject = gameObjects.get(0);
+            }
             return;
         }
 
@@ -43,6 +46,18 @@ public class DevScene extends Scene {
         AssetPool.getTexture("assets/images/seperateImages/tree2.png");
         AssetPool.getTexture("assets/images/seperateImages/stone2.png");
         AssetPool.getTexture("assets/images/seperateImages/metal2.png");
+
+        for (GameObject g : gameObjects) {
+            SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
+            // Check if the game object has a sprite renderer
+            if (spr != null) {
+                // Check if the sprite renderer has a texture
+                if (spr.getTexture() != null) {
+                    // Set the texture to the texture that is found in the asset pool
+                    spr.setTexture(AssetPool.getTexture(spr.getTexture().getFilepath()));
+                }
+            }
+        }
     }
 
     @Override

@@ -11,7 +11,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Texture {
     private String filepath;
-    private int texID;
+    private transient int texID;
     private int width, height;
 
     public Texture() {
