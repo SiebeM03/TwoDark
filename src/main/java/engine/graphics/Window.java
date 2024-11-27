@@ -1,6 +1,7 @@
 package engine.graphics;
 
 import engine.graphics.debug.DebugDraw;
+import engine.graphics.renderer.Framebuffer;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
 import engine.util.ImGuiLayer;
@@ -23,6 +24,7 @@ public class Window {
     private String title;
     private long glfwWindow;
     private ImGuiLayer imGuiLayer;
+    private Framebuffer framebuffer;
 
     private static int monitorWidth = 1920;
     private static int monitorHeight = 1080;
@@ -106,6 +108,8 @@ public class Window {
         this.imGuiLayer = new ImGuiLayer(glfwWindow);
         this.imGuiLayer.initImGui();
 
+        this.framebuffer = new Framebuffer(monitorWidth, monitorHeight);
+
         Window.changeScene(0);
     }
 
@@ -152,10 +156,12 @@ public class Window {
             glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            this.framebuffer.bind();
             if (dt >= 0) {
                 DebugDraw.draw();
                 currentScene.update(dt);
             }
+            this.framebuffer.unbind();
 
             this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);

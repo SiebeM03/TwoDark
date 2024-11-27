@@ -7,17 +7,34 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Texture {
     private String filepath;
     private int texID;
     private int width, height;
 
+    public Texture() {
+        this.texID = -1;
+        this.width = -1;
+        this.height = -1;
+    }
+
+    public Texture(int width, int height) {
+        this.filepath = "Generated";
+
+        // Generate texture on GPU
+        texID = glGenTextures();
+        // The pixels value is NULL (0L), we don't have any data yet to send to the GPU
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    }
+
     public void init(String filepath) {
         this.filepath = filepath;
 
         // Generate texture on GPU
-        texID = glGenTextures(); glBindTexture(GL_TEXTURE_2D, texID);
+        texID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texID);
 
         // Set texture parameters
         // Repeat image in both directions
