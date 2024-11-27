@@ -3,12 +3,10 @@ package scenes;
 import engine.ecs.*;
 import engine.ecs.components.MouseControls;
 import engine.graphics.Camera;
-import engine.graphics.debug.DebugDraw;
 import engine.util.AssetPool;
 import game.GameManager;
 import game.resources.ResourceManager;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 public class DevScene extends Scene {
 
@@ -50,7 +48,6 @@ public class DevScene extends Scene {
     @Override
     public void update(float dt) {
         devSceneGameObject.update(dt);
-        DebugDraw.addCircle(new Vector2f(200, 200), 64, new Vector3f(0, 1, 1), 1);
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
