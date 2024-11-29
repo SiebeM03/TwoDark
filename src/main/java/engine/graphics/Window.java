@@ -5,6 +5,7 @@ import engine.graphics.renderer.Framebuffer;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
 import engine.util.ImGuiLayer;
+import engine.util.Settings;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -26,18 +27,13 @@ public class Window {
     private ImGuiLayer imGuiLayer;
     private Framebuffer framebuffer;
 
-    private static int monitorWidth = 1920;
-    private static int monitorHeight = 1080;
-//    private static int monitorWidth = 500;
-//    private static int monitorHeight = 500;
-
     private static Window window = null;
 
     private static Scene currentScene = null;
 
     private Window() {
-        this.width = monitorWidth;
-        this.height = monitorHeight;
+        this.width = Settings.MONITOR_WIDTH;
+        this.height = Settings.MONITOR_HEIGHT;
         this.title = "Idle Ark";
     }
 
@@ -80,7 +76,7 @@ public class Window {
         glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
 
 
-        glfwWindow = glfwCreateWindow(monitorWidth, monitorHeight, this.title, NULL, NULL);
+        glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
@@ -108,7 +104,8 @@ public class Window {
         this.imGuiLayer = new ImGuiLayer(glfwWindow);
         this.imGuiLayer.initImGui();
 
-        this.framebuffer = new Framebuffer(monitorWidth, monitorHeight);
+        this.framebuffer = new Framebuffer(this.width, this.height);
+        glViewport(0, 0, this.width, this.height);
 
         Window.changeScene(0);
     }
@@ -152,11 +149,11 @@ public class Window {
 
             DebugDraw.beginFrame();
 
-            // TODO renders
+            this.framebuffer.bind();
+
             glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//            this.framebuffer.bind();
             if (dt >= 0) {
                 DebugDraw.draw();
                 currentScene.update(dt);
@@ -216,5 +213,13 @@ public class Window {
 
     public static Scene getScene() {
         return currentScene;
+    }
+
+    public static Framebuffer getFramebuffer() {
+        return get().framebuffer;
+    }
+
+    public static float getTargetAspectRatio() {
+        return Settings.TARGET_ASPECT_RATIO;
     }
 }

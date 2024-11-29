@@ -1,5 +1,6 @@
 package engine.util;
 
+import engine.editor.GameViewWindow;
 import engine.graphics.Window;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
@@ -46,9 +47,9 @@ public class ImGuiLayer {
         imGuiGl3.newFrame();
         ImGui.newFrame();
 
-        // setupDockSpace();
+        setupDockSpace();
         renderWindows(dt, currentScene);
-        // ImGui.end();
+        ImGui.end();    // End dock space
 
         ImGui.render();
         endFrame();
@@ -57,7 +58,8 @@ public class ImGuiLayer {
     private void initImGuiConfig() {
         final ImGuiIO io = ImGui.getIO();
         io.setIniFilename("imgui.ini");
-        io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard | ImGuiConfigFlags.DockingEnable);
+        io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
+        io.setConfigFlags(ImGuiConfigFlags.DockingEnable);
     }
 
     private void initCallbacks() {
@@ -168,7 +170,7 @@ public class ImGuiLayer {
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
 
-        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking |
+        int windowFlags = ImGuiWindowFlags.NoDocking |
                                   ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
                                   ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
                                   ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
@@ -181,6 +183,7 @@ public class ImGuiLayer {
     private void renderWindows(float dt, Scene currentScene) {
         currentScene.sceneImgui();
         ImGui.showDemoWindow();
+        GameViewWindow.imgui();
     }
 
     private static int getImGuiKey(int key) {

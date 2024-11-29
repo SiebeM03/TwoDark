@@ -25,6 +25,11 @@ public class Texture {
 
         // Generate texture on GPU
         texID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texID);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
         // The pixels value is NULL (0L), we don't have any data yet to send to the GPU
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     }
