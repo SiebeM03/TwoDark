@@ -5,18 +5,11 @@ import engine.graphics.Window;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyListener {
-    private static KeyListener instance;
-    private boolean keyPressed[] = new boolean[350];
+    /**
+     * An array of booleans representing the state of each key on the keyboard.
+     */
+    private static boolean keyPressed[] = new boolean[350];
 
-    private KeyListener() {}
-
-    public static KeyListener get() {
-        if (KeyListener.instance == null) {
-            KeyListener.instance = new KeyListener();
-        }
-
-        return KeyListener.instance;
-    }
 
     public static void setupCallbacks() {
         long window = Window.getGlfwWindow();
@@ -25,15 +18,15 @@ public class KeyListener {
     }
 
     public static void keyCallback(long window, int keycode, int scancode, int action, int mods) {
-        if (keycode < get().keyPressed.length && keycode >= 0) {
+        if (keycode < keyPressed.length && keycode >= 0) {
             switch (action) {
-                case GLFW_PRESS -> get().keyPressed[keycode] = true;
-                case GLFW_RELEASE -> get().keyPressed[keycode] = false;
+                case GLFW_PRESS -> keyPressed[keycode] = true;
+                case GLFW_RELEASE -> keyPressed[keycode] = false;
             }
         }
     }
 
     public static boolean isKeyPressed(int keyCode) {
-        return get().keyPressed[keyCode];
+        return keyPressed[keyCode];
     }
 }

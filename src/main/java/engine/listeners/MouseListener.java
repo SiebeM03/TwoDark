@@ -1,34 +1,42 @@
 package engine.listeners;
 
+import engine.graphics.Camera;
 import engine.graphics.Window;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseListener {
-    private static MouseListener instance;
-    private double scrollX, scrollY;
-    private double xPos, yPos, lastX, lastY;
 
-    private boolean mouseButtonPressed[] = new boolean[9];
-    private int mouseButtonsDown = 0;
+    /**
+     * The current position of the mouse cursor.
+     */
+    private static double xPos, yPos;
 
-    private MouseListener() {
-        this.scrollX = 0.0;
-        this.scrollY = 0.0;
-        this.xPos = 0.0;
-        this.yPos = 0.0;
-        this.lastX = 0.0;
-        this.lastY = 0.0;
-    }
+    /**
+     * The position of the mouse cursor in the previous frame.
+     */
+    private static double lastX, lastY;
 
-    public static MouseListener get() {
-        if (MouseListener.instance == null) {
-            MouseListener.instance = new MouseListener();
-        }
+    /**
+     * The scroll wheel's offset.
+     */
+    private static double scrollX, scrollY;
 
-        return MouseListener.instance;
-    }
+    /**
+     * An array of booleans representing the state of each mouse button.
+     */
+    private static boolean mouseButtonPressed[] = new boolean[9];
+
+    /**
+     * The number of mouse buttons currently pressed.
+     */
+    private static int mouseButtonsDown = 0;
+
+    private static Vector2f gameViewPortPos = new Vector2f();
+    private static Vector2f gameViewPortSize = new Vector2f();
 
     public static void setupCallbacks() {
         long window = Window.getGlfwWindow();
@@ -39,90 +47,112 @@ public class MouseListener {
         glfwSetScrollCallback(window, MouseListener::mouseScrollCallback);
     }
 
-    public static void mousePosCallback(long window, double xPos, double yPos) {
-        get().lastX = get().xPos;
-        get().lastY = get().yPos;
-        get().xPos = xPos;
-        get().yPos = yPos;
+    public static void mousePosCallback(long window, double newXPos, double newYPos) {
+        lastX = xPos;
+        lastY = yPos;
+        xPos = newXPos;
+        yPos = newYPos;
     }
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (action == GLFW_PRESS) {
-            get().mouseButtonsDown++;
+            mouseButtonsDown++;
 
-            if (button < get().mouseButtonPressed.length) {
-                get().mouseButtonPressed[button] = true;
+            if (button < mouseButtonPressed.length) {
+                mouseButtonPressed[button] = true;
             }
         } else if (action == GLFW_RELEASE) {
-            get().mouseButtonsDown--;
+            mouseButtonsDown--;
 
-            if (button < get().mouseButtonPressed.length) {
-                get().mouseButtonPressed[button] = false;
+            if (button < mouseButtonPressed.length) {
+                mouseButtonPressed[button] = false;
             }
         }
     }
 
     public static void mouseScrollCallback(long window, double xOffset, double yOffset) {
-        get().scrollX = (float) xOffset;
-        get().scrollY = (float) yOffset;
+        scrollX = (float) xOffset;
+        scrollY = (float) yOffset;
+        clearMouseInput();
     }
 
+    /**
+     * This method should be called once per frame.
+     *
+     * <p>Resets scroll values and sets {@link #lastX} and {@link #lastY} to the mouse position of the previous frame.</p>
+     */
     public static void clearMouseInput() {
-        get().scrollX = 0;
-        get().scrollY = 0;
-        get().lastX = get().xPos;
-        get().lastY = get().yPos;
+        scrollX = 0;
+        scrollY = 0;
+        lastX = xPos;
+        lastY = yPos;
     }
 
     public static float getX() {
-        return (float) get().xPos;
+        return (float) xPos;
     }
 
     public static float getY() {
-        return (float) get().yPos;
+        return (float) yPos;
+    }
+
+    public static float getDx() {
+        return (float) (lastX - xPos);
+    }
+
+    public static float getDy() {
+        return (float) (lastY - yPos);
+    }
+
+    public static float getScrollX() {
+        return (float) scrollX;
+    }
+
+    public static float getScrollY() {
+        return (float) scrollY;
+    }
+
+    public static boolean mouseButtonDown(int button) {
+        if (button < mouseButtonPressed.length) {
+            return mouseButtonPressed[button];
+        } else {
+            return false;
+        }
     }
 
     public static float getOrthoX() {
-        float currentX = getX();
-        currentX = (currentX / (float) Window.getWidth()) * 2.0f - 1.0f;
+        float currentX = getX() - gameViewPortPos.x;
+        currentX = (currentX / (float) gameViewPortSize.x) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
-        tmp.mul(Window.getScene().camera().getInverseProjection()).mul(Window.getScene().camera().getInverseView());
+
+        Camera camera = Window.getScene().camera();
+        Matrix4f viewProjection = new Matrix4f();
+        camera.getInverseProjection().mul(camera.getInverseProjection(), viewProjection);
+        tmp.mul(viewProjection);
         currentX = tmp.x;
 
         return currentX;
     }
 
     public static float getOrthoY() {
-        float currentY = Window.getHeight() - getY();
-        currentY = (currentY / (float) Window.getHeight()) * 2.0f - 1.0f;
+        float currentY = getY() - gameViewPortPos.y;
+        currentY = -((currentY / (float) gameViewPortSize.y) * 2.0f - 1.0f);
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
-        tmp.mul(Window.getScene().camera().getInverseProjection()).mul(Window.getScene().camera().getInverseView());
+
+        Camera camera = Window.getScene().camera();
+        Matrix4f viewProjection = new Matrix4f();
+        camera.getInverseProjection().mul(camera.getInverseProjection(), viewProjection);
+        tmp.mul(viewProjection);
         currentY = tmp.y;
 
         return currentY;
     }
 
-    public static float getDx() {
-        return (float) (get().lastX - get().xPos);
+    public static void setGameViewPortPos(Vector2f pos) {
+        gameViewPortPos.set(pos);
     }
 
-    public static float getDy() {
-        return (float) (get().lastY - get().yPos);
-    }
-
-    public static float getScrollX() {
-        return (float) get().scrollX;
-    }
-
-    public static float getScrollY() {
-        return (float) get().scrollY;
-    }
-
-    public static boolean mouseButtonDown(int button) {
-        if (button < get().mouseButtonPressed.length) {
-            return get().mouseButtonPressed[button];
-        } else {
-            return false;
-        }
+    public static void setGameViewPortSize(Vector2f size) {
+        gameViewPortSize.set(size);
     }
 }
