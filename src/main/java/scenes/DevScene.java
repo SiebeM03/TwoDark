@@ -5,6 +5,7 @@ import engine.ecs.components.MouseControls;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Camera;
 import engine.util.AssetPool;
+import engine.util.GameDataDebug;
 import game.GameManager;
 import game.resources.ResourceManager;
 import org.joml.Vector2f;
@@ -31,8 +32,6 @@ public class DevScene extends Scene {
             }
             return;
         }
-
-        this.resourceManager.addResourceGameObjectsToScene();
     }
 
     public void loadResources() {
@@ -73,7 +72,7 @@ public class DevScene extends Scene {
 
     @Override
     public void imgui() {
-        if (resourceManager == null) return;
-        resourceManager.imgui();
+        GameDataDebug.imgui();
+        // GameManager.get().getResourceManager().imgui();
     }
 }
