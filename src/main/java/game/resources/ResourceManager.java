@@ -19,15 +19,13 @@ public class ResourceManager {
     private Resource selectedResource;
 
     /**
-     * Initializes the {@link #resources} list with all available resources and adds a corresponding game object to the scene for each resource.
+     * Initializes the {@link #resources} list with all available resources.
      */
     public void init() {
         resources = new ArrayList<>();
         resources.add(new Wood());
         resources.add(new Stone());
         resources.add(new Metal());
-
-        addResourceGameObjectsToScene();
     }
 
     public List<Resource> getResources() {
@@ -42,7 +40,7 @@ public class ResourceManager {
      * Creates a game object for every Resource in {@link #resources} and configures all sprites and their renderers.
      * Each game object is also added to the scene.
      */
-    private void addResourceGameObjectsToScene() {
+    public void addResourceGameObjectsToScene() {
         for (int i = 0; i < resources.size(); i++) {
             Resource resource = resources.get(i);
             SpriteRenderer resourceSpriteRenderer = new SpriteRenderer();

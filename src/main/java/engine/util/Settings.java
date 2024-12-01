@@ -26,4 +26,9 @@ public class Settings {
      * The target aspect ratio 16:9
      */
     public static float TARGET_ASPECT_RATIO = 16.0f / 9.0f;
+
+    /**
+     * Whether the game is in development mode or not
+     */
+    public static boolean DEVELOPMENT_MODE = true;
 }

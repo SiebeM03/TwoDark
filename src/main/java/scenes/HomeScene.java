@@ -10,4 +10,8 @@ public class HomeScene extends Scene {
 
     }
 
+    @Override
+    public void render() {
+
+    }
 }

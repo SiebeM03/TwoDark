@@ -1,9 +1,12 @@
 package engine.graphics;
 
+import engine.editor.PickingTexture;
 import engine.graphics.debug.DebugDraw;
 import engine.graphics.renderer.Framebuffer;
+import engine.graphics.renderer.Renderer;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
+import engine.util.AssetPool;
 import engine.util.ImGuiLayer;
 import engine.util.Settings;
 import org.lwjgl.PointerBuffer;
@@ -26,6 +29,7 @@ public class Window {
     private long glfwWindow;
     private ImGuiLayer imGuiLayer;
     private Framebuffer framebuffer;
+    private PickingTexture pickingTexture;
 
     private static Window window = null;
 
@@ -101,11 +105,14 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        this.imGuiLayer = new ImGuiLayer(glfwWindow);
-        this.imGuiLayer.initImGui();
+        if (Settings.DEVELOPMENT_MODE) {
+            this.imGuiLayer = new ImGuiLayer(glfwWindow);
+            this.imGuiLayer.initImGui();
 
-        this.framebuffer = new Framebuffer(this.width, this.height);
-        glViewport(0, 0, this.width, this.height);
+            this.framebuffer = new Framebuffer(this.width, this.height);
+            this.pickingTexture = new PickingTexture(this.width, this.height);
+            glViewport(0, 0, this.width, this.height);
+        }
 
         Window.changeScene(0);
     }
@@ -141,26 +148,41 @@ public class Window {
         float endTime;
         float dt = -1.0f;
 
+        Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
+
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round(1 / dt) + " FPS");
 
             // Poll events
             glfwPollEvents();
 
+            // Render picking texture
+            pickingTexture.render(this.width, this.height, currentScene);
+
+            // Render actual textures
             DebugDraw.beginFrame();
 
-            this.framebuffer.bind();
+            if (Settings.DEVELOPMENT_MODE) {
+                this.framebuffer.bind();
+            }
 
             glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if (dt >= 0) {
                 DebugDraw.draw();
+                Renderer.bindShader(defaultShader);
                 currentScene.update(dt);
+                currentScene.render();
             }
-            this.framebuffer.unbind();
+            // Render picking texture
+            pickingTexture.render(this.width, this.height, currentScene);
 
-            this.imGuiLayer.update(dt, currentScene);
+            if (Settings.DEVELOPMENT_MODE) {
+                this.framebuffer.unbind();
+                this.imGuiLayer.update(dt, currentScene);
+            }
+
             glfwSwapBuffers(glfwWindow);
 
             // Close on escape press
