@@ -2,6 +2,7 @@ package engine.listeners;
 
 import engine.graphics.Camera;
 import engine.graphics.Window;
+import engine.util.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -120,6 +121,20 @@ public class MouseListener {
         }
     }
 
+    public static float getScreenX() {
+        float currentX = getX() - gameViewPortPos.x;
+        currentX = (currentX / (float) gameViewPortSize.x) * Settings.MONITOR_WIDTH;
+
+        return currentX;
+    }
+
+    public static float getScreenY() {
+        float currentY = getY() - gameViewPortPos.y;
+        currentY = Settings.MONITOR_HEIGHT - ((currentY / (float) gameViewPortSize.y) * Settings.MONITOR_HEIGHT);
+
+        return currentY;
+    }
+
     public static float getOrthoX() {
         float currentX = getX() - gameViewPortPos.x;
         currentX = (currentX / (float) gameViewPortSize.x) * 2.0f - 1.0f;
@@ -127,7 +142,7 @@ public class MouseListener {
 
         Camera camera = Window.getScene().camera();
         Matrix4f viewProjection = new Matrix4f();
-        camera.getInverseProjection().mul(camera.getInverseProjection(), viewProjection);
+        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
         tmp.mul(viewProjection);
         currentX = tmp.x;
 
@@ -141,7 +156,7 @@ public class MouseListener {
 
         Camera camera = Window.getScene().camera();
         Matrix4f viewProjection = new Matrix4f();
-        camera.getInverseProjection().mul(camera.getInverseProjection(), viewProjection);
+        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
         tmp.mul(viewProjection);
         currentY = tmp.y;
 
