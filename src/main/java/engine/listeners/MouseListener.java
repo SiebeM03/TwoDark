@@ -78,6 +78,18 @@ public class MouseListener {
     }
 
     /**
+     * @param button The mouse button to check (use GLFW constants).
+     * @return true if the mouse button is currently pressed, false otherwise.
+     */
+    public static boolean mouseButtonDown(int button) {
+        if (button < mouseButtonPressed.length) {
+            return mouseButtonPressed[button];
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * This method should be called once per frame.
      *
      * <p>Resets scroll values and sets {@link #lastX} and {@link #lastY} to the mouse position of the previous frame.</p>
@@ -89,38 +101,55 @@ public class MouseListener {
         lastY = yPos;
     }
 
+
+    /**
+     * @return The x position of the mouse cursor on the monitor.
+     */
     public static float getX() {
         return (float) xPos;
     }
 
+    /**
+     * @return The y position of the mouse cursor on the monitor.
+     */
     public static float getY() {
         return (float) yPos;
     }
 
+
+    /**
+     * @return The change in x position of the mouse cursor from the previous frame.
+     */
     public static float getDx() {
         return (float) (lastX - xPos);
     }
 
+    /**
+     * @return The change in y position of the mouse cursor from the previous frame.
+     */
     public static float getDy() {
         return (float) (lastY - yPos);
     }
 
+
+    /**
+     * @return The scroll offset in the x direction.
+     */
     public static float getScrollX() {
         return (float) scrollX;
     }
 
+    /**
+     * @return The scroll offset in the y direction.
+     */
     public static float getScrollY() {
         return (float) scrollY;
     }
 
-    public static boolean mouseButtonDown(int button) {
-        if (button < mouseButtonPressed.length) {
-            return mouseButtonPressed[button];
-        } else {
-            return false;
-        }
-    }
 
+    /**
+     * @return The x position of the mouse cursor in the screen (game view port or window).
+     */
     public static float getScreenX() {
         float currentX = getX() - gameViewPortPos.x;
         currentX = (currentX / (float) gameViewPortSize.x) * Settings.MONITOR_WIDTH;
@@ -128,6 +157,9 @@ public class MouseListener {
         return currentX;
     }
 
+    /**
+     * @return The y position of the mouse cursor in the screen (game view port or window).
+     */
     public static float getScreenY() {
         float currentY = getY() - gameViewPortPos.y;
         currentY = Settings.MONITOR_HEIGHT - ((currentY / (float) gameViewPortSize.y) * Settings.MONITOR_HEIGHT);
@@ -135,6 +167,10 @@ public class MouseListener {
         return currentY;
     }
 
+
+    /**
+     * @return The x position of the mouse cursor in the orthographic view (world coordinates).
+     */
     public static float getOrthoX() {
         float currentX = getX() - gameViewPortPos.x;
         currentX = (currentX / (float) gameViewPortSize.x) * 2.0f - 1.0f;
@@ -149,6 +185,9 @@ public class MouseListener {
         return currentX;
     }
 
+    /**
+     * @return The y position of the mouse cursor in the orthographic view (world coordinates).
+     */
     public static float getOrthoY() {
         float currentY = getY() - gameViewPortPos.y;
         currentY = -((currentY / (float) gameViewPortSize.y) * 2.0f - 1.0f);
@@ -163,10 +202,21 @@ public class MouseListener {
         return currentY;
     }
 
+
+    /**
+     * Sets the position of the game view port. This is used to convert the mouse position to the orthographic view.
+     *
+     * @param pos The position of the game view port.
+     */
     public static void setGameViewPortPos(Vector2f pos) {
         gameViewPortPos.set(pos);
     }
 
+    /**
+     * Sets the size of the game view port. This is used to convert the mouse position to the orthographic view.
+     *
+     * @param size The size of the game view port.
+     */
     public static void setGameViewPortSize(Vector2f size) {
         gameViewPortSize.set(size);
     }
