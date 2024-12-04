@@ -112,6 +112,27 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
     }
 
+    public void removeSprite(SpriteRenderer sprite) {
+        int index = -1;
+        for (int i = 0; i < numSprites; i++) {
+            if (sprites[i].equals(sprite)) {
+                index = i;
+                sprites[i] = null;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            return;
+        }
+
+        for (int i = index; i < numSprites - 1; i++) {
+            sprites[i] = sprites[i + 1];
+        }
+
+        numSprites--;
+    }
+
     public void render() {
         boolean rebufferData = false;
         for (int i = 0; i < numSprites; i++) {

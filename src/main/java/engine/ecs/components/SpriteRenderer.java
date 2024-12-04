@@ -51,27 +51,34 @@ public class SpriteRenderer extends Component {
         return sprite.getTexCoords();
     }
 
-    public void setSprite(Sprite sprite) {
+    public SpriteRenderer setSprite(Sprite sprite) {
         this.sprite = sprite;
         this.isDirty = true;
+        return this;
     }
 
-    public void setColor(Vector4f color) {
+    public SpriteRenderer setColor(Vector4f color) {
         if (!this.color.equals(color)) {
             this.color.set(color);
             this.isDirty = true;
         }
+        return this;
     }
 
     public boolean isDirty() {
         return this.isDirty;
     }
 
+    public void setDirty() {
+        this.isDirty = true;
+    }
+
     public void setClean() {
         this.isDirty = false;
     }
 
-    public void setTexture(Texture texture) {
+    public SpriteRenderer setTexture(Texture texture) {
         this.sprite.setTexture(texture);
+        return this;
     }
 }

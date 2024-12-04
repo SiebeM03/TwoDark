@@ -3,6 +3,7 @@ package engine.graphics.renderer;
 import engine.ecs.GameObject;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Shader;
+import engine.util.AssetPool;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,13 +26,13 @@ public class Renderer {
         }
     }
 
-    private void add(SpriteRenderer sprite) {
+    private void add(SpriteRenderer spriteRenderer) {
         boolean added = false;
         for (RenderBatch batch : batches) {
-            if (batch.hasRoom() && batch.zIndex() == sprite.gameObject.zIndex()) {
-                Texture tex = sprite.getTexture();
+            if (batch.hasRoom() && batch.zIndex() == spriteRenderer.gameObject.zIndex()) {
+                Texture tex = spriteRenderer.getTexture();
                 if (tex == null || (batch.hasTexture(tex) || batch.hasTextureRoom())) {
-                    batch.addSprite(sprite);
+                    batch.addSprite(spriteRenderer);
                     added = true;
                     break;
                 }
@@ -39,11 +40,26 @@ public class Renderer {
         }
 
         if (!added) {
-            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
+            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, spriteRenderer.gameObject.zIndex());
             newBatch.start();
             batches.add(newBatch);
-            newBatch.addSprite(sprite);
+            newBatch.addSprite(spriteRenderer);
             Collections.sort(batches);
+        }
+    }
+
+    public void remove(GameObject go) {
+        SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
+        if (spr != null) {
+            remove(spr);
+        }
+    }
+
+    private void remove(SpriteRenderer sprite) {
+        for (RenderBatch batch : batches) {
+            if (batch.zIndex() == sprite.gameObject.zIndex()) {
+                batch.removeSprite(sprite);
+            }
         }
     }
 
@@ -57,7 +73,9 @@ public class Renderer {
 
     public void render() {
         currentShader.use();
+        boolean renderingPickingTexture = currentShader == AssetPool.getShader("assets/shaders/pickingShader.glsl");
         for (RenderBatch batch : batches) {
+            if (renderingPickingTexture && batch.zIndex() == 999) continue;
             batch.render();
         }
     }

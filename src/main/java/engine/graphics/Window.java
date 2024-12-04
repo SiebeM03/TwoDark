@@ -174,6 +174,7 @@ public class Window {
                 Renderer.bindShader(defaultShader);
                 currentScene.update(dt);
                 currentScene.render();
+                currentScene.endFrame();
             }
             // Render picking texture
             pickingTexture.render(this.width, this.height, currentScene);
@@ -243,5 +244,9 @@ public class Window {
 
     public static float getTargetAspectRatio() {
         return Settings.TARGET_ASPECT_RATIO;
+    }
+
+    public static PickingTexture getPickingTexture() {
+        return get().pickingTexture;
     }
 }

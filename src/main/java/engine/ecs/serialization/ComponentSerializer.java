@@ -2,6 +2,7 @@ package engine.ecs.serialization;
 
 import com.google.gson.*;
 import engine.ecs.Component;
+import testGame.Resource;
 
 import java.lang.reflect.Type;
 
@@ -23,7 +24,15 @@ public class ComponentSerializer implements JsonSerializer<Component>, JsonDeser
     public JsonElement serialize(Component src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject result = new JsonObject();
         result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
-        result.add("properties", context.serialize(src, src.getClass()));
+
+        if (src.getClass() == Resource.class) {
+            JsonObject properties = new JsonObject();
+            properties.add("uid", context.serialize(((Resource) src).getUid())); // Serialize only the UID
+            result.add("properties", properties);
+        } else {
+            result.add("properties", context.serialize(src, src.getClass()));
+        }
+
         return result;
     }
 }

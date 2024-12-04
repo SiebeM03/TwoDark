@@ -2,17 +2,16 @@ package engine.editor;
 
 import engine.graphics.Shader;
 import engine.graphics.renderer.Renderer;
-import engine.graphics.renderer.Texture;
-import engine.listeners.MouseListener;
 import engine.util.AssetPool;
 import scenes.Scene;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT32;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
 
+/**
+ * This class is used to create a texture that can be used to pick objects in the scene.
+ */
 public class PickingTexture {
     private int pickingTextureId;
     private int fboID;
@@ -77,6 +76,11 @@ public class PickingTexture {
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
 
+    /**
+     * Read the pixel at the given coordinates, and return the ID of the game object that was picked.
+     *
+     * @return the ID of the game object that was picked
+     */
     public int readPixel(int x, int y) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fboID);
         glReadBuffer(GL_COLOR_ATTACHMENT0);

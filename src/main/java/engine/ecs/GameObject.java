@@ -1,5 +1,7 @@
 package engine.ecs;
 
+import engine.ui.EventHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,11 @@ public class GameObject {
     private String name;
     private List<Component> components;
     public Transform transform;
+    /**
+     * The zIndex of the GameObject. This is used to determine the order in which GameObjects are rendered.
+     *
+     * @implNote A zIndex of 999 is used for the UI layer
+     */
     private int zIndex;
 
     public GameObject(String name, Transform transform, int zIndex) {
@@ -88,6 +95,10 @@ public class GameObject {
 
     public int getUid() {
         return this.uid;
+    }
+
+    public Transform getTransform() {
+        return this.transform;
     }
 
     /**

@@ -2,15 +2,16 @@ package scenes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import engine.ecs.Component;
 import engine.ecs.GameObject;
 import engine.ecs.serialization.*;
+import engine.ecs.serialization.dataStructures.Data;
+import engine.ecs.serialization.dataStructures.ResourceData;
 import engine.graphics.Camera;
 import engine.graphics.renderer.Renderer;
-import game.GameManager;
-import game.resources.Resource;
+
 import imgui.ImGui;
+import testGame.Resource;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Scene {
 
@@ -25,6 +27,8 @@ public abstract class Scene {
     protected Camera camera;
     private boolean isRunning = false;
     protected List<GameObject> gameObjects = new ArrayList<>();
+    protected List<GameObject> gameObjectsToAdd = new ArrayList<>();
+    protected List<GameObject> gameObjectsToRemove = new ArrayList<>();
 
     protected GameObject activeGameObject = null;
     /**
@@ -52,14 +56,34 @@ public abstract class Scene {
         if (!isRunning) {
             gameObjects.add(go);
         } else {
-            gameObjects.add(go);
+            gameObjectsToAdd.add(go);
             go.start();
             this.renderer.add(go);
         }
     }
 
+    public void removeGameObjectFromScene(GameObject go) {
+        if (!isRunning) {
+            gameObjectsToRemove.remove(go);
+        } else {
+            gameObjectsToRemove.remove(go);
+            this.renderer.remove(go);
+        }
+    }
+
     public abstract void update(float dt);
+
     public abstract void render();
+
+    /**
+     * Called at the end of the frame to add and remove GameObjects from the scene.
+     */
+    public void endFrame() {
+        gameObjects.addAll(gameObjectsToAdd);
+        gameObjects.removeAll(gameObjectsToRemove);
+        gameObjectsToAdd.clear();
+        gameObjectsToRemove.clear();
+    }
 
     public Camera camera() {
         return this.camera;
@@ -80,37 +104,40 @@ public abstract class Scene {
     }
 
     public void saveExit() {
-        Gson gson = new GsonBuilder()
-                            .setPrettyPrinting()
-                            .registerTypeAdapter(Component.class, new ComponentSerializer())
-                            .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
-                            .registerTypeAdapter(Resource.class, new ResourceSerializer())
-                            .create();
+        Gson levelGson = new GsonBuilder()
+                                 .setPrettyPrinting()
+                                 .registerTypeAdapter(Component.class, new ComponentSerializer())
+                                 .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
+                                 .create();
+        Gson dataGson = new GsonBuilder()
+                                .setPrettyPrinting()
+                                .create();
+
+        List<GameObject> gameObjectsWithoutUI = gameObjects.stream().filter(go -> go.zIndex() != 999).toList();
+        List<ResourceData> resources = gameObjects.stream()
+                                               .map(go -> go.getComponent(Resource.class))
+                                               .filter(Objects::nonNull)
+                                               .map(r -> new ResourceData(r.getUid(), r.getName(), r.getAmount(), r.getClass().getCanonicalName()))
+                                               .toList();
 
         try {
             FileWriter writer = new FileWriter("level.txt");
-            writer.write(gson.toJson(this.gameObjects));
+            writer.write(levelGson.toJson(gameObjectsWithoutUI));
             writer.close();
 
-            List<Resource> resources = GameManager.get().getResourceManager().getResources();
-            writer = new FileWriter("data.txt");
-            writer.write(gson.toJson(new Data(resources)));
-            writer.close();
+
+            FileWriter writerUI = new FileWriter("data.txt");
+            writerUI.write(dataGson.toJson(new Data(resources)));
+            writerUI.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void load() {
-        Gson gson = new GsonBuilder()
-                            .setPrettyPrinting()
-                            .registerTypeAdapter(Component.class, new ComponentSerializer())
-                            .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
-                            .registerTypeAdapter(Resource.class, new ResourceSerializer())
-                            .create();
-
-        loadGameObjectsAndComponents(gson);
-        loadGameData(gson);
+        // For now, we will just load the GameObjects and Components from our dev scene
+        loadGameObjectsAndComponents();
+        loadGameData();
     }
 
     /**
@@ -120,10 +147,14 @@ public abstract class Scene {
      * <li>Adds all GameObjects to the scene</li>
      * </ol>
      *
-     * @param gson GsonBuilder that has registered a GameObject and Component type adapter
      * @return true if the file was read, false if the file was empty.
      */
-    private boolean loadGameObjectsAndComponents(Gson gson) {
+    private boolean loadGameObjectsAndComponents() {
+        Gson gson = new GsonBuilder()
+                            .setPrettyPrinting()
+                            .registerTypeAdapter(Component.class, new ComponentSerializer())
+                            .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
+                            .create();
         String levelFile = "";
 
         try {
@@ -162,33 +193,33 @@ public abstract class Scene {
         }
     }
 
-    /**
-     * Loads all game data from data.txt and initializes GameManager with the loaded data.
-     *
-     * @param gson GsonBuilder that has registered a Resource type adapter
-     * @return true if the file was read, false if the file was empty.
-     */
-    private boolean loadGameData(Gson gson) {
+    private boolean loadGameData() {
+        Gson gson = new GsonBuilder()
+                            .setPrettyPrinting()
+                            .create();
+
         String dataFile = "";
+
         try {
             dataFile = new String(Files.readAllBytes(Paths.get("data.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Initialize GameManager instance
-        GameManager gameManager = GameManager.get();
-
         if (!dataFile.equals("")) {
-            // Load Data record
             Data data = gson.fromJson(dataFile, Data.class);
-            // Initialize ResourceManager and pass the loaded Resource objects to it
-            gameManager.initResourceManager();
-            gameManager.getResourceManager().setResources(data.resources());
+            for (ResourceData rd : data.resources()) {
+                int uid = rd.uid();
+                for (GameObject go : gameObjects) {
+                    Resource r = go.getComponent(Resource.class);
+                    if (r != null && r.getUid() == uid) {
+                        r.setName(rd.name());
+                        r.setAmount(rd.amount());
+                    }
+                }
+            }
             return true;
         } else {
-            // Initialize ResourceManager and keep the default Resource objects
-            gameManager.initResourceManager();
             return false;
         }
     }

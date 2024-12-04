@@ -1,11 +1,10 @@
-package engine.ecs.serialization;
+package engine.ecs.serialization.dataStructures;
 
-import game.resources.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record Data(List<Resource> resources) {
+public record Data(List<ResourceData> resources) {
     public Data {
         resources = new ArrayList<>(resources);
     }
