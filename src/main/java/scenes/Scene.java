@@ -71,9 +71,13 @@ public abstract class Scene {
         }
     }
 
-    public abstract void update(float dt);
+    public abstract void update();
 
     public abstract void render();
+
+    public boolean isRunning() {
+        return isRunning;
+    }
 
     /**
      * Called at the end of the frame to add and remove GameObjects from the scene.
@@ -117,7 +121,7 @@ public abstract class Scene {
         List<ResourceData> resources = gameObjects.stream()
                                                .map(go -> go.getComponent(Resource.class))
                                                .filter(Objects::nonNull)
-                                               .map(r -> new ResourceData(r.getUid(), r.getName(), r.getAmount(), r.getClass().getCanonicalName()))
+                                               .map(r -> new ResourceData(r.getUid(), r.name(), r.amount(), r.getClass().getCanonicalName()))
                                                .toList();
 
         try {
@@ -193,6 +197,12 @@ public abstract class Scene {
         }
     }
 
+
+    /**
+     * Loads all game data from data.txt and updates the corresponding Components.
+     *
+     * @return true if the file was read, false if the file was empty.
+     */
     private boolean loadGameData() {
         Gson gson = new GsonBuilder()
                             .setPrettyPrinting()

@@ -4,6 +4,9 @@ import com.google.gson.*;
 import engine.ecs.Component;
 import engine.ecs.GameObject;
 import engine.ecs.Transform;
+import engine.ecs.components.SpriteRenderer;
+import engine.ui.MouseEventConsumer;
+import org.joml.Vector4f;
 
 import java.lang.reflect.Type;
 
@@ -20,6 +23,13 @@ public class GameObjectSerializer implements JsonDeserializer<GameObject> {
         for (JsonElement e : components) {
             Component c = context.deserialize(e, Component.class);
             go.addComponent(c);
+        }
+
+        // If the GameObject has a MouseEventConsumer, reset the SpriteRenderer's color. This prevents GameObjects from having the hover color right after deserialization
+        MouseEventConsumer mouseEventConsumer = go.getComponent(MouseEventConsumer.class);
+        SpriteRenderer spriteRenderer = go.getComponent(SpriteRenderer.class);
+        if (mouseEventConsumer != null && spriteRenderer != null) {
+            spriteRenderer.setColor(mouseEventConsumer.defaultColor);
         }
         return go;
     }

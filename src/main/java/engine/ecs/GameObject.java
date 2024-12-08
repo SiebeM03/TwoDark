@@ -71,9 +71,9 @@ public class GameObject {
         c.gameObject = this;
     }
 
-    public void update(float dt) {
+    public void update() {
         for (int i = 0; i < components.size(); i++) {
-            components.get(i).update(dt);
+            components.get(i).update();
         }
     }
 

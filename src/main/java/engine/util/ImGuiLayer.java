@@ -42,13 +42,13 @@ public class ImGuiLayer {
         imGuiGl3.init(GL_VERSION);
     }
 
-    public void update(float dt, Scene currentScene) {
-        startFrame(dt);
+    public void update(Scene currentScene) {
+        startFrame();
         imGuiGl3.newFrame();
         ImGui.newFrame();
 
         setupDockSpace();
-        renderWindows(dt, currentScene);
+        renderWindows(currentScene);
         ImGui.end();    // End dock space
 
         ImGui.render();
@@ -138,7 +138,7 @@ public class ImGuiLayer {
     }
 
 
-    private void startFrame(float deltaTime) {
+    private void startFrame() {
         double[] mousePosX = {0};
         double[] mousePosY = {0};
         glfwGetCursorPos(glfwWindow, mousePosX, mousePosY);
@@ -149,7 +149,7 @@ public class ImGuiLayer {
         io.setDisplaySize(winWidth[0], winHeight[0]);
         io.setDisplayFramebufferScale(1f, 1f);
         io.setMousePos((float) mousePosX[0], (float) mousePosY[0]);
-        io.setDeltaTime(deltaTime);
+        io.setDeltaTime(Engine.deltaTime());
 
         updateCursor();
     }
@@ -180,7 +180,7 @@ public class ImGuiLayer {
         ImGui.dockSpace(ImGui.getID("Dockspace"));
     }
 
-    private void renderWindows(float dt, Scene currentScene) {
+    private void renderWindows(Scene currentScene) {
         currentScene.sceneImgui();
         ImGui.showDemoWindow();
         GameViewWindow.imgui();

@@ -8,7 +8,7 @@ public class EventHandler {
 
     private final UIElement uiElement;
     private boolean wasMouseOnThis;
-    private transient MouseEventConsumer consumer;
+    private MouseEventConsumer consumer;
 
     public EventHandler(UIElement uiElement) {
         this.uiElement = uiElement;
@@ -31,7 +31,6 @@ public class EventHandler {
             // If the mouse isn't on this element and was before, leave
             uiElement.getConsumer().onLeave();
         }
-
         if (isMouseOnThis) {
             if (MouseListener.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
                 uiElement.getConsumer().onClick();

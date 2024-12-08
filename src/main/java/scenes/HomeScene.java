@@ -6,7 +6,7 @@ public class HomeScene extends Scene {
     }
 
     @Override
-    public void update(float dt) {
+    public void update() {
 
     }
 

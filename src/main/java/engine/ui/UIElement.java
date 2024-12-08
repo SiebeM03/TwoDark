@@ -5,6 +5,7 @@ import engine.ecs.Component;
 
 /**
  * Class that represents a UI element in the game engine. This class is a component that can be attached to a GameObject.
+ *
  * @implNote This class requires the GameObject to have a MouseEventConsumer component attached to it.
  */
 public class UIElement extends Component {
@@ -21,7 +22,7 @@ public class UIElement extends Component {
     }
 
     @Override
-    public void update(float dt) {
+    public void update() {
         this.eventHandler.update();
     }
 }

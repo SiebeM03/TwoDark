@@ -4,16 +4,23 @@ import engine.ecs.*;
 import engine.ecs.components.MouseControls;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Camera;
-import engine.ui.MouseEventConsumer;
 import engine.ui.UIElement;
 import engine.util.AssetPool;
+import engine.util.Engine;
 import org.joml.Vector2f;
 import testGame.Resource;
+import testGame.resourceTypes.Stone;
+import testGame.resourceTypes.Wood;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DevScene extends Scene {
 
     private SpriteSheet sprites;
     GameObject devSceneGameObject = new GameObject("DevScene", new Transform(new Vector2f(), new Vector2f()), 0);
+
+    List<Resource> resources = new ArrayList<>();
 
     @Override
     public void init() {
@@ -39,8 +46,7 @@ public class DevScene extends Scene {
                                                        .setWidth(200)
                                                        .setHeight(200)
                                     ));
-        Resource wood = new Resource("Wood", 100);
-        treeGo.addComponent(wood);
+        treeGo.addComponent(new Wood());
         treeGo.addComponent(new UIElement());
         addGameObjectToScene(treeGo);
 
@@ -51,22 +57,9 @@ public class DevScene extends Scene {
                                                         .setWidth(200)
                                                         .setHeight(200)
                                      ));
-        Resource stone = new Resource("Stone", 100);
-        stoneGo.addComponent(stone);
+        stoneGo.addComponent(new Stone());
         stoneGo.addComponent(new UIElement());
         addGameObjectToScene(stoneGo);
-
-        GameObject metalGo = new GameObject("Metal", new Transform(new Vector2f(700, 100), new Vector2f(200, 200)), 1);
-        metalGo.addComponent(new SpriteRenderer()
-                                     .setSprite(new Sprite()
-                                                        .setTexture(AssetPool.getTexture("assets/images/seperateImages/metal2.png"))
-                                                        .setWidth(200)
-                                                        .setHeight(200)
-                                     ));
-        Resource metal = new Resource("Metal", 100);
-        metalGo.addComponent(metal);
-        metalGo.addComponent(new UIElement());
-        addGameObjectToScene(metalGo);
     }
 
     public void loadResources() {
@@ -95,11 +88,11 @@ public class DevScene extends Scene {
     }
 
     @Override
-    public void update(float dt) {
-        devSceneGameObject.update(dt);
+    public void update() {
+        devSceneGameObject.update();
 
         for (GameObject go : this.gameObjects) {
-            go.update(dt);
+            go.update();
         }
     }
 

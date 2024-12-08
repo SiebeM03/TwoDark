@@ -7,6 +7,7 @@ import engine.graphics.renderer.Renderer;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
 import engine.util.AssetPool;
+import engine.util.Engine;
 import engine.util.ImGuiLayer;
 import engine.util.Settings;
 import org.lwjgl.PointerBuffer;
@@ -76,7 +77,7 @@ public class Window {
         // Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+//        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
         glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
 
 
@@ -84,7 +85,7 @@ public class Window {
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
-        setupMonitor();
+//        setupMonitor();
 
         MouseListener.setupCallbacks();
         KeyListener.setupCallbacks();
@@ -144,14 +145,15 @@ public class Window {
     }
 
     public void loop() {
-        float beginTime = (float) glfwGetTime();
-        float endTime;
-        float dt = -1.0f;
+        double frameBeginTime = glfwGetTime();
+        double frameEndTime = glfwGetTime();
 
         Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
 
         while (!glfwWindowShouldClose(glfwWindow)) {
-            glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round(1 / dt) + " FPS");
+            frameEndTime = glfwGetTime();
+            Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
+            frameBeginTime = frameEndTime;
 
             // Poll events
             glfwPollEvents();
@@ -169,19 +171,21 @@ public class Window {
             glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            if (dt >= 0) {
+            if (currentScene.isRunning()) {
                 DebugDraw.draw();
                 Renderer.bindShader(defaultShader);
-                currentScene.update(dt);
+                currentScene.update();
                 currentScene.render();
                 currentScene.endFrame();
             }
+
+
             // Render picking texture
             pickingTexture.render(this.width, this.height, currentScene);
 
             if (Settings.DEVELOPMENT_MODE) {
                 this.framebuffer.unbind();
-                this.imGuiLayer.update(dt, currentScene);
+                this.imGuiLayer.update(currentScene);
             }
 
             glfwSwapBuffers(glfwWindow);
@@ -191,9 +195,7 @@ public class Window {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
 
-            endTime = (float) glfwGetTime();
-            dt = endTime - beginTime;
-            beginTime = endTime;
+            get().getFPS();
         }
 
         currentScene.saveExit();
@@ -248,5 +250,11 @@ public class Window {
 
     public static PickingTexture getPickingTexture() {
         return get().pickingTexture;
+    }
+
+    public float getFPS() {
+        float fps = 1 / Engine.deltaTime();
+        glfwSetWindowTitle(glfwWindow, title + " @ " + (int) fps + " FPS");
+        return fps;
     }
 }

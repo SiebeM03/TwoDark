@@ -25,7 +25,8 @@ public class ComponentSerializer implements JsonSerializer<Component>, JsonDeser
         JsonObject result = new JsonObject();
         result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
 
-        if (src.getClass() == Resource.class) {
+        // Only serialize uid of Resource objects, the actual data will be stored in data.txt
+        if (Resource.class.isAssignableFrom(src.getClass())) {
             JsonObject properties = new JsonObject();
             properties.add("uid", context.serialize(((Resource) src).getUid())); // Serialize only the UID
             result.add("properties", properties);
