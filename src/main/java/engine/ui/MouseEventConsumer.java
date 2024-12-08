@@ -5,12 +5,28 @@ import engine.ecs.components.SpriteRenderer;
 import engine.util.Engine;
 import org.joml.Vector4f;
 
+/**
+ * Abstract class for handling mouse events on a UI element.
+ * This class provides default behavior for handling hover, click, enter, and leave events,
+ * along with a click delay mechanism to control interaction timing.
+ */
 public abstract class MouseEventConsumer extends Component {
+
+    /** The current color of the UI element. */
     protected Vector4f color = new Vector4f(1, 1, 1, 1);
+
+    /** The default color of the UI element. */
     public Vector4f defaultColor = color;
+
+    /** The color of the UI element when it is hovered over. */
     public Vector4f hoverColor = new Vector4f(0.5f, 0.5f, 0.5f, 1);
+
+    /** The required delay between consecutive clicks in seconds. */
     protected float clickDelay;
+
+    /** The current timer for tracking the click delay. */
     protected float clickDelayTimer;
+
 
     public abstract void onClick();
 
@@ -21,7 +37,10 @@ public abstract class MouseEventConsumer extends Component {
     public abstract void onLeave();
 
     /**
-     * Add delta time to the click delay timer
+     * Updates the click delay timer based on the elapsed time since the last frame.
+     * <p>
+     * If the object cannot currently be clicked, this method increments the timer
+     * and marks the associated {@link SpriteRenderer} as dirty (to update the visual cooldown state).
      */
     protected void updateClickDelayTimer() {
         if (!canClick()) {
@@ -38,7 +57,9 @@ public abstract class MouseEventConsumer extends Component {
     }
 
     /**
-     * Check if the object can be clicked
+     * Checks whether the object can currently be clicked.
+     *
+     * @return true if the click delay has elapsed, false otherwise
      */
     protected boolean canClick() {
         return clickDelayTimer >= clickDelay;
@@ -53,10 +74,12 @@ public abstract class MouseEventConsumer extends Component {
     }
 
     /**
-     * Set the click delay timer to a specific value, also sets the click delay to the same value to prevent a cooldown from being triggered
+     * Sets the click delay and initializes the timer to the specified value.
+     * <p>
+     * This method must be called in the constructor of subclasses to avoid
+     * unintended behavior where the click delay defaults to zero.
      *
-     * @param delay the value to set the click delay timer to
-     * @implNote This method needs to be called in the constructor of the class that extends this class, otherwise the click delay will be set to 0.0f
+     * @param delay the delay in seconds to set for click interactions
      */
     protected void setClickDelay(float delay) {
         clickDelay = delay;

@@ -16,6 +16,10 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
+/**
+ * A RenderBatch is a collection of sprites that are rendered together. This is done to reduce the number of draw calls.
+ * The RenderBatch is sorted by zIndex and then rendered.
+ */
 public class RenderBatch implements Comparable<RenderBatch> {
     // Vertex
     // ======
@@ -61,6 +65,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
         this.textures = new ArrayList<>();
     }
 
+    /**
+     * Start the render batch. This will create the VAO and VBO and upload the necessary data to the GPU.
+     * This method should be called right after creation.
+     */
     public void start() {
         // Tell GPU to give us enough space for doing all this
         // Generate and bind VAO
@@ -98,6 +106,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glEnableVertexAttribArray(5);
     }
 
+
+    /**
+     * Add a sprite to the render batch. This will add the sprite to the local array {@link #sprites} and update the {@link #vertices} array.
+     * <p>This method will also add the sprite's texture (if it has one) to the {@link #textures} list.</p>
+     * <p>If the batch is full, {@link #hasRoom} will be set to false.</p>
+     */
     public void addSprite(SpriteRenderer spr) {
         // Get index and add renderObject
         int index = this.numSprites;
@@ -118,6 +132,11 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
     }
 
+
+    /**
+     * Remove a sprite from the render batch. This will remove the sprite from the local array {@link #sprites}.
+     * <p>If the sprite was found, all elements to the right of the sprite will be shifted to the left.</p>
+     */
     public void removeSprite(SpriteRenderer sprite) {
         int index = -1;
         for (int i = 0; i < numSprites; i++) {
@@ -128,10 +147,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
             }
         }
 
+        // Return if sprite was not found
         if (index == -1) {
             return;
         }
 
+        // Shift all elements to the left
         for (int i = index; i < numSprites - 1; i++) {
             sprites[i] = sprites[i + 1];
         }
@@ -139,6 +160,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
         numSprites--;
     }
 
+
+    /**
+     * This method will render all sprites in the batch. It will also check if any sprite is dirty and update the vertex properties if necessary, if one or more sprites are dirty the data will be rebuffered.
+     */
     public void render() {
         boolean rebufferData = false;
         for (int i = 0; i < numSprites; i++) {
@@ -181,6 +206,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
         shader.detach();
     }
 
+    /**
+     * This method will load the vertex properties for a sprite at a given index.
+     */
     private void loadVertexProperties(int index) {
         SpriteRenderer sprite = this.sprites[index];
 
@@ -242,6 +270,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
     }
 
+    /**
+     * This method will generate the indices for the batch by calling {@link #loadElementIndices(int[], int)} for each sprite in the batch.
+     */
     private int[] generateIndices() {
         // 6 indices per quad (3 per triangle)
         int[] elements = new int[6 * maxBatchSize];
@@ -252,6 +283,13 @@ public class RenderBatch implements Comparable<RenderBatch> {
         return elements;
     }
 
+    /**
+     * This method will load the element indices for a sprite at a given index. The indices will be loaded into the elements array at the correct offset.
+     * <p>Each sprite will have 6 indices (2 triangles).</p>
+     *
+     * @param elements the array to load the indices into
+     * @param index    the index of the sprite
+     */
     private void loadElementIndices(int[] elements, int index) {
         int offsetArrayIndex = 6 * index;
         // 4 comes from the fact that every quad uses 4 vertices
@@ -287,6 +325,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
         return this.zIndex;
     }
 
+    /**
+     * Compare this RenderBatch to another RenderBatch based on their {@link #zIndex}.
+     */
     @Override
     public int compareTo(RenderBatch o) {
         return Integer.compare(this.zIndex, o.zIndex());

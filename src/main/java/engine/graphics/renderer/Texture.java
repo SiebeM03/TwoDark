@@ -9,6 +9,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/**
+ * A class representing a 2D texture in an OpenGL context.
+ * Provides functionality to load textures from image files, create blank textures,
+ * and manage texture parameters such as filtering and wrapping.
+ */
 public class Texture {
     private String filepath;
     private transient int texID;
@@ -34,6 +39,28 @@ public class Texture {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     }
 
+    /**
+     * Initializes the texture by loading an image from the specified file path and generating a texture on the GPU.
+     * This method sets texture parameters for wrapping and filtering and uploads the image data to the GPU.
+     *
+     * @param filepath the path to the image file to be used as the texture.
+     *                 Supported formats include images that can be loaded by the STB library (e.g., PNG, JPG).
+     * @throws AssertionError if the image cannot be loaded from the specified filepath or if the image contains an unsupported number of channels.
+     *                        <p>
+     *                        The following operations are performed in this method:
+     *                        <ul>
+     *                          <li>Generates a texture ID and binds it as a 2D texture.</li>
+     *                          <li>Configures the texture wrapping mode to repeat in both the S and T directions.</li>
+     *                          <li>Configures the filtering mode to use nearest-neighbor interpolation for both magnification and minification.</li>
+     *                          <li>Loads the image using the STB library, flipping it vertically for correct texture orientation.</li>
+     *                          <li>Determines the image format based on the number of color channels (RGB or RGBA).</li>
+     *                          <li>Uploads the image data to the GPU.</li>
+     *                          <li>Frees the memory allocated for the image once it is uploaded.</li>
+     *                        </ul>
+     *                        <p>
+     *                        Note: If the image contains 3 color channels, it is treated as an RGB image. If it contains 4 channels, it is treated as an RGBA image.
+     *                        Any other number of channels will cause an {@code AssertionError}.
+     */
     public void init(String filepath) {
         this.filepath = filepath;
 

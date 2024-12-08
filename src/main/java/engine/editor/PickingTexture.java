@@ -10,14 +10,34 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
 
 /**
- * This class is used to create a texture that can be used to pick objects in the scene.
+ * This class is responsible for managing a picking texture used for object selection
+ * in a rendered scene. It creates a framebuffer and associated textures to facilitate
+ * reading object IDs based on pixel data.
  */
 public class PickingTexture {
+    /**
+     * ID of the picking texture
+     */
     private int pickingTextureId;
+    /**
+     * ID of the framebuffer object
+     */
     private int fboID;
+    /**
+     * ID of the depth texture //TODO research what this is for
+     */
     private int depthTexture;
+    /**
+     * The picking shader used to render the scene
+     */
     private Shader pickingShader;
 
+    /**
+     * Initializes the picking texture with the specified dimensions and loads the picking shader.
+     *
+     * @param width  the width of the texture in pixels
+     * @param height the height of the texture in pixels
+     */
     public PickingTexture(int width, int height) {
         if (!init(width, height)) {
             assert false : "Error initializing picking texture";
@@ -25,6 +45,23 @@ public class PickingTexture {
         pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
     }
 
+
+    /**
+     * Sets up the framebuffer and its associated textures for picking operations.
+     *
+     * <p>Steps performed:
+     * <ul>
+     *     <li>Generates and binds a framebuffer.</li>
+     *     <li>Creates and attaches a color texture to the framebuffer.</li>
+     *     <li>Creates and attaches a depth texture to the framebuffer.</li>
+     *     <li>Configures framebuffer read and draw settings.</li>
+     *     <li>Validates framebuffer completeness.</li>
+     * </ul>
+     *
+     * @param width  the width of the textures in pixels
+     * @param height the height of the textures in pixels
+     * @return true if the framebuffer was successfully initialized, false otherwise
+     */
     public boolean init(int width, int height) {
         // Generate framebuffer
         fboID = glGenFramebuffers();
@@ -77,9 +114,12 @@ public class PickingTexture {
     }
 
     /**
-     * Read the pixel at the given coordinates, and return the ID of the game object that was picked.
+     * Reads a pixel from the picking texture at the specified screen coordinates
+     * to determine the ID of the game object at that location.
      *
-     * @return the ID of the game object that was picked
+     * @param x the x-coordinate of the pixel
+     * @param y the y-coordinate of the pixel
+     * @return the ID of the game object at the specified pixel, or -1 if no object is present
      */
     public int readPixel(int x, int y) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fboID);
@@ -91,6 +131,21 @@ public class PickingTexture {
         return (int) (pixels[0] - 1);
     }
 
+    /**
+     * Renders the specified scene to the picking texture, enabling object selection.
+     *
+     * <p>Steps performed:
+     * <ul>
+     *     <li>Disables blending for clarity in the picking operation.</li>
+     *     <li>Binds the framebuffer and clears its color and depth buffers.</li>
+     *     <li>Renders the scene using the picking shader.</li>
+     *     <li>Re-enables blending after rendering is complete.</li>
+     * </ul>
+     *
+     * @param width         the width of the viewport in pixels
+     * @param height        the height of the viewport in pixels
+     * @param sceneToRender the scene to render into the picking texture
+     */
     public void render(int width, int height, Scene sceneToRender) {
         glDisable(GL_BLEND);
         enableWriting();

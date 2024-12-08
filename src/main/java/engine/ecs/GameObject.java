@@ -23,7 +23,7 @@ public class GameObject {
     /**
      * The zIndex of the GameObject. This is used to determine the order in which GameObjects are rendered.
      *
-     * @implNote A zIndex of 999 is used for the UI layer
+     * @implNote A zIndex of 999 is used for the UI layer, this layer is ignored by the picker system (see {@link engine.editor.PickingTexture}).
      */
     private int zIndex;
 

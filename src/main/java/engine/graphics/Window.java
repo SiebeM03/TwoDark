@@ -24,24 +24,55 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/**
+ * The main game window class responsible for initializing and managing the rendering context,
+ * input listeners, and game scenes. It encapsulates the lifecycle of the application
+ * including initialization, rendering, and cleanup.
+ */
 public class Window {
-    private int width, height;
+
+    /** Width of the game window in pixels. */
+    private int width;
+
+    /** Height of the game window in pixels. */
+    private int height;
+
+    /** Title displayed in the window's title bar. */
     private String title;
+
+    /** Handle to the GLFW window instance. */
     private long glfwWindow;
+
+    /** Layer responsible for rendering the ImGui user interface. */
     private ImGuiLayer imGuiLayer;
+
+    /** Framebuffer for rendering textures. */
     private Framebuffer framebuffer;
+
+    /** Texture for object picking operations. */
     private PickingTexture pickingTexture;
 
+    /** Singleton instance of the window. */
     private static Window window = null;
 
+    /** The currently active scene. */
     private static Scene currentScene = null;
 
+    /**
+     * Private constructor to enforce the singleton pattern.
+     * Initializes default window settings.
+     */
     private Window() {
         this.width = Settings.MONITOR_WIDTH;
         this.height = Settings.MONITOR_HEIGHT;
         this.title = "Idle Ark";
     }
 
+    /**
+     * Returns the singleton instance of the Window class.
+     *
+     * @return the Window instance
+     */
     public static Window get() {
         if (Window.window == null) {
             Window.window = new Window();
@@ -50,6 +81,10 @@ public class Window {
         return Window.window;
     }
 
+    /**
+     * Starts the main application loop, initializing and managing
+     * resources and rendering until the window is closed.
+     */
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
@@ -65,6 +100,10 @@ public class Window {
         glfwSetErrorCallback(null).free();
     }
 
+    /**
+     * Initializes GLFW, OpenGL, and window-specific settings.
+     * Also prepares development resources if development mode is enabled.
+     */
     public void init() {
         // Set up an error callback: where GLFW will show errors
         GLFWErrorCallback.createPrint(System.err).set();
@@ -85,7 +124,7 @@ public class Window {
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
-//        setupMonitor();
+        setupMonitor();
 
         MouseListener.setupCallbacks();
         KeyListener.setupCallbacks();
@@ -118,11 +157,10 @@ public class Window {
         Window.changeScene(0);
     }
 
-
     /**
-     * Sets up the game window on the secondary monitor.
-     *
-     * <p>This method is <b>development only</b>.</p>
+     * Configures the game window to use the secondary monitor in development mode.
+     * <p>
+     * This method is <b>development only</b>.
      */
     private void setupMonitor() {
         PointerBuffer monitors = glfwGetMonitors();
@@ -144,6 +182,10 @@ public class Window {
         glfwFocusWindow(glfwWindow);
     }
 
+    /**
+     * Executes the main rendering loop, updating the scene and rendering
+     * frames until the window is closed.
+     */
     public void loop() {
         double frameBeginTime = glfwGetTime();
         double frameEndTime = glfwGetTime();
@@ -201,6 +243,17 @@ public class Window {
         currentScene.saveExit();
     }
 
+    /**
+     * Changes the active scene to the specified scene ID.
+     *
+     * <ul>
+     *     <li>Loads the scene ({@link Scene#load()})</li>
+     *     <li>Initializes the scene ({@link Scene#init()})</li>
+     *     <li>Starts the scene ({@link Scene#start()})</li>
+     * </ul>
+     *
+     * @param newScene the ID of the new scene (0: {@link DevScene}, 1: {@link HomeScene})
+     */
     public static void changeScene(int newScene) {
         switch (newScene) {
             case 0 -> currentScene = new DevScene();
@@ -252,9 +305,11 @@ public class Window {
         return get().pickingTexture;
     }
 
-    public float getFPS() {
+    /**
+     * Updates the window's title to display the current frames per second (FPS).
+     */
+    public void getFPS() {
         float fps = 1 / Engine.deltaTime();
         glfwSetWindowTitle(glfwWindow, title + " @ " + (int) fps + " FPS");
-        return fps;
     }
 }

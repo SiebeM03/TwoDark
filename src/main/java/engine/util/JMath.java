@@ -3,10 +3,18 @@ package engine.util;
 import org.joml.Vector2f;
 
 /**
- * Custom math class, requires revision.
+ * A utility class for mathematical operations, primarily focused on vector manipulation
+ * and numerical comparison with precision handling.
  */
 public class JMath {
-    // TODO revise entire class and write documentation
+
+    /**
+     * Rotates a given vector around a specified origin by a given angle.
+     *
+     * @param vec      the vector to rotate
+     * @param angleDeg the angle of rotation in degrees
+     * @param origin   the point around which the vector is rotated
+     */
     public static void rotate(Vector2f vec, float angleDeg, Vector2f origin) {
         float x = vec.x - origin.x;
         float y = vec.y - origin.y;
@@ -24,18 +32,48 @@ public class JMath {
         vec.y = yPrime;
     }
 
+    /**
+     * Compares two float values for approximate equality within a specified epsilon.
+     *
+     * @param x       the first float value
+     * @param y       the second float value
+     * @param epsilon the allowable margin of error
+     * @return {@code true} if the values are approximately equal, {@code false} otherwise
+     */
     public static boolean compare(float x, float y, float epsilon) {
         return Math.abs(x - y) <= epsilon * Math.max(1.0f, Math.max(Math.abs(x), Math.abs(y)));
     }
 
+    /**
+     * Compares two 2D vectors for approximate equality within a specified epsilon.
+     *
+     * @param vec1    the first vector
+     * @param vec2    the second vector
+     * @param epsilon the allowable margin of error
+     * @return {@code true} if the vectors are approximately equal, {@code false} otherwise
+     */
     public static boolean compare(Vector2f vec1, Vector2f vec2, float epsilon) {
         return compare(vec1.x, vec2.x, epsilon) && compare(vec1.y, vec2.y, epsilon);
     }
 
+    /**
+     * Compares two float values for approximate equality using a very small default epsilon.
+     *
+     * @param x the first float value
+     * @param y the second float value
+     * @return {@code true} if the values are approximately equal, {@code false} otherwise
+     */
     public static boolean compare(float x, float y) {
         return Math.abs(x - y) <= Float.MIN_VALUE * Math.max(1.0f, Math.max(Math.abs(x), Math.abs(y)));
     }
 
+    /**
+     * Compares two 2D vectors for approximate equality using a very small default epsilon.
+     *
+     * @param vec1 the first vector
+     * @param vec2 the second vector
+     * @return {@code true} if the vectors are approximately equal, {@code false} otherwise
+     */
     public static boolean compare(Vector2f vec1, Vector2f vec2) {
         return compare(vec1.x, vec2.x) && compare(vec1.y, vec2.y);
     }

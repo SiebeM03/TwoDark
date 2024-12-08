@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The Renderer class is responsible for rendering all GameObjects in the game. It separates GameObjects by their Z-Index into {@link RenderBatch batches}.
+ * Each batch is then rendered in order of their Z-Index to ensure that GameObjects with higher Z-Index are rendered on top of GameObjects with lower Z-Index.
+ * <p>This class also keeps track of the {@link #currentShader current shader}.</p>
+ */
 public class Renderer {
     private final int MAX_BATCH_SIZE = 1000;
 
@@ -75,6 +80,7 @@ public class Renderer {
         currentShader.use();
         boolean renderingPickingTexture = currentShader == AssetPool.getShader("assets/shaders/pickingShader.glsl");
         for (RenderBatch batch : batches) {
+            // Skip rendering picking texture for all but the z-index 999 batch (which contains tooltips etc. that should be ignored by the picking shader).
             if (renderingPickingTexture && batch.zIndex() == 999) continue;
             batch.render();
         }
