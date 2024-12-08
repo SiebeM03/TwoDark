@@ -6,7 +6,6 @@ import engine.graphics.Window;
 import engine.ui.MouseEventConsumer;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import testGame.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -262,7 +261,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
             // Load cooldown value
             MouseEventConsumer mouseEventConsumer = sprite.gameObject.getComponent(MouseEventConsumer.class);
-            if (mouseEventConsumer != null) {
+            if (mouseEventConsumer != null && mouseEventConsumer.hasCooldownAnimation()) {
                 vertices[offset + 10] = Math.min(1.0f, mouseEventConsumer.clickDelayTimer() / mouseEventConsumer.clickDelay());
             }
 

@@ -27,6 +27,8 @@ public abstract class MouseEventConsumer extends Component {
     /** The current timer for tracking the click delay. */
     protected float clickDelayTimer;
 
+    private boolean hasCooldownAnimation = false;
+
 
     public abstract void onClick();
 
@@ -36,13 +38,18 @@ public abstract class MouseEventConsumer extends Component {
 
     public abstract void onLeave();
 
+    @Override
+    public void update() {
+        updateClickDelayTimer();
+    }
+
     /**
      * Updates the click delay timer based on the elapsed time since the last frame.
      * <p>
      * If the object cannot currently be clicked, this method increments the timer
      * and marks the associated {@link SpriteRenderer} as dirty (to update the visual cooldown state).
      */
-    protected void updateClickDelayTimer() {
+    private void updateClickDelayTimer() {
         if (!canClick()) {
             clickDelayTimer += Engine.deltaTime();
             gameObject.getComponent(SpriteRenderer.class).setDirty();
@@ -84,5 +91,13 @@ public abstract class MouseEventConsumer extends Component {
     protected void setClickDelay(float delay) {
         clickDelay = delay;
         clickDelayTimer = delay;
+    }
+
+    public void setHasCooldownAnimation() {
+        this.hasCooldownAnimation = true;
+    }
+
+    public boolean hasCooldownAnimation() {
+        return hasCooldownAnimation;
     }
 }

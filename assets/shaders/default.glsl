@@ -47,7 +47,13 @@ void main()
         } else {
             // if cooldown is not 0, render the texture with a cooldown effect
             bool aboveCooldown = fCooldown > fTexCoords.y;
-            color = fColor * texture(uTextures[id], fTexCoords) * vec4(1, 1, 1, aboveCooldown ? 1 : 0.5);
+            if (aboveCooldown) {
+                color = fColor * texture(uTextures[id], fTexCoords);
+            } else {
+                vec4 newColor = vec4(fColor.rgb * 0.5, 1) * texture(uTextures[id], fTexCoords);
+                color = newColor;
+            }
+
         }
     } else {
         color = fColor;

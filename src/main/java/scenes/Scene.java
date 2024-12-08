@@ -7,11 +7,15 @@ import engine.ecs.GameObject;
 import engine.ecs.serialization.*;
 import engine.ecs.serialization.dataStructures.Data;
 import engine.ecs.serialization.dataStructures.ResourceData;
+import engine.ecs.serialization.dataStructures.ToolData;
 import engine.graphics.Camera;
+import engine.graphics.Window;
 import engine.graphics.renderer.Renderer;
 
+import engine.util.Layer;
 import imgui.ImGui;
-import testGame.Resource;
+import testGame.resources.Resource;
+import testGame.tools.Tool;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -108,6 +112,9 @@ public abstract class Scene {
     }
 
     public void saveExit() {
+        if (!Window.get().loadFromFiles()) {
+            return;
+        }
         Gson levelGson = new GsonBuilder()
                                  .setPrettyPrinting()
                                  .registerTypeAdapter(Component.class, new ComponentSerializer())
@@ -117,12 +124,18 @@ public abstract class Scene {
                                 .setPrettyPrinting()
                                 .create();
 
-        List<GameObject> gameObjectsWithoutUI = gameObjects.stream().filter(go -> go.zIndex() != 999).toList();
+        List<GameObject> gameObjectsWithoutUI = gameObjects.stream().filter(go -> go.zIndex() != Layer.NO_INTERACTION).toList();
         List<ResourceData> resources = gameObjects.stream()
                                                .map(go -> go.getComponent(Resource.class))
                                                .filter(Objects::nonNull)
                                                .map(r -> new ResourceData(r.getUid(), r.name(), r.amount(), r.getClass().getCanonicalName()))
                                                .toList();
+
+        List<ToolData> tools = gameObjects.stream()
+                                       .map(go -> go.getComponent(Tool.class))
+                                       .filter(Objects::nonNull)
+                                       .map(t -> new ToolData(t.getUid(), t.name(), t.level(), t.getClass().getCanonicalName()))
+                                       .toList();
 
         try {
             FileWriter writer = new FileWriter("level.txt");
@@ -131,7 +144,7 @@ public abstract class Scene {
 
 
             FileWriter writerUI = new FileWriter("data.txt");
-            writerUI.write(dataGson.toJson(new Data(resources)));
+            writerUI.write(dataGson.toJson(new Data(resources, tools)));
             writerUI.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -139,6 +152,10 @@ public abstract class Scene {
     }
 
     public void load() {
+        if (!Window.get().loadFromFiles()) {
+            levelLoaded = false;
+            return;
+        }
         // For now, we will just load the GameObjects and Components from our dev scene
         loadGameObjectsAndComponents();
         loadGameData();
@@ -225,6 +242,16 @@ public abstract class Scene {
                     if (r != null && r.getUid() == uid) {
                         r.setName(rd.name());
                         r.setAmount(rd.amount());
+                    }
+                }
+            }
+            for (ToolData td : data.tools()) {
+                int uid = td.uid();
+                for (GameObject go : gameObjects) {
+                    Tool t = go.getComponent(Tool.class);
+                    if (t != null && t.getUid() == uid) {
+                        t.setName(td.name());
+                        t.setLevel(td.level());
                     }
                 }
             }

@@ -4,6 +4,7 @@ import engine.ecs.GameObject;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Shader;
 import engine.util.AssetPool;
+import engine.util.Layer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,8 +81,8 @@ public class Renderer {
         currentShader.use();
         boolean renderingPickingTexture = currentShader == AssetPool.getShader("assets/shaders/pickingShader.glsl");
         for (RenderBatch batch : batches) {
-            // Skip rendering picking texture for all but the z-index 999 batch (which contains tooltips etc. that should be ignored by the picking shader).
-            if (renderingPickingTexture && batch.zIndex() == 999) continue;
+            // Skip rendering picking texture for all batches with NO_INTERACTION (tooltip, etc)
+            if (renderingPickingTexture && batch.zIndex() == Layer.NO_INTERACTION) continue;
             batch.render();
         }
     }

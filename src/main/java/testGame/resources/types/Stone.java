@@ -1,10 +1,10 @@
-package testGame.resourceTypes;
+package testGame.resources.types;
 
-import testGame.Resource;
+import testGame.resources.Resource;
 
 public class Stone extends Resource {
     public Stone() {
-        setClickDelay(4.0f);
+        setClickDelay(2.0f);
         setName("Stone");
         setAmount(0);
     }

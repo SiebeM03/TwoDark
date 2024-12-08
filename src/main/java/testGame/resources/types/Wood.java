@@ -1,6 +1,6 @@
-package testGame.resourceTypes;
+package testGame.resources.types;
 
-import testGame.Resource;
+import testGame.resources.Resource;
 
 public class Wood extends Resource {
     public Wood() {

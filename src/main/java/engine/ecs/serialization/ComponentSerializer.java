@@ -2,7 +2,8 @@ package engine.ecs.serialization;
 
 import com.google.gson.*;
 import engine.ecs.Component;
-import testGame.Resource;
+import testGame.resources.Resource;
+import testGame.tools.Tool;
 
 import java.lang.reflect.Type;
 
@@ -29,6 +30,10 @@ public class ComponentSerializer implements JsonSerializer<Component>, JsonDeser
         if (Resource.class.isAssignableFrom(src.getClass())) {
             JsonObject properties = new JsonObject();
             properties.add("uid", context.serialize(((Resource) src).getUid())); // Serialize only the UID
+            result.add("properties", properties);
+        } else if (Tool.class.isAssignableFrom(src.getClass())) {
+            JsonObject properties = new JsonObject();
+            properties.add("uid", context.serialize(((Tool) src).getUid())); // Serialize only the UID
             result.add("properties", properties);
         } else {
             result.add("properties", context.serialize(src, src.getClass()));

@@ -124,7 +124,7 @@ public class Window {
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
-        setupMonitor();
+//        setupMonitor();
 
         MouseListener.setupCallbacks();
         KeyListener.setupCallbacks();
@@ -311,5 +311,9 @@ public class Window {
     public void getFPS() {
         float fps = 1 / Engine.deltaTime();
         glfwSetWindowTitle(glfwWindow, title + " @ " + (int) fps + " FPS");
+    }
+
+    public boolean loadFromFiles() {
+        return Settings.DEVELOPMENT_MODE;
     }
 }

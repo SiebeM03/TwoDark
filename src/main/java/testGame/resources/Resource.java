@@ -1,19 +1,17 @@
-package testGame;
+package testGame.resources;
 
-import engine.ecs.GameObject;
+import engine.ecs.components.SpriteRenderer;
 import engine.ui.MouseEventConsumer;
-
+import org.joml.Vector4f;
 
 public abstract class Resource extends MouseEventConsumer {
     private String name;
     private float amount;
     private float amountPerClick = 1;
-    protected transient GameObject toolTipGo;
 
-    @Override
-    public void update() {
-        updateClickDelayTimer();
-
+    protected Resource() {
+        setHasCooldownAnimation();
+        ResourceManager.addResource(this);
     }
 
     @Override
@@ -29,14 +27,17 @@ public abstract class Resource extends MouseEventConsumer {
 
     @Override
     public void onEnter() {
+        gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0.8f, 0.8f, 0.8f, 1));
     }
 
     @Override
     public void onLeave() {
+        gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 1, 1, 1));
     }
 
     private void harvest() {
         this.setAmount(this.amount() + this.amountPerClick());
+
         System.out.println(this.name() + " has " + this.amount() + " resources");
     }
 
@@ -58,5 +59,9 @@ public abstract class Resource extends MouseEventConsumer {
 
     public void setAmount(float amount) {
         this.amount = amount;
+    }
+
+    public void setAmountPerClick(float amountPerClick) {
+        this.amountPerClick = amountPerClick;
     }
 }
