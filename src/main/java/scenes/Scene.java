@@ -10,8 +10,10 @@ import engine.ecs.serialization.dataStructures.ResourceData;
 import engine.ecs.serialization.dataStructures.ToolData;
 import engine.graphics.Camera;
 import engine.graphics.Window;
-import engine.graphics.renderer.Renderer;
+import engine.graphics.renderer.DefaultRenderer;
 
+import engine.graphics.renderer.PickingRenderer;
+import engine.graphics.renderer.Renderer;
 import engine.util.Layer;
 import imgui.ImGui;
 import testGame.resources.Resource;
@@ -25,9 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+
 public abstract class Scene {
 
-    protected Renderer renderer = new Renderer();
+    public DefaultRenderer renderer = new DefaultRenderer();
     protected Camera camera;
     private boolean isRunning = false;
     protected List<GameObject> gameObjects = new ArrayList<>();
@@ -41,29 +46,31 @@ public abstract class Scene {
     protected boolean levelLoaded = false;
 
     public Scene() {
-
+        this.renderer.init();
     }
 
     public void init() {
-
     }
 
     public void start() {
         for (GameObject go : gameObjects) {
             go.start();
+
             this.renderer.add(go);
         }
         isRunning = true;
     }
 
     public void addGameObjectToScene(GameObject go) {
-        if (!isRunning) {
-            gameObjects.add(go);
-        } else {
-            gameObjectsToAdd.add(go);
+        gameObjects.add(go);
+        if (isRunning) {
             go.start();
-            this.renderer.add(go);
+            addToRenderers(go);
         }
+    }
+
+    public void addToRenderers(GameObject go) {
+        this.renderer.add(go);
     }
 
     public void removeGameObjectFromScene(GameObject go) {
@@ -77,7 +84,9 @@ public abstract class Scene {
 
     public abstract void update();
 
-    public abstract void render();
+    public void render() {
+        this.renderer.render();
+    }
 
     public boolean isRunning() {
         return isRunning;
@@ -95,6 +104,10 @@ public abstract class Scene {
 
     public Camera camera() {
         return this.camera;
+    }
+
+    public Renderer defaultRenderer() {
+        return this.renderer;
     }
 
     public void sceneImgui() {

@@ -29,7 +29,7 @@ public class GameViewWindow {
         rightX = topLeft.x + windowSize.x;
         topY = topLeft.y + windowSize.y;
 
-        int framebufferTextureId = Window.getFramebuffer().getTextureId();
+        int framebufferTextureId = Window.getScene().defaultRenderer().getFramebuffer().getTextureId();
         ImGui.image(framebufferTextureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
         MouseListener.setGameViewPortPos(new Vector2f(topLeft.x, topLeft.y));

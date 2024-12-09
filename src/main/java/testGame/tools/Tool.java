@@ -37,13 +37,11 @@ public class Tool extends MouseEventConsumer {
     public void onEnter() {
         gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0.8f, 0.8f, 0.8f, 1));
         tooltipGo = ToolTooltip.createTooltip(this);
-        Window.getScene().addGameObjectToScene(tooltipGo);
     }
 
     @Override
     public void onLeave() {
         gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 1, 1, 1));
-        Window.getScene().removeGameObjectFromScene(tooltipGo);
     }
 
     private void upgrade() {

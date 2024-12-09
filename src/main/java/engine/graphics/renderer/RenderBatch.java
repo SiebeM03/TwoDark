@@ -2,11 +2,9 @@ package engine.graphics.renderer;
 
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Primitive;
-import engine.graphics.Shader;
 import engine.graphics.ShaderDatatype;
-import engine.graphics.Window;
-import engine.ui.MouseEventConsumer;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
@@ -30,20 +28,20 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final ShaderDatatype[] attributes;
     private final Primitive primitive;
 
-    private SpriteRenderer[] sprites;
-    private int numSprites;
-    private boolean hasRoom;
     private float[] vertices;
-    private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
     private List<Texture> textures;
-    private int vaoID, vboID;
+
+    private int vaoID, vboID, eboID;
     private int maxBatchSize;
+    private boolean hasRoom;
+    public int dataOffset;
+    private int textureIndex;
+
     private int zIndex;
 
     public RenderBatch(int maxBatchSize, int zIndex, Primitive primitive, ShaderDatatype... attributes) {
         this.zIndex = zIndex;
-        this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
         this.primitive = primitive;
         this.attributes = attributes;
@@ -52,20 +50,20 @@ public class RenderBatch implements Comparable<RenderBatch> {
             vertexCount += s.count;
             vertexSizeBytes += s.sizeInBytes;
         }
-
         // 4 vertices quads
         vertices = new float[maxBatchSize * primitive.vertexCount * vertexCount];
 
-        this.numSprites = 0;
+        textureIndex = 0;
+        dataOffset = 0;
         this.hasRoom = true;
         this.textures = new ArrayList<>();
     }
 
     /**
-     * Start the render batch. This will create the VAO and VBO and upload the necessary data to the GPU.
-     * This method should be called right after creation.
+     * Create the GPU resources.
+     * Generates a vao, a dynamic vbo, and a static buffer of indices.
      */
-    public void start() {
+    public void init() {
         // Tell GPU to give us enough space for doing all this
         // Generate and bind VAO
         vaoID = glGenVertexArrays();
@@ -74,13 +72,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
         // Allocate space for vertices
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long) maxBatchSize * primitive.vertexCount * vertexSizeBytes, GL_DYNAMIC_DRAW);
 
         // Create and upload indices buffer
-        int eboID = glGenBuffers();
-        int[] indices = generateIndices();
+        eboID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, generateIndices(), GL_STATIC_DRAW);
 
         // Enable the buffer attribute pointers (telling how our vertex is built)
         int currentOffset = 0;
@@ -92,167 +89,60 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
     }
 
-    /**
-     * Add a sprite to the render batch. This will add the sprite to the local array {@link #sprites} and update the {@link #vertices} array.
-     * <p>This method will also add the sprite's texture (if it has one) to the {@link #textures} list.</p>
-     * <p>If the batch is full, {@link #hasRoom} will be set to false.</p>
-     */
-    public void addSprite(SpriteRenderer spr) {
-        // Get index and add renderObject
-        int index = this.numSprites;
-        this.sprites[index] = spr;
-        this.numSprites++;
-
-        if (spr.getTexture() != null) {
-            if (!textures.contains(spr.getTexture())) {
-                textures.add(spr.getTexture());
-            }
-        }
-
-        // Add properties to local vertices array
-        loadVertexProperties(index);
-
-        if (numSprites >= this.maxBatchSize) {
-            this.hasRoom = false;
-        }
+    public void start() {
+        dataOffset = 0;
+        textureIndex = 0;
+        textures.clear();
+        hasRoom = true;
     }
 
 
     /**
-     * Remove a sprite from the render batch. This will remove the sprite from the local array {@link #sprites}.
-     * <p>If the sprite was found, all elements to the right of the sprite will be shifted to the left.</p>
+     * Finish setting batch data. upload to gpu
      */
-    public void removeSprite(SpriteRenderer sprite) {
-        int index = -1;
-        for (int i = 0; i < numSprites; i++) {
-            if (sprites[i].equals(sprite)) {
-                index = i;
-                sprites[i] = null;
-                break;
-            }
-        }
-
-        // Return if sprite was not found
-        if (index == -1) {
-            return;
-        }
-
-        // Shift all elements to the left
-        for (int i = index; i < numSprites - 1; i++) {
-            sprites[i] = sprites[i + 1];
-        }
-
-        numSprites--;
+    public void finish() {
+        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
     }
 
-
-    /**
-     * This method will render all sprites in the batch. It will also check if any sprite is dirty and update the vertex properties if necessary, if one or more sprites are dirty the data will be rebuffered.
-     */
-    public void render() {
-        boolean rebufferData = false;
-        for (int i = 0; i < numSprites; i++) {
-            SpriteRenderer spr = sprites[i];
-            if (spr.isDirty()) {
-                loadVertexProperties(i);
-                spr.setClean();
-                rebufferData = true;
-            }
+    public int addTexture(Texture texture) {
+        int texIndex;
+        if (texture == null) return 0;
+        if (textures.contains(texture)) {
+            texIndex = textures.indexOf(texture) + 1;
+        } else {
+            textures.add(texture);
+            texIndex = textures.size();
         }
-        if (rebufferData) {
-            glBindBuffer(GL_ARRAY_BUFFER, vboID);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
-        }
+        return texIndex;
+    }
 
-        // Use shader
-        Shader shader = Renderer.getBoundShader();
-        shader.use();
-        shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
-        shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
-        for (int i = 0; i < textures.size(); i++) {
-            glActiveTexture(GL_TEXTURE0 + i + 1);
-            textures.get(i).bind();
-        }
-        shader.uploadIntArray("uTextures", texSlots);
-
+    public void bind() {
         glBindVertexArray(vaoID);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glDrawElements(GL_TRIANGLES, this.numSprites * 6, GL_UNSIGNED_INT, 0);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
-
         for (int i = 0; i < textures.size(); i++) {
-            textures.get(i).unbind();
+            textures.get(i).bindToSlot(i + 1);
         }
-        shader.detach();
     }
 
+    public void unbind() {
+        for (Texture texture : textures) {
+            texture.unbind();
+        }
+        glBindVertexArray(0);
+    }
+
+
     /**
-     * This method will load the vertex properties for a sprite at a given index.
+     * Get the number of vertices to be drawn
+     *
+     * @return the number of vertices to be drawn
      */
-    private void loadVertexProperties(int index) {
-        SpriteRenderer sprite = this.sprites[index];
-
-        // Find offset within array (4 vertices per sprite)
-        int offset = index * 4 * vertexCount;   // See loadElementIndices() for more explanation
-
-        Vector4f color = sprite.getColor();
-        Vector2f[] texCoords = sprite.getTexCoords();
-
-        int texId = 0;
-        if (sprite.getTexture() != null) {
-            for (int i = 0; i < textures.size(); i++) {
-                if (textures.get(i).equals(sprite.getTexture())) {
-                    texId = i + 1;  // +1 because 0 is reserved for the default texture (just a color: [0, tex, tex, tex])
-                    break;
-                }
-            }
+    public int getVertexCount() {
+        // Safety check (dataOffset should be a multiple of vertexCount)
+        if (dataOffset % vertexCount != 0) {
+            assert false : "A renderer seems to not have the correct amount of vertices";
         }
-
-        // Add vertices with the appropriate properties
-        float xAdd = 1.0f;
-        float yAdd = 1.0f;
-        for (int i = 0; i < 4; i++) {
-            if (i == 1) {
-                yAdd = 0.0f;
-            } else if (i == 2) {
-                xAdd = 0.0f;
-            } else if (i == 3) {
-                yAdd = 1.0f;
-            }
-
-            // Load position
-            vertices[offset] = sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x);
-            vertices[offset + 1] = sprite.gameObject.transform.position.y + (yAdd * sprite.gameObject.transform.scale.y);
-
-            // Load color
-            vertices[offset + 2] = color.x;
-            vertices[offset + 3] = color.y;
-            vertices[offset + 4] = color.z;
-            vertices[offset + 5] = color.w;
-
-            // Load texture coordinates
-            vertices[offset + 6] = texCoords[i].x;
-            vertices[offset + 7] = texCoords[i].y;
-
-            // Load texture id
-            vertices[offset + 8] = texId;
-
-            // Load entity id
-            vertices[offset + 9] = sprite.gameObject.getUid() + 1;  // uid 0 will be used to represent an invalid object
-
-            // Load cooldown value
-            MouseEventConsumer mouseEventConsumer = sprite.gameObject.getComponent(MouseEventConsumer.class);
-            if (mouseEventConsumer != null && mouseEventConsumer.hasCooldownAnimation()) {
-                vertices[offset + 10] = Math.min(1.0f, mouseEventConsumer.clickDelayTimer() / mouseEventConsumer.clickDelay());
-            }
-
-            offset += vertexCount;
-        }
+        return (dataOffset * primitive.elementCount) / (vertexCount * primitive.vertexCount);
     }
 
     /**
@@ -283,11 +173,73 @@ public class RenderBatch implements Comparable<RenderBatch> {
         return this.zIndex;
     }
 
+    public Primitive primitive() {
+        return this.primitive;
+    }
+
     /**
      * Compare this RenderBatch to another RenderBatch based on their {@link #zIndex}.
      */
     @Override
     public int compareTo(RenderBatch o) {
         return Integer.compare(this.zIndex, o.zIndex());
+    }
+
+    private void checkFullness() {
+        if (dataOffset >= vertices.length) {
+            hasRoom = false;
+        }
+    }
+
+    public void pushFloat(float f) {
+        vertices[dataOffset++] = f;
+        checkFullness();
+    }
+
+    public void pushInt(int i) {
+        vertices[dataOffset++] = i;
+        checkFullness();
+    }
+
+    public void pushVec2(float x, float y) {
+        vertices[dataOffset++] = x;
+        vertices[dataOffset++] = y;
+        checkFullness();
+    }
+
+    public void pushVec2(Vector2f vec) {
+        vertices[dataOffset++] = vec.x;
+        vertices[dataOffset++] = vec.y;
+        checkFullness();
+    }
+
+    public void pushVec3(float x, float y, float z) {
+        vertices[dataOffset++] = x;
+        vertices[dataOffset++] = y;
+        vertices[dataOffset++] = z;
+        checkFullness();
+    }
+
+    public void pushVec3(Vector3f vec) {
+        vertices[dataOffset++] = vec.x;
+        vertices[dataOffset++] = vec.y;
+        vertices[dataOffset++] = vec.z;
+        checkFullness();
+    }
+
+    public void pushVec4(float x, float y, float z, float w) {
+        vertices[dataOffset++] = x;
+        vertices[dataOffset++] = y;
+        vertices[dataOffset++] = z;
+        vertices[dataOffset++] = w;
+        checkFullness();
+    }
+
+    public void pushVec4(Vector4f vec) {
+        vertices[dataOffset++] = vec.x;
+        vertices[dataOffset++] = vec.y;
+        vertices[dataOffset++] = vec.z;
+        vertices[dataOffset++] = vec.w;
+        checkFullness();
     }
 }

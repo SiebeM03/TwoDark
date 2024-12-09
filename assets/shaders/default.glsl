@@ -40,7 +40,6 @@ void main()
 {
     if (fTexId > 0) {
         int id = int(fTexId);
-
         if (fCooldown == 0) {
             // if cooldown is 0, render the texture normally (no cooldown value was given)
             color = fColor * texture(uTextures[id], fTexCoords);
@@ -53,7 +52,6 @@ void main()
                 vec4 newColor = vec4(fColor.rgb * 0.5, 1) * texture(uTextures[id], fTexCoords);
                 color = newColor;
             }
-
         }
     } else {
         color = fColor;

@@ -17,7 +17,7 @@ public class GameObject {
      */
     private int uid = -1;
 
-    private String name;
+    public String name;
     private List<Component> components;
     public Transform transform;
     /**

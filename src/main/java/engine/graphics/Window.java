@@ -124,7 +124,7 @@ public class Window {
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
-//        setupMonitor();
+        setupMonitor();
 
         MouseListener.setupCallbacks();
         KeyListener.setupCallbacks();
@@ -190,8 +190,6 @@ public class Window {
         double frameBeginTime = glfwGetTime();
         double frameEndTime = glfwGetTime();
 
-        Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
-
         while (!glfwWindowShouldClose(glfwWindow)) {
             frameEndTime = glfwGetTime();
             Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
@@ -200,33 +198,20 @@ public class Window {
             // Poll events
             glfwPollEvents();
 
-            // Render picking texture
             pickingTexture.render(this.width, this.height, currentScene);
 
             // Render actual textures
             DebugDraw.beginFrame();
 
-            if (Settings.DEVELOPMENT_MODE) {
-                this.framebuffer.bind();
-            }
-
-            glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
             if (currentScene.isRunning()) {
                 DebugDraw.draw();
-                Renderer.bindShader(defaultShader);
                 currentScene.update();
                 currentScene.render();
                 currentScene.endFrame();
             }
 
-
-            // Render picking texture
-            pickingTexture.render(this.width, this.height, currentScene);
-
             if (Settings.DEVELOPMENT_MODE) {
-                this.framebuffer.unbind();
+//                this.framebuffer.unbind();
                 this.imGuiLayer.update(currentScene);
             }
 
@@ -314,6 +299,6 @@ public class Window {
     }
 
     public boolean loadFromFiles() {
-        return Settings.DEVELOPMENT_MODE;
+        return false;
     }
 }

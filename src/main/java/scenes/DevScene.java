@@ -5,11 +5,13 @@ import engine.ecs.components.MouseControls;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Camera;
 import engine.graphics.Window;
+import engine.listeners.MouseListener;
 import engine.ui.UIElement;
 import engine.util.AssetPool;
 import engine.util.Layer;
 import engine.util.Settings;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import testGame.resources.Resource;
 import testGame.resources.types.Metal;
 import testGame.resources.types.Stone;
@@ -35,6 +37,12 @@ public class DevScene extends Scene {
         this.camera = new Camera(new Vector2f());
         this.sprites = AssetPool.getSpriteSheet("assets/images/spritesheets/resourceObjectSprites.png");
 
+        GameObject axeGo = new GameObject("Axe", new Transform(new Vector2f(Settings.PROJECTION_WIDTH - 175, Settings.PROJECTION_HEIGHT - 105), new Vector2f(60, 60)), Layer.NO_INTERACTION);
+        axeGo.addComponent(new SpriteRenderer()
+                                   .setSprite(new Sprite()
+                                                      .setTexture(AssetPool.getTexture("assets/images/seperateImages/axe.png"))
+                                   ));
+        addGameObjectToScene(axeGo);
 
         GameObject pickaxeGo = new GameObject("Pickaxe", new Transform(new Vector2f(Settings.PROJECTION_WIDTH - 100, Settings.PROJECTION_HEIGHT - 100), new Vector2f(50, 50)), Layer.NO_INTERACTION);
         pickaxeGo.addComponent(new SpriteRenderer()
@@ -43,19 +51,13 @@ public class DevScene extends Scene {
                                        ));
         addGameObjectToScene(pickaxeGo);
 
-        GameObject axeGo = new GameObject("Axe", new Transform(new Vector2f(Settings.PROJECTION_WIDTH - 175, Settings.PROJECTION_HEIGHT - 105), new Vector2f(60, 60)), Layer.NO_INTERACTION);
-        axeGo.addComponent(new SpriteRenderer()
-                                   .setSprite(new Sprite()
-                                                      .setTexture(AssetPool.getTexture("assets/images/seperateImages/axe.png"))
-                                   ));
-        addGameObjectToScene(axeGo);
-
         if (levelLoaded) {
             if (gameObjects.size() > 0) {
                 this.activeGameObject = gameObjects.get(0);
             }
             return;
         }
+
 
         // Create resource game objects
         GameObject treeGo = new GameObject("Tree", new Transform(new Vector2f((float) Settings.PROJECTION_WIDTH / 2 - 400, 100), new Vector2f(200, 200)), Layer.INTERACTION);
@@ -111,10 +113,10 @@ public class DevScene extends Scene {
                 new SpriteSheet(AssetPool.getTexture("assets/images/spritesheets/resourceObjectSprites.png"),
                         200, 200, 3, 0));
 
-        AssetPool.getTexture("assets/images/tile.png");
-        AssetPool.getTexture("assets/images/seperateImages/tree2.png");
         AssetPool.getTexture("assets/images/seperateImages/stone2.png");
+        AssetPool.getTexture("assets/images/seperateImages/tree2.png");
         AssetPool.getTexture("assets/images/seperateImages/metal2.png");
+        AssetPool.getTexture("assets/images/tile.png");
         AssetPool.getTexture("assets/images/seperateImages/pickaxe.png");
         AssetPool.getTexture("assets/images/seperateImages/axe.png");
 
@@ -138,11 +140,6 @@ public class DevScene extends Scene {
         for (GameObject go : this.gameObjects) {
             go.update();
         }
-    }
-
-    @Override
-    public void render() {
-        this.renderer.render();
     }
 
     @Override
