@@ -1,7 +1,9 @@
 package engine.graphics.renderer;
 
 import engine.ecs.components.SpriteRenderer;
+import engine.graphics.Primitive;
 import engine.graphics.Shader;
+import engine.graphics.ShaderDatatype;
 import engine.graphics.Window;
 import engine.ui.MouseEventConsumer;
 import org.joml.Vector2f;
@@ -20,25 +22,13 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
  * The RenderBatch is sorted by zIndex and then rendered.
  */
 public class RenderBatch implements Comparable<RenderBatch> {
-    // Vertex
-    // ======
-    // Pos              Color                       Tex Coords      Tex Id
-    // float, float,    float, float, float, float, float, float,   float
-    private final int POS_SIZE = 2;
-    private final int COLOR_SIZE = 4;
-    private final int TEX_COORDS_SIZE = 2;
-    private final int TEX_ID_SIZE = 1;
-    private final int ENTITY_ID_SIZE = 1;
-    private final int COOLDOWN_SIZE = 1;
-    private final int VERTEX_SIZE = POS_SIZE + COLOR_SIZE + TEX_COORDS_SIZE + TEX_ID_SIZE + ENTITY_ID_SIZE + COOLDOWN_SIZE;
-    private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+    /** Amount of floats/ints in a single vertex */
+    private int vertexCount;
+    /** Amount of bytes for a single vertex */
+    private int vertexSizeBytes;
 
-    private final int POS_OFFSET = 0;
-    private final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
-    private final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
-    private final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
-    private final int ENTITY_ID_OFFSET = TEX_ID_OFFSET + TEX_ID_SIZE * Float.BYTES;
-    private final int COOLDOWN_OFFSET = ENTITY_ID_OFFSET + ENTITY_ID_SIZE * Float.BYTES;
+    private final ShaderDatatype[] attributes;
+    private final Primitive primitive;
 
     private SpriteRenderer[] sprites;
     private int numSprites;
@@ -51,13 +41,20 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private int maxBatchSize;
     private int zIndex;
 
-    public RenderBatch(int maxBatchSize, int zIndex) {
+    public RenderBatch(int maxBatchSize, int zIndex, Primitive primitive, ShaderDatatype... attributes) {
         this.zIndex = zIndex;
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
+        this.primitive = primitive;
+        this.attributes = attributes;
+
+        for (ShaderDatatype s : attributes) {
+            vertexCount += s.count;
+            vertexSizeBytes += s.sizeInBytes;
+        }
 
         // 4 vertices quads
-        vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
+        vertices = new float[maxBatchSize * primitive.vertexCount * vertexCount];
 
         this.numSprites = 0;
         this.hasRoom = true;
@@ -86,25 +83,14 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
         // Enable the buffer attribute pointers (telling how our vertex is built)
-        glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET);
-        glEnableVertexAttribArray(1);
-
-        glVertexAttribPointer(2, TEX_COORDS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_COORDS_OFFSET);
-        glEnableVertexAttribArray(2);
-
-        glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
-        glEnableVertexAttribArray(3);
-
-        glVertexAttribPointer(4, ENTITY_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, ENTITY_ID_OFFSET);
-        glEnableVertexAttribArray(4);
-
-        glVertexAttribPointer(5, COOLDOWN_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COOLDOWN_OFFSET);
-        glEnableVertexAttribArray(5);
+        int currentOffset = 0;
+        for (int i = 0; i < attributes.length; i++) {
+            ShaderDatatype attribute = attributes[i];
+            glVertexAttribPointer(i, attribute.count, attribute.openglType, false, vertexSizeBytes, currentOffset);
+            glEnableVertexAttribArray(i);
+            currentOffset += attribute.sizeInBytes;
+        }
     }
-
 
     /**
      * Add a sprite to the render batch. This will add the sprite to the local array {@link #sprites} and update the {@link #vertices} array.
@@ -212,7 +198,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         SpriteRenderer sprite = this.sprites[index];
 
         // Find offset within array (4 vertices per sprite)
-        int offset = index * 4 * VERTEX_SIZE;   // See loadElementIndices() for more explanation
+        int offset = index * 4 * vertexCount;   // See loadElementIndices() for more explanation
 
         Vector4f color = sprite.getColor();
         Vector2f[] texCoords = sprite.getTexCoords();
@@ -265,47 +251,20 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 vertices[offset + 10] = Math.min(1.0f, mouseEventConsumer.clickDelayTimer() / mouseEventConsumer.clickDelay());
             }
 
-            offset += VERTEX_SIZE;
+            offset += vertexCount;
         }
     }
 
     /**
-     * This method will generate the indices for the batch by calling {@link #loadElementIndices(int[], int)} for each sprite in the batch.
+     * This method will generate the indices for the batch by calling {@link Primitive#elementCreation} for each sprite in the batch.
      */
     private int[] generateIndices() {
-        // 6 indices per quad (3 per triangle)
-        int[] elements = new int[6 * maxBatchSize];
+        int[] elements = new int[primitive.elementCount * maxBatchSize];
         for (int i = 0; i < maxBatchSize; i++) {
-            loadElementIndices(elements, i);
+            primitive.elementCreation.accept(elements, i);
         }
 
         return elements;
-    }
-
-    /**
-     * This method will load the element indices for a sprite at a given index. The indices will be loaded into the elements array at the correct offset.
-     * <p>Each sprite will have 6 indices (2 triangles).</p>
-     *
-     * @param elements the array to load the indices into
-     * @param index    the index of the sprite
-     */
-    private void loadElementIndices(int[] elements, int index) {
-        int offsetArrayIndex = 6 * index;
-        // 4 comes from the fact that every quad uses 4 vertices
-        // For triangle 1 it's 0, 1, 2, 3
-        // For triangle 2 it's 4, 5, 6, 7 (vertices from triangle 1 + (4 * index) with index = 1)
-        int offset = 4 * index;
-
-        // 3, 2, 0, 0, 2, 1        7, 6, 4, 4, 6, 5
-        // Triangle 1
-        elements[offsetArrayIndex] = offset + 3;
-        elements[offsetArrayIndex + 1] = offset + 2;
-        elements[offsetArrayIndex + 2] = offset + 0;
-
-        // Triangle 2
-        elements[offsetArrayIndex + 3] = offset + 0;
-        elements[offsetArrayIndex + 4] = offset + 2;
-        elements[offsetArrayIndex + 5] = offset + 1;
     }
 
     public boolean hasRoom() {

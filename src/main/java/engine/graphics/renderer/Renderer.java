@@ -2,7 +2,9 @@ package engine.graphics.renderer;
 
 import engine.ecs.GameObject;
 import engine.ecs.components.SpriteRenderer;
+import engine.graphics.Primitive;
 import engine.graphics.Shader;
+import engine.graphics.ShaderDatatype;
 import engine.util.AssetPool;
 import engine.util.Layer;
 
@@ -46,7 +48,9 @@ public class Renderer {
         }
 
         if (!added) {
-            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, spriteRenderer.gameObject.zIndex());
+            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, spriteRenderer.gameObject.zIndex(), Primitive.QUAD,
+                    // Postion             color                  texCoords              texId                 entityId              cooldown
+                    ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT);
             newBatch.start();
             batches.add(newBatch);
             newBatch.addSprite(spriteRenderer);
