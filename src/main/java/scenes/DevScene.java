@@ -33,18 +33,7 @@ public class DevScene extends Scene {
         devSceneGameObject.addComponent(new MouseControls());
         this.camera = new Camera(new Vector2f());
 
-        Font testFont = new Font("src/assets/fonts/OpenSans-Regular.ttf", 20);
-//        GameObject testGo = new GameObject("Test", new Transform(new Vector2f(50, 50), new Vector2f(2468 * 2, 28 * 2)), Layer.DEFAULT);
-//        testGo.addComponent(new SpriteRenderer()
-//                                    .setSprite(new Sprite()
-//                                                       .setTexture(testFont.getTexture())
-//                                    ));
-//        addGameObjectToScene(testGo);
-
-        test = new Text("!", testFont, new Vector4f(1, 0, 0, 1), 200, 200);
-
-        return;
-        /*loadResources();
+        loadResources();
 
         GameObject axeGo = new GameObject("Axe", new Transform(new Vector2f(Settings.PROJECTION_WIDTH - 175, Settings.PROJECTION_HEIGHT - 105), new Vector2f(60, 60)), Layer.NO_INTERACTION);
         axeGo.addComponent(new SpriteRenderer()
@@ -112,7 +101,7 @@ public class DevScene extends Scene {
                                      ));
         axeGoBg.addComponent(new Axe());
         axeGoBg.addComponent(new UIElement());
-        addGameObjectToScene(axeGoBg);*/
+        addGameObjectToScene(axeGoBg);
     }
 
     public void loadResources() {

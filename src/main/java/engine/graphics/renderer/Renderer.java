@@ -110,7 +110,7 @@ public abstract class Renderer {
 
     public void render() {
         framebuffer.bind();
-//        prepare();
+        prepare();
         currentShader.use();
         uploadUniforms(currentShader);
 

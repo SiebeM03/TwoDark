@@ -31,7 +31,7 @@ public class DefaultRenderer extends Renderer {
 
     @Override
     protected Framebuffer createFramebuffer() {
-        return new Framebuffer(Window.getWidth(), Window.getHeight());
+        return Window.getFramebuffer();
     }
 
 

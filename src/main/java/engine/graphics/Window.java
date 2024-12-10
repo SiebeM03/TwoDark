@@ -1,8 +1,10 @@
 package engine.graphics;
 
 import engine.graphics.debug.DebugDraw;
+import engine.graphics.renderer.Framebuffer;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
+import engine.ui.fonts.FontLoader;
 import engine.util.Engine;
 import engine.util.ImGuiLayer;
 import engine.util.Settings;
@@ -45,6 +47,8 @@ public class Window {
 
     /** Singleton instance of the window. */
     private static Window window = null;
+
+    private static Framebuffer framebuffer;
 
     /** The currently active scene. */
     private static Scene currentScene = null;
@@ -136,11 +140,14 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        framebuffer = new Framebuffer(this.width, this.height);
+
         if (Settings.DEVELOPMENT_MODE) {
             this.imGuiLayer = new ImGuiLayer(glfwWindow);
             this.imGuiLayer.initImGui();
             glViewport(0, 0, this.width, this.height);
         }
+        FontLoader.loadFonts();
 
         Window.changeScene(0);
     }
@@ -265,6 +272,10 @@ public class Window {
         return currentScene;
     }
 
+    public static Framebuffer getFramebuffer() {
+        return framebuffer;
+    }
+
     public static int readPixel(int x, int y) {
         return currentScene.pickingRenderer().readPixel(x, y);
     }
@@ -283,6 +294,6 @@ public class Window {
     }
 
     public boolean loadFromFiles() {
-        return false;
+        return true;
     }
 }

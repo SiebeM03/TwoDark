@@ -10,11 +10,10 @@ import engine.util.AssetPool;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TextRenderer extends Renderer {
-    private static final int MAX_BATCH_SIZE = 30;
+    private static final int MAX_BATCH_SIZE = 1000;
 
     private final List<Text> texts;
 
@@ -29,7 +28,7 @@ public class TextRenderer extends Renderer {
 
     @Override
     protected Framebuffer createFramebuffer() {
-        return new Framebuffer(Window.getWidth(), Window.getHeight());
+        return Window.getFramebuffer();
     }
 
     @Override

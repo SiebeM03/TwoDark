@@ -102,6 +102,11 @@ public abstract class Scene {
         this.texts.add(t);
     }
 
+    public void removeTextFromScene(Text t) {
+        this.textRenderer.remove(t);
+        this.texts.remove(t);
+    }
+
 
     // =================================================================================================================
     // UPDATE

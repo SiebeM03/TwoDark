@@ -75,8 +75,7 @@ public class PickingRenderer extends Renderer {
 
     @Override
     protected Framebuffer createFramebuffer() {
-        framebuffer = new Framebuffer(Window.getWidth(), Window.getHeight());
-        return framebuffer;
+        return new Framebuffer(Window.getWidth(), Window.getHeight());
     }
 
 

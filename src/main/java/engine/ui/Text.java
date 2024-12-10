@@ -1,5 +1,6 @@
 package engine.ui;
 
+import engine.ecs.GameObject;
 import engine.ecs.Transform;
 import engine.graphics.Window;
 import engine.graphics.renderer.TextRenderer;
@@ -22,6 +23,7 @@ public class Text {
 
     private Font font;
     private CharSequence text;
+
 
     public Text(String string, Font font, Vector4f color, float x, float y) {
         this.text = string;
@@ -139,7 +141,6 @@ public class Text {
             // glyphRenders.
             Glyph glyph = font.getGlyphs().get(ch);
 
-            System.out.println(glyph.width + " " + glyph.width + " " + ch + " " + drawX + " " + drawY);
             glyphRenderers.add(new GlyphRenderer(new Transform(new Vector2f(drawX, drawY), new Vector2f(glyph.width, glyph.height)),
                     glyph, this, ch, this.color));
 

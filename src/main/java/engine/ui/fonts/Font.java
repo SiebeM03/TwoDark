@@ -89,19 +89,11 @@ public class Font {
         }
 
         Texture finalTexture = bufferedImageToTexture(image);
-        System.out.println("Width: " + finalTexture.getWidth());
-        System.out.println("Height: " + finalTexture.getHeight());
-        System.out.println("ID: " + finalTexture.getId());
-        System.out.println("Texture: " + finalTexture);
-
 
         // Finally, calculate the UV coordinates on the generated texture and store it in each Glyph
         for (int i = 32; i < 256; i++) {
             if (glyphs.get((char) i) != null) {
-                // CHECKED
-                System.out.println("Calculating UVs for " + (char) i);
                 glyphs.get((char) i).calculateUVs(finalTexture);
-//                System.out.println(Arrays.toString(glyphs.get((char) i).getUV()));
             }
         }
 

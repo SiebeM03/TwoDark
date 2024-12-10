@@ -34,5 +34,25 @@ uniform sampler2D uTextures[8];
 out vec4 color;
 
 void main () {
-    color = vec4(1, 0, 0, 1);
+    vec4 texColor;
+
+    if (fTexId == 0) {
+        texColor = fColor * texture(uTextures[0], fTexCoords);
+    } else if (fTexId == 1) {
+        texColor = fColor * texture(uTextures[1], fTexCoords);
+    } else if (fTexId == 2) {
+        texColor = fColor * texture(uTextures[2], fTexCoords);
+    } else if (fTexId == 3) {
+        texColor = fColor * texture(uTextures[3], fTexCoords);
+    } else if (fTexId == 4) {
+        texColor = fColor * texture(uTextures[4], fTexCoords);
+    } else if (fTexId == 5) {
+        texColor = fColor * texture(uTextures[5], fTexCoords);
+    } else if (fTexId == 6) {
+        texColor = fColor * texture(uTextures[6], fTexCoords);
+    } else if (fTexId == 7) {
+        texColor = fColor * texture(uTextures[7], fTexCoords);
+    }
+
+    color = texColor;
 }
