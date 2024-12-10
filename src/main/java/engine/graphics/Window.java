@@ -206,8 +206,9 @@ public class Window {
             if (currentScene.isRunning()) {
                 DebugDraw.draw();
                 currentScene.update();
+                currentScene.updateGameObjects();
                 currentScene.render();
-                currentScene.endFrame();
+                currentScene.processPendingModifications();
             }
 
             if (Settings.DEVELOPMENT_MODE) {

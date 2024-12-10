@@ -136,10 +136,6 @@ public class DevScene extends Scene {
     @Override
     public void update() {
         devSceneGameObject.update();
-
-        for (GameObject go : this.gameObjects) {
-            go.update();
-        }
     }
 
     @Override

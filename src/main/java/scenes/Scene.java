@@ -4,15 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import engine.ecs.Component;
 import engine.ecs.GameObject;
-import engine.ecs.serialization.*;
+import engine.ecs.serialization.ComponentSerializer;
+import engine.ecs.serialization.GameObjectSerializer;
 import engine.ecs.serialization.dataStructures.Data;
 import engine.ecs.serialization.dataStructures.ResourceData;
 import engine.ecs.serialization.dataStructures.ToolData;
 import engine.graphics.Camera;
 import engine.graphics.Window;
 import engine.graphics.renderer.DefaultRenderer;
-
-import engine.graphics.renderer.PickingRenderer;
 import engine.graphics.renderer.Renderer;
 import engine.util.Layer;
 import imgui.ImGui;
@@ -27,14 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-
 public abstract class Scene {
 
     public DefaultRenderer renderer = new DefaultRenderer();
     protected Camera camera;
     private boolean isRunning = false;
+
     protected List<GameObject> gameObjects = new ArrayList<>();
     protected List<GameObject> gameObjectsToAdd = new ArrayList<>();
     protected List<GameObject> gameObjectsToRemove = new ArrayList<>();
@@ -45,6 +42,10 @@ public abstract class Scene {
      */
     protected boolean levelLoaded = false;
 
+
+    // =================================================================================================================
+    // INITIALIZATION
+    // =================================================================================================================
     public Scene() {
         this.renderer.init();
     }
@@ -52,54 +53,86 @@ public abstract class Scene {
     public void init() {
     }
 
+    /**
+     * Starts the scene by calling the start method of all GameObjects in the scene and adding them to the renderer.
+     */
     public void start() {
         for (GameObject go : gameObjects) {
             go.start();
-
-            this.renderer.add(go);
+            addToRenderers(go);
         }
         isRunning = true;
     }
 
+
+    // =================================================================================================================
+    // GAME OBJECT MANAGEMENT
+    // =================================================================================================================
+
+    /**
+     * Queues a GameObject to be added to the scene at the end of the frame.
+     */
     public void addGameObjectToScene(GameObject go) {
-        gameObjects.add(go);
-        if (isRunning) {
-            go.start();
-            addToRenderers(go);
+        gameObjectsToAdd.add(go);
+    }
+
+    /**
+     * Queues a GameObject to be removed from the scene at the end of the frame.
+     */
+    public void removeGameObjectFromScene(GameObject go) {
+        gameObjectsToRemove.add(go);
+    }
+
+    /**
+     * Called at the end of the frame to apply all queued modifications to the {@link #gameObjects} list.
+     */
+    public void processPendingModifications() {
+        for (GameObject go : gameObjectsToAdd) {
+            gameObjects.add(go);
+            if (isRunning) {
+                go.start();
+                addToRenderers(go);
+            }
+        }
+        gameObjectsToAdd.clear();
+
+        for (GameObject go : gameObjectsToRemove) {
+            gameObjects.remove(go);
+            renderer.remove(go);
+        }
+        gameObjectsToRemove.clear();
+    }
+
+
+    // =================================================================================================================
+    // UPDATE
+    // =================================================================================================================
+
+    /**
+     * Called once per frame to update things that are not added to the {@link #gameObjects} list.
+     */
+    public abstract void update();
+
+    public void updateGameObjects() {
+        for (GameObject go : this.gameObjects) {
+            go.update();
         }
     }
 
+    // =================================================================================================================
+    // RENDER
+    // =================================================================================================================
     public void addToRenderers(GameObject go) {
         this.renderer.add(go);
     }
-
-    public void removeGameObjectFromScene(GameObject go) {
-        if (!isRunning) {
-            gameObjectsToRemove.remove(go);
-        } else {
-            gameObjectsToRemove.remove(go);
-            this.renderer.remove(go);
-        }
-    }
-
-    public abstract void update();
 
     public void render() {
         this.renderer.render();
     }
 
+
     public boolean isRunning() {
         return isRunning;
-    }
-
-    /**
-     * Called at the end of the frame to add and remove GameObjects from the scene.
-     */
-    public void endFrame() {
-        gameObjects.addAll(gameObjectsToAdd);
-        gameObjects.removeAll(gameObjectsToRemove);
-        gameObjectsToAdd.clear();
-        gameObjectsToRemove.clear();
     }
 
     public Camera camera() {
@@ -110,6 +143,10 @@ public abstract class Scene {
         return this.renderer;
     }
 
+
+    // =================================================================================================================
+    // IMGUI
+    // =================================================================================================================
     public void sceneImgui() {
         if (activeGameObject != null) {
             ImGui.begin("Inspector");
@@ -124,6 +161,10 @@ public abstract class Scene {
 
     }
 
+
+    // =================================================================================================================
+    // SAVE AND LOAD
+    // =================================================================================================================
     public void saveExit() {
         if (!Window.get().loadFromFiles()) {
             return;

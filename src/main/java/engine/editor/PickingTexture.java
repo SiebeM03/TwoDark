@@ -1,18 +1,11 @@
 package engine.editor;
 
 import engine.graphics.Shader;
-import engine.graphics.Window;
-import engine.graphics.renderer.Renderer;
-import engine.graphics.renderer.Texture;
-import engine.listeners.MouseListener;
 import engine.util.AssetPool;
 import scenes.Scene;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT32;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
 
 public class PickingTexture {
     private int pickingTextureId;
