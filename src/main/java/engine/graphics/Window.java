@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL;
 import scenes.DevScene;
 import scenes.HomeScene;
 import scenes.Scene;
+import scenes.SceneLoader;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -210,14 +211,14 @@ public class Window {
             get().getFPS();
         }
 
-        currentScene.saveExit();
+        SceneLoader.saveScene(currentScene);
     }
 
     /**
      * Changes the active scene to the specified scene ID.
      *
      * <ul>
-     *     <li>Loads the scene ({@link Scene#load()})</li>
+     *     <li>Loads the scene ({@link SceneLoader#loadScene(Scene)})</li>
      *     <li>Initializes the scene ({@link Scene#init()})</li>
      *     <li>Starts the scene ({@link Scene#start()})</li>
      * </ul>
@@ -233,7 +234,7 @@ public class Window {
             }
         }
 
-        currentScene.load();
+        SceneLoader.loadScene(currentScene);
         currentScene.init();
         currentScene.start();
     }

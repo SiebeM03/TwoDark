@@ -1,6 +1,5 @@
 package testGame.tools.types;
 
-import testGame.resources.types.Metal;
 import testGame.resources.types.Stone;
 import testGame.resources.types.Wood;
 import testGame.tools.Tool;

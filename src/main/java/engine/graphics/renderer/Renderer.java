@@ -2,7 +2,6 @@ package engine.graphics.renderer;
 
 import engine.ecs.GameObject;
 import engine.graphics.Shader;
-import engine.util.AssetPool;
 
 import java.util.ArrayList;
 import java.util.Collections;
