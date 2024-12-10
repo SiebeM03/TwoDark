@@ -5,6 +5,8 @@ import engine.graphics.Camera;
 import engine.graphics.renderer.DefaultRenderer;
 import engine.graphics.renderer.PickingRenderer;
 import engine.graphics.renderer.Renderer;
+import engine.graphics.renderer.TextRenderer;
+import engine.ui.Text;
 import engine.util.Layer;
 import imgui.ImGui;
 
@@ -15,12 +17,14 @@ public abstract class Scene {
 
     public DefaultRenderer renderer = new DefaultRenderer();
     public PickingRenderer pickingRenderer = new PickingRenderer();
+    public TextRenderer textRenderer = new TextRenderer();
     protected Camera camera;
     private boolean isRunning = false;
 
     protected List<GameObject> gameObjects = new ArrayList<>();
     protected List<GameObject> gameObjectsToAdd = new ArrayList<>();
     protected List<GameObject> gameObjectsToRemove = new ArrayList<>();
+    protected List<Text> texts = new ArrayList<>();
 
     protected GameObject activeGameObject = null;
     /**
@@ -35,6 +39,7 @@ public abstract class Scene {
     public Scene() {
         this.renderer.init();
         this.pickingRenderer.init();
+        this.textRenderer.init();
     }
 
     public void init() {
@@ -92,6 +97,11 @@ public abstract class Scene {
         gameObjectsToRemove.clear();
     }
 
+    public void addTextToScene(Text t) {
+        this.textRenderer.add(t);
+        this.texts.add(t);
+    }
+
 
     // =================================================================================================================
     // UPDATE
@@ -106,6 +116,13 @@ public abstract class Scene {
         for (GameObject go : this.gameObjects) {
             go.update();
         }
+    }
+
+    public void updateUI() {
+        for (Text t : this.texts) {
+            t.update();
+        }
+        this.textRenderer.render();
     }
 
     // =================================================================================================================
@@ -133,8 +150,8 @@ public abstract class Scene {
     }
 
     public void render() {
-        this.renderer.render();
         this.pickingRenderer.render();
+        this.renderer.render();
     }
 
 

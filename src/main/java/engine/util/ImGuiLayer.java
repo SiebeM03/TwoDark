@@ -25,7 +25,7 @@ public class ImGuiLayer {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
 
     // Configuration constants
-    private static final String FONT_PATH = "assets/fonts/segoeui.ttf";
+    private static final String FONT_PATH = "src/assets/fonts/segoeui.ttf";
     private static final float FONT_SIZE = 20.0f;
     private static final String GL_VERSION = "#version 330 core";
 

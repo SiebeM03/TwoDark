@@ -2,6 +2,7 @@ package engine.graphics.renderer;
 
 import engine.ecs.GameObject;
 import engine.graphics.Shader;
+import engine.util.Layer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +41,7 @@ public abstract class Renderer {
     public void remove(GameObject gameObject) {
     }
 
+    // TODO make protected
     public abstract Shader createShader();
 
     protected abstract Framebuffer createFramebuffer();
@@ -108,11 +110,9 @@ public abstract class Renderer {
 
     public void render() {
         framebuffer.bind();
+//        prepare();
         currentShader.use();
         uploadUniforms(currentShader);
-
-        glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         start();
         rebuffer();
@@ -128,6 +128,11 @@ public abstract class Renderer {
         currentShader.detach();
         framebuffer.unbind();
     }
+
+    /**
+     * Prepare for rendering. Do anything like setting background here.
+     */
+    protected abstract void prepare();
 
     public Framebuffer getFramebuffer() {
         return framebuffer;

@@ -195,6 +195,7 @@ public class Window {
                 currentScene.updateGameObjects();
                 currentScene.render();
                 currentScene.processPendingModifications();
+                currentScene.updateUI();
             }
 
             if (Settings.DEVELOPMENT_MODE) {
@@ -282,6 +283,6 @@ public class Window {
     }
 
     public boolean loadFromFiles() {
-        return true;
+        return false;
     }
 }

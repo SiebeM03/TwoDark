@@ -28,7 +28,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final ShaderDatatype[] attributes;
     private final Primitive primitive;
 
-    private float[] vertices;
+    public float[] vertices;
 
     private List<Texture> textures;
 
@@ -112,7 +112,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
             texIndex = textures.indexOf(texture) + 1;
         } else {
             textures.add(texture);
-            texIndex = textures.size();
+            texIndex = ++textureIndex;
         }
         return texIndex;
     }

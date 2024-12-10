@@ -8,6 +8,7 @@ import java.nio.IntBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_SRGB;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -22,9 +23,7 @@ public class Texture {
     private int width, height;
 
     public Texture() {
-        this.texID = -1;
-        this.width = -1;
-        this.height = -1;
+        this.texID = glGenTextures();
     }
 
     public Texture(int width, int height) {
@@ -115,6 +114,27 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    public Texture createTexture(int width, int height, ByteBuffer buffer) {
+        this.width = width;
+        this.height = height;
+
+        bind();
+
+        // Set texture parameters
+        // Repeat image in both directions
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        // When stretching image, pixelate
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        // When shrinking image, pixelate
+//        glEnable(GL_FRAMEBUFFER_SRGB);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        return this;
+    }
+
     public int getWidth() {
         return this.width;
     }
@@ -138,7 +158,6 @@ public class Texture {
         Texture oTex = (Texture) o;
         return oTex.getWidth() == this.width &&
                        oTex.getHeight() == this.height &&
-                       oTex.getId() == this.texID &&
-                       oTex.getFilepath().equals(this.filepath);
+                       oTex.getId() == this.texID;
     }
 }

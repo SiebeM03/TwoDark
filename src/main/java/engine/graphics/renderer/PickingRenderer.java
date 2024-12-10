@@ -35,7 +35,7 @@ public class PickingRenderer extends Renderer {
 
     @Override
     public Shader createShader() {
-        return AssetPool.getShader("assets/shaders/pickingShader.glsl");
+        return AssetPool.getShader("src/assets/shaders/pickingShader.glsl");
     }
 
     private boolean init(int width, int height) {
@@ -204,5 +204,9 @@ public class PickingRenderer extends Renderer {
         float[] pixels = new float[3];
         glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, pixels);
         return (int) (pixels[0] - 1);
+    }
+
+    @Override
+    public void prepare() {
     }
 }

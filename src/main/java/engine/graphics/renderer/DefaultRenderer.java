@@ -13,6 +13,8 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class DefaultRenderer extends Renderer {
     protected final int MAX_BATCH_SIZE = 1000;
 
@@ -24,13 +26,12 @@ public class DefaultRenderer extends Renderer {
 
     @Override
     public Shader createShader() {
-        return AssetPool.getShader("assets/shaders/default.glsl");
+        return AssetPool.getShader("src/assets/shaders/default.glsl");
     }
 
     @Override
     protected Framebuffer createFramebuffer() {
-        framebuffer = new Framebuffer(Window.getWidth(), Window.getHeight());
-        return framebuffer;
+        return new Framebuffer(Window.getWidth(), Window.getHeight());
     }
 
 
@@ -39,6 +40,14 @@ public class DefaultRenderer extends Renderer {
         return new RenderBatch(MAX_BATCH_SIZE, zIndex, Primitive.QUAD,
                 ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT
         );
+    }
+
+    @Override
+    protected void uploadUniforms(Shader shader) {
+        shader.uploadIntArray("uTextures", textureSlots);
+
+        shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
+        shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
     }
 
     @Override
@@ -57,7 +66,7 @@ public class DefaultRenderer extends Renderer {
                 texID = 0;
             }
 
-            // Push vertices to the batchfloat xAdd = 1.0f;
+            // Push vertices to the batch
             float xAdd = 1.0f;
             float yAdd = 1.0f;
             for (int i = 0; i < 4; i++) {
@@ -113,10 +122,8 @@ public class DefaultRenderer extends Renderer {
     }
 
     @Override
-    protected void uploadUniforms(Shader shader) {
-        shader.uploadIntArray("uTextures", textureSlots);
-
-        shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
-        shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
+    protected void prepare() {
+        glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 }
