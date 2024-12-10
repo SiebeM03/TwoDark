@@ -108,16 +108,11 @@ public abstract class Renderer {
     }
 
     public void render() {
-        boolean renderingPickingTexture = currentShader == AssetPool.getShader("assets/shaders/pickingShader.glsl");
-        if (!renderingPickingTexture) {
-            framebuffer.bind();
-            glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
-        } else {
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        }
+        framebuffer.bind();
         currentShader.use();
         uploadUniforms(currentShader);
 
+        glClearColor(12.0f / 255.0f, 122.0f / 255.0f, 138.0f / 255.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         start();
@@ -132,16 +127,7 @@ public abstract class Renderer {
             batch.unbind();
         }
         currentShader.detach();
-        if (!renderingPickingTexture) {
-            framebuffer.unbind();
-        }
-    }
-
-    public void render(Shader forcedShader) {
-        Shader oldShader = currentShader;
-        currentShader = forcedShader;
-        render();
-        currentShader = oldShader;
+        framebuffer.unbind();
     }
 
     public Framebuffer getFramebuffer() {

@@ -1,8 +1,6 @@
 package engine.ui;
 
-import engine.editor.PickingTexture;
 import engine.graphics.Window;
-import engine.graphics.renderer.PickingRenderer;
 import engine.listeners.MouseListener;
 import org.lwjgl.glfw.GLFW;
 
@@ -68,7 +66,7 @@ public class EventHandler {
      * @return true if the mouse is on the element, false otherwise
      */
     private boolean isMouseOnThis() {
-        int hoveredUid = Window.getPickingTexture().readPixel((int) MouseListener.getScreenX(), (int) MouseListener.getScreenY());
+        int hoveredUid = Window.readPixel((int) MouseListener.getScreenX(), (int) MouseListener.getScreenY());
         return hoveredUid == uiElement.gameObject.getUid();
     }
 

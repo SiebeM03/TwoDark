@@ -1,33 +1,27 @@
 package scenes;
 
-import engine.ecs.*;
+import engine.ecs.GameObject;
+import engine.ecs.Sprite;
+import engine.ecs.SpriteSheet;
+import engine.ecs.Transform;
 import engine.ecs.components.MouseControls;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Camera;
-import engine.graphics.Window;
-import engine.listeners.MouseListener;
 import engine.ui.UIElement;
 import engine.util.AssetPool;
 import engine.util.Layer;
 import engine.util.Settings;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
-import testGame.resources.Resource;
 import testGame.resources.types.Metal;
 import testGame.resources.types.Stone;
 import testGame.resources.types.Wood;
 import testGame.tools.types.Axe;
 import testGame.tools.types.Pickaxe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DevScene extends Scene {
 
-    private SpriteSheet sprites;
     GameObject devSceneGameObject = new GameObject("DevScene", new Transform(new Vector2f(), new Vector2f()), Layer.NO_RENDER);
 
-    List<Resource> resources = new ArrayList<>();
 
     @Override
     public void init() {
@@ -35,7 +29,6 @@ public class DevScene extends Scene {
 
         loadResources();
         this.camera = new Camera(new Vector2f());
-        this.sprites = AssetPool.getSpriteSheet("assets/images/spritesheets/resourceObjectSprites.png");
 
         GameObject axeGo = new GameObject("Axe", new Transform(new Vector2f(Settings.PROJECTION_WIDTH - 175, Settings.PROJECTION_HEIGHT - 105), new Vector2f(60, 60)), Layer.NO_INTERACTION);
         axeGo.addComponent(new SpriteRenderer()
@@ -50,6 +43,7 @@ public class DevScene extends Scene {
                                                           .setTexture(AssetPool.getTexture("assets/images/seperateImages/pickaxe.png"))
                                        ));
         addGameObjectToScene(pickaxeGo);
+
 
         if (levelLoaded) {
             if (gameObjects.size() > 0) {

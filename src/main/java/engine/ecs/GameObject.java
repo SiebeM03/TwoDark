@@ -1,7 +1,5 @@
 package engine.ecs;
 
-import engine.ui.EventHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +20,6 @@ public class GameObject {
     public Transform transform;
     /**
      * The zIndex of the GameObject. This is used to determine the order in which GameObjects are rendered.
-     *
-     * @implNote A zIndex of 999 is used for the UI layer, this layer is ignored by the picker system (see {@link engine.editor.PickingTexture}).
      */
     private int zIndex;
 

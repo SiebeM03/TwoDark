@@ -1,12 +1,8 @@
 package engine.graphics;
 
-import engine.editor.PickingTexture;
 import engine.graphics.debug.DebugDraw;
-import engine.graphics.renderer.Framebuffer;
-import engine.graphics.renderer.Renderer;
 import engine.listeners.KeyListener;
 import engine.listeners.MouseListener;
-import engine.util.AssetPool;
 import engine.util.Engine;
 import engine.util.ImGuiLayer;
 import engine.util.Settings;
@@ -45,12 +41,6 @@ public class Window {
 
     /** Layer responsible for rendering the ImGui user interface. */
     private ImGuiLayer imGuiLayer;
-
-    /** Framebuffer for rendering textures. */
-    private Framebuffer framebuffer;
-
-    /** Texture for object picking operations. */
-    private PickingTexture pickingTexture;
 
     /** Singleton instance of the window. */
     private static Window window = null;
@@ -116,7 +106,7 @@ public class Window {
         // Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-//        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
         glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
 
 
@@ -148,9 +138,6 @@ public class Window {
         if (Settings.DEVELOPMENT_MODE) {
             this.imGuiLayer = new ImGuiLayer(glfwWindow);
             this.imGuiLayer.initImGui();
-
-            this.framebuffer = new Framebuffer(this.width, this.height);
-            this.pickingTexture = new PickingTexture(this.width, this.height);
             glViewport(0, 0, this.width, this.height);
         }
 
@@ -198,8 +185,6 @@ public class Window {
             // Poll events
             glfwPollEvents();
 
-            pickingTexture.render(this.width, this.height, currentScene);
-
             // Render actual textures
             DebugDraw.beginFrame();
 
@@ -212,7 +197,6 @@ public class Window {
             }
 
             if (Settings.DEVELOPMENT_MODE) {
-//                this.framebuffer.unbind();
                 this.imGuiLayer.update(currentScene);
             }
 
@@ -279,16 +263,13 @@ public class Window {
         return currentScene;
     }
 
-    public static Framebuffer getFramebuffer() {
-        return get().framebuffer;
+    public static int readPixel(int x, int y) {
+        return currentScene.pickingRenderer().readPixel(x, y);
     }
+
 
     public static float getTargetAspectRatio() {
         return Settings.TARGET_ASPECT_RATIO;
-    }
-
-    public static PickingTexture getPickingTexture() {
-        return get().pickingTexture;
     }
 
     /**
@@ -300,6 +281,6 @@ public class Window {
     }
 
     public boolean loadFromFiles() {
-        return false;
+        return true;
     }
 }

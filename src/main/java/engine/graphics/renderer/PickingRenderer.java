@@ -2,11 +2,11 @@ package engine.graphics.renderer;
 
 import engine.ecs.GameObject;
 import engine.ecs.components.SpriteRenderer;
-import engine.editor.PickingTexture;
 import engine.graphics.Primitive;
 import engine.graphics.Shader;
 import engine.graphics.ShaderDatatype;
 import engine.graphics.Window;
+import engine.ui.MouseEventConsumer;
 import engine.util.AssetPool;
 import org.joml.Vector2f;
 
@@ -14,20 +14,63 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 
 public class PickingRenderer extends Renderer {
     protected final int MAX_BATCH_SIZE = 1000;
-    public static PickingTexture pickingTexture;
 
-    private List<SpriteRenderer> sprites;
+    protected final List<SpriteRenderer> sprites;
 
     public PickingRenderer() {
         sprites = new ArrayList<>();
     }
 
+    public void init() {
+        framebuffer = createFramebuffer();
+        if (!init(Window.getWidth(), Window.getHeight())) {
+            assert false : "Error initializing picking texture";
+        }
+        currentShader = createShader();
+    }
+
     @Override
     public Shader createShader() {
         return AssetPool.getShader("assets/shaders/pickingShader.glsl");
+    }
+
+    private boolean init(int width, int height) {
+        int depthTexture;
+        int pickingTextureId;
+        framebuffer.bind();
+
+        // Create the texture to render the data to and attach it to our framebuffer
+        pickingTextureId = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, pickingTextureId);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pickingTextureId, 0);
+
+        // Create texture object for the depth buffer
+        glEnable(GL_TEXTURE_2D);
+        depthTexture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, depthTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+
+        // Disable the reading
+        glReadBuffer(GL_NONE);
+        glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+            assert false : "Error: Framebuffer is not complete";
+            return false;
+        }
+        glBindTexture(GL_TEXTURE_2D, 0);
+        framebuffer.unbind();
+        return true;
     }
 
     @Override
@@ -36,10 +79,12 @@ public class PickingRenderer extends Renderer {
         return framebuffer;
     }
 
+
     @Override
     protected RenderBatch createBatch(int zIndex) {
         return new RenderBatch(MAX_BATCH_SIZE, zIndex, Primitive.QUAD,
-                ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.INT);
+                ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT
+        );
     }
 
     @Override
@@ -85,6 +130,14 @@ public class PickingRenderer extends Renderer {
 
                 // Load entity id
                 batch.pushInt(sprite.gameObject.getUid() + 1);
+
+                // Load cooldown value
+                MouseEventConsumer mouseEventConsumer = sprite.gameObject.getComponent(MouseEventConsumer.class);
+                if (mouseEventConsumer != null && mouseEventConsumer.hasCooldownAnimation()) {
+                    batch.pushFloat(Math.min(1.0f, mouseEventConsumer.clickDelayTimer() / mouseEventConsumer.clickDelay()));
+                } else {
+                    batch.pushFloat(0.0f);
+                }
             }
         }
     }
@@ -115,14 +168,12 @@ public class PickingRenderer extends Renderer {
 
     @Override
     public void render() {
-        System.out.println("rendering fbo " + framebuffer.getFboID());
+        glDisable(GL_BLEND);
         framebuffer.bind();
+        glViewport(0, 0, Window.getWidth(), Window.getHeight());
         currentShader.use();
         uploadUniforms(currentShader);
 
-        glDisable(GL_BLEND);
-        pickingTexture.enableWriting();
-        glViewport(0, 0, Window.getWidth(), Window.getHeight());
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -131,19 +182,27 @@ public class PickingRenderer extends Renderer {
         finish();
 
         for (RenderBatch batch : batches) {
-            System.out.println("Binding batch " + batch.zIndex());
             batch.bind();
             glDrawElements(batch.primitive().openglPrimitive, batch.getVertexCount(), GL_UNSIGNED_INT, 0);
             batch.unbind();
         }
 
         currentShader.detach();
-
-        pickingTexture.disableWriting();
+        framebuffer.unbind();
         glEnable(GL_BLEND);
     }
 
-    public static PickingTexture getPickingTexture() {
-        return pickingTexture;
+    public int readPixel(int x, int y) {
+        if (framebuffer == null) {
+            System.out.println("Framebuffer is null");
+            return -1;
+        }
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.getFboID());
+        glReadBuffer(GL_COLOR_ATTACHMENT0);
+
+        float[] pixels = new float[3];
+        glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, pixels);
+        return (int) (pixels[0] - 1);
     }
 }

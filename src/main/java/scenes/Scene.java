@@ -12,6 +12,7 @@ import engine.ecs.serialization.dataStructures.ToolData;
 import engine.graphics.Camera;
 import engine.graphics.Window;
 import engine.graphics.renderer.DefaultRenderer;
+import engine.graphics.renderer.PickingRenderer;
 import engine.graphics.renderer.Renderer;
 import engine.util.Layer;
 import imgui.ImGui;
@@ -29,6 +30,7 @@ import java.util.Objects;
 public abstract class Scene {
 
     public DefaultRenderer renderer = new DefaultRenderer();
+    public PickingRenderer pickingRenderer = new PickingRenderer();
     protected Camera camera;
     private boolean isRunning = false;
 
@@ -48,6 +50,7 @@ public abstract class Scene {
     // =================================================================================================================
     public Scene() {
         this.renderer.init();
+        this.pickingRenderer.init();
     }
 
     public void init() {
@@ -98,7 +101,9 @@ public abstract class Scene {
 
         for (GameObject go : gameObjectsToRemove) {
             gameObjects.remove(go);
-            renderer.remove(go);
+            if (isRunning) {
+                removeFromRenderers(go);
+            }
         }
         gameObjectsToRemove.clear();
     }
@@ -124,10 +129,21 @@ public abstract class Scene {
     // =================================================================================================================
     public void addToRenderers(GameObject go) {
         this.renderer.add(go);
+        if (go.zIndex() == Layer.INTERACTION) {
+            this.pickingRenderer.add(go);
+        }
+    }
+
+    public void removeFromRenderers(GameObject go) {
+        this.renderer.remove(go);
+        if (go.zIndex() == Layer.INTERACTION) {
+            this.pickingRenderer.remove(go);
+        }
     }
 
     public void render() {
         this.renderer.render();
+        this.pickingRenderer.render();
     }
 
 
@@ -141,6 +157,10 @@ public abstract class Scene {
 
     public Renderer defaultRenderer() {
         return this.renderer;
+    }
+
+    public PickingRenderer pickingRenderer() {
+        return this.pickingRenderer;
     }
 
 
@@ -260,6 +280,8 @@ public abstract class Scene {
             maxCompId++;
             GameObject.init(maxGoId);
             Component.init(maxCompId);
+
+            processPendingModifications();
 
             this.levelLoaded = true;
             return true;
