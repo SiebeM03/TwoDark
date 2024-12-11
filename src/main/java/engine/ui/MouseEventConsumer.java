@@ -2,8 +2,8 @@ package engine.ui;
 
 import engine.ecs.Component;
 import engine.ecs.components.SpriteRenderer;
+import engine.util.Color;
 import engine.util.Engine;
-import org.joml.Vector4f;
 
 /**
  * Abstract class for handling mouse events on a UI element.
@@ -13,13 +13,13 @@ import org.joml.Vector4f;
 public abstract class MouseEventConsumer extends Component {
 
     /** The current color of the UI element. */
-    protected Vector4f color = new Vector4f(1, 1, 1, 1);
+    protected Color color = Color.WHITE;
 
     /** The default color of the UI element. */
-    public Vector4f defaultColor = color;
+    public Color defaultColor = color;
 
     /** The color of the UI element when it is hovered over. */
-    public Vector4f hoverColor = new Vector4f(0.5f, 0.5f, 0.5f, 1);
+    public Color hoverColor = new Color(0.8f, 0.8f, 0.8f, 1);
 
     /** The required delay between consecutive clicks in seconds. */
     protected float clickDelay;

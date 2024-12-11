@@ -4,7 +4,8 @@ import engine.ecs.GameObject;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Window;
 import engine.ui.MouseEventConsumer;
-import org.joml.Vector4f;
+import engine.util.Color;
+
 import testGame.resources.Resource;
 import testGame.resources.ResourceManager;
 
@@ -35,14 +36,14 @@ public class Tool extends MouseEventConsumer {
 
     @Override
     public void onEnter() {
-        gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0.8f, 0.8f, 0.8f, 1));
+        gameObject.getComponent(SpriteRenderer.class).setColor(this.hoverColor);
         tooltipGo = ToolTooltip.createTooltip(this);
         Window.getScene().addGameObjectToScene(tooltipGo);
     }
 
     @Override
     public void onLeave() {
-        gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 1, 1, 1));
+        gameObject.getComponent(SpriteRenderer.class).setColor(Color.WHITE);
         Window.getScene().removeGameObjectFromScene(tooltipGo);
     }
 

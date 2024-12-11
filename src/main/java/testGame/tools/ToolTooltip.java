@@ -6,9 +6,9 @@ import engine.ecs.components.SpriteRenderer;
 import engine.ui.Text;
 import engine.ui.fonts.Font;
 import engine.ui.fonts.FontLoader;
+import engine.util.Color;
 import engine.util.Layer;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 public class ToolTooltip {
     private static final int WIDTH = 100;
@@ -23,8 +23,9 @@ public class ToolTooltip {
                 transform.position.y - HEIGHT - 10
         );
         GameObject tooltip = new GameObject("Tooltip_" + tool.name(), new Transform(toolTipPosition, new Vector2f(WIDTH, HEIGHT)), Layer.NO_INTERACTION);
-        tooltip.addComponent(new SpriteRenderer().setColor(new Vector4f(1, 1, 1, 1)));
-        Text level = new Text("Level: " + tool.level(), font, new Vector4f(0, 0, 0, 1), toolTipPosition.x + 10, toolTipPosition.y);
+        tooltip.addComponent(new SpriteRenderer().setColor(Color.WHITE));
+
+        Text level = new Text("Level: " + tool.level(), font, Color.BLACK, toolTipPosition.x + 10, toolTipPosition.y);
         return tooltip;
     }
 }

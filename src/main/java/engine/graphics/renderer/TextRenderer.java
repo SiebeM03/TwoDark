@@ -85,7 +85,7 @@ public class TextRenderer extends Renderer {
             batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
 
             // Load color
-            batch.pushVec4(glyph.getColor());
+            batch.pushVec4(glyph.getColor().toNormalizedVec4f());
 
             // Load texture coordinates
             batch.pushVec2(texCoords[i]);

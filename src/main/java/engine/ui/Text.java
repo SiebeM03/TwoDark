@@ -7,9 +7,9 @@ import engine.graphics.renderer.TextRenderer;
 import engine.ui.fonts.Font;
 import engine.ui.fonts.Glyph;
 import engine.ui.fonts.GlyphRenderer;
+import engine.util.Color;
 import engine.util.Layer;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 
@@ -19,13 +19,13 @@ public class Text {
     private int zIndex;
 
     private ArrayList<GlyphRenderer> glyphRenderers;
-    private Vector4f color = new Vector4f(1, 1, 1, 1);
+    private Color color = Color.WHITE;
 
     private Font font;
     private CharSequence text;
 
 
-    public Text(String string, Font font, Vector4f color, float x, float y) {
+    public Text(String string, Font font, Color color, float x, float y) {
         this.text = string;
         this.font = font;
         this.color = color;

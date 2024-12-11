@@ -6,7 +6,6 @@ import engine.ecs.GameObject;
 import engine.ecs.Transform;
 import engine.ecs.components.SpriteRenderer;
 import engine.ui.MouseEventConsumer;
-import org.joml.Vector4f;
 
 import java.lang.reflect.Type;
 

@@ -2,7 +2,7 @@ package testGame.resources;
 
 import engine.ecs.components.SpriteRenderer;
 import engine.ui.MouseEventConsumer;
-import org.joml.Vector4f;
+import engine.util.Color;
 
 public abstract class Resource extends MouseEventConsumer {
     private String name;
@@ -27,12 +27,12 @@ public abstract class Resource extends MouseEventConsumer {
 
     @Override
     public void onEnter() {
-        gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(0.8f, 0.8f, 0.8f, 1));
+        gameObject.getComponent(SpriteRenderer.class).setColor(this.hoverColor);
     }
 
     @Override
     public void onLeave() {
-        gameObject.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 1, 1, 1));
+        gameObject.getComponent(SpriteRenderer.class).setColor(Color.WHITE);
     }
 
     private void harvest() {

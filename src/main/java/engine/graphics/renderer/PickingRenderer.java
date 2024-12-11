@@ -119,7 +119,7 @@ public class PickingRenderer extends Renderer {
                 batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
 
                 // Load color
-                batch.pushVec4(sprite.getColor());
+                batch.pushVec4(sprite.getColor().toNormalizedVec4f());
 
                 // Load texture coordinates
                 batch.pushVec2(texCoords[i]);

@@ -5,9 +5,9 @@ import engine.ecs.Component;
 import engine.ecs.Sprite;
 import engine.ecs.Transform;
 import engine.graphics.renderer.Texture;
+import engine.util.Color;
 import imgui.ImGui;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 /**
  * A component responsible for rendering a {@link Sprite} with a specified color and texture.
@@ -18,7 +18,7 @@ public class SpriteRenderer extends Component {
     /**
      * The color of the sprite. Default is white (1, 1, 1, 1).
      */
-    private Vector4f color = new Vector4f(1, 1, 1, 1);
+    private Color color = Color.WHITE;
 
     /**
      * The sprite being rendered.
@@ -62,14 +62,14 @@ public class SpriteRenderer extends Component {
      */
     @Override
     public void imgui() {
-        float[] imColor = {color.x, color.y, color.z, color.w};
+        float[] imColor = {color.r(), color.g(), color.b(), color.a()};
         if (ImGui.colorPicker4("Color Picker: ", imColor)) {
             this.color.set(imColor[0], imColor[1], imColor[2], imColor[3]);
             this.isDirty = true;
         }
     }
 
-    public Vector4f getColor() {
+    public Color getColor() {
         return this.color;
     }
 
@@ -87,7 +87,7 @@ public class SpriteRenderer extends Component {
         return this;
     }
 
-    public SpriteRenderer setColor(Vector4f color) {
+    public SpriteRenderer setColor(Color color) {
         if (!this.color.equals(color)) {
             this.color.set(color);
             this.isDirty = true;

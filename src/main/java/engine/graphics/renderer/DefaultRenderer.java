@@ -38,7 +38,7 @@ public class DefaultRenderer extends Renderer {
     @Override
     protected RenderBatch createBatch(int zIndex) {
         return new RenderBatch(MAX_BATCH_SIZE, zIndex, Primitive.QUAD,
-                ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT
+                ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT
         );
     }
 
@@ -83,16 +83,13 @@ public class DefaultRenderer extends Renderer {
                 batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
 
                 // Load color
-                batch.pushVec4(sprite.getColor());
+                batch.pushVec4(sprite.getColor().toNormalizedVec4f());
 
                 // Load texture coordinates
                 batch.pushVec2(texCoords[i]);
 
                 // Load texture id
                 batch.pushInt(texID);
-
-                // Load entity id
-                batch.pushInt(sprite.gameObject.getUid() + 1);
 
                 // Load cooldown value
                 MouseEventConsumer mouseEventConsumer = sprite.gameObject.getComponent(MouseEventConsumer.class);

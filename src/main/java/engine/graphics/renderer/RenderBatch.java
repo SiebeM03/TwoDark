@@ -2,6 +2,8 @@ package engine.graphics.renderer;
 
 import engine.graphics.Primitive;
 import engine.graphics.ShaderDatatype;
+import engine.util.Color;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -241,5 +243,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
         vertices[dataOffset++] = vec.z;
         vertices[dataOffset++] = vec.w;
         checkFullness();
+    }
+
+    public void pushColor(Color color) {
+        pushVec4(color.r(), color.g(), color.b(), color.a());
     }
 }

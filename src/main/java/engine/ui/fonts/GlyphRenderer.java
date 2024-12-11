@@ -3,11 +3,12 @@ package engine.ui.fonts;
 import engine.ecs.Transform;
 import engine.graphics.renderer.Texture;
 import engine.ui.Text;
+import engine.util.Color;
+
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 public class GlyphRenderer {
-    private Vector4f color;
+    private Color color;
 
     private Glyph glyph;
     private char character;
@@ -16,7 +17,7 @@ public class GlyphRenderer {
     private Transform localTransform;
     private Transform lastTransform = new Transform();
 
-    public GlyphRenderer(Transform transform, Glyph glyph, Text parentText, char c, Vector4f color) {
+    public GlyphRenderer(Transform transform, Glyph glyph, Text parentText, char c, Color color) {
         this.localTransform = transform;
         this.glyph = glyph;
         this.color = color;
@@ -51,9 +52,9 @@ public class GlyphRenderer {
     }
 
     /**
-     * @return a Vector4f containing the normalized (0-1) color values (R, G, B, and A)
+     * @return a Color containing the normalized (0-1) color values (R, G, B, and A)
      */
-    public Vector4f getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -62,11 +63,11 @@ public class GlyphRenderer {
     }
 
     /**
-     * Change the color by passing a Vector4f
+     * Change the color by passing a Color
      *
-     * @param color vector, values should be in the range of 0-1
+     * @param color values should be in the range of 0-1
      */
-    public void setColor(Vector4f color) {
+    public void setColor(Color color) {
         if (!this.color.equals(color)) {
             this.color = color;
         }
