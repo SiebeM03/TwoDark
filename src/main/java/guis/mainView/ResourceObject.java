@@ -1,4 +1,4 @@
-package testGame.resources;
+package guis.mainView;
 
 import engine.ecs.GameObject;
 import engine.ecs.Sprite;
@@ -9,6 +9,8 @@ import engine.ui.EventConsumer;
 import engine.util.AssetPool;
 import engine.util.Layer;
 import org.joml.Vector2f;
+import testGame.resources.Resource;
+import testGame.resources.ResourceManager;
 
 
 public class ResourceObject extends EventConsumer {
@@ -24,12 +26,13 @@ public class ResourceObject extends EventConsumer {
                 new Transform(new Vector2f(x, y), new Vector2f(SIZE, SIZE)),
                 Layer.INTERACTION);
         resourceObject.addComponent(new SpriteRenderer().setSprite(
-                new Sprite().setTexture(AssetPool.getTexture(resource.texturePath))
+                new Sprite().setTexture(AssetPool.getTexture(resource.getTexturePath()))
         ));
-        resourceObject.addComponent(this);
+        resourceObject.eventConsumer = this;
+        this.gameObject = resourceObject;
 
         setHasCooldownAnimation();
-        setClickDelay(resource.clickDelay);
+        setClickDelay(resource.getClickDelay());
 
         Window.getScene().addGameObjectToScene(resourceObject);
     }

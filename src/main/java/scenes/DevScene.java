@@ -1,28 +1,24 @@
 package scenes;
 
 import engine.ecs.GameObject;
-import engine.ecs.Sprite;
 import engine.ecs.SpriteSheet;
 import engine.ecs.Transform;
 import engine.ecs.components.MouseControls;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Camera;
-import engine.ui.RenderableComponent;
-import engine.ui.UIComponent;
 import engine.ui.fonts.FontLoader;
 import engine.util.AssetPool;
-import engine.util.Color;
 import engine.util.Layer;
 import engine.util.Settings;
+import guis.mainView.ResourceObject;
+import guis.topBar.ResourceCounterUI;
+import guis.topBar.TopBar;
 import org.joml.Vector2f;
-import testGame.resources.ResourceCounterUI;
-import testGame.resources.ResourceObject;
 import testGame.resources.types.Metal;
 import testGame.resources.types.Stone;
 import testGame.resources.types.Wood;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -35,27 +31,14 @@ public class DevScene extends Scene {
     public void init() {
         devSceneGameObject.addComponent(new MouseControls());
         this.camera = new Camera(new Vector2f());
-
         FontLoader.loadFonts();
-
         loadResources();
 
         new ResourceObject(Wood.class, (float) Settings.PROJECTION_WIDTH / 2 - 400, 100);
         new ResourceObject(Stone.class, (float) Settings.PROJECTION_WIDTH / 2 - 100, 100);
         new ResourceObject(Metal.class, (float) Settings.PROJECTION_WIDTH / 2 + 200, 100);
 
-
-        UIComponent topBar = new RenderableComponent("TopBar", Color.BACKGROUND, new Sprite());
-        topBar.setTransform(new Transform(new Vector2f(0, Settings.PROJECTION_HEIGHT - 50), new Vector2f(Settings.PROJECTION_WIDTH, 50)));
-        topBar.setNoInteraction();
-        addUIComponent(topBar);
-
-        resourceCounters = new ArrayList<>(Arrays.asList(
-                new ResourceCounterUI(Wood.class, 50, 15, topBar),
-                new ResourceCounterUI(Metal.class, 200, 15, topBar),
-                new ResourceCounterUI(Stone.class, 350, 15, topBar)
-        ));
-
+        addUIComponent(new TopBar());
 
         if (levelLoaded) {
             if (gameObjects.size() > 0) {
@@ -97,9 +80,9 @@ public class DevScene extends Scene {
         devSceneGameObject.update();
 
 
-        for (ResourceCounterUI ui : resourceCounters) {
-            ui.update();
-        }
+//        for (ResourceCounterUI ui : resourceCounters) {
+//            ui.update();
+//        }
 
 
 //        test.setPosition(new Vector2f(MouseListener.getScreenX(), MouseListener.getScreenY()));

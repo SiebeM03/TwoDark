@@ -53,7 +53,6 @@ public class DefaultRenderer extends Renderer {
     @Override
     protected void rebuffer() {
         for (SpriteRenderer sprite : sprites) {
-            System.out.println(sprite.gameObject.name + ": " + sprite.getColor().r() + " " + sprite.getColor().g() + " " + sprite.getColor().b() + " " + sprite.getColor().a());
             RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.gameObject.zIndex());
 
             Vector2f pos = sprite.gameObject.transform.position;
@@ -93,7 +92,7 @@ public class DefaultRenderer extends Renderer {
                 batch.pushInt(texID);
 
                 // Load cooldown value
-                EventConsumer eventConsumer = sprite.gameObject.getComponent(EventConsumer.class);
+                EventConsumer eventConsumer = sprite.gameObject.eventConsumer;
                 if (eventConsumer != null && eventConsumer.hasCooldownAnimation()) {
                     batch.pushFloat(Math.min(1.0f, eventConsumer.clickDelayTimer() / eventConsumer.clickDelay()));
                 } else {

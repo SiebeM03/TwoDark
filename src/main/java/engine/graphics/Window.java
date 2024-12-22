@@ -119,7 +119,7 @@ public class Window {
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
-//        setupMonitor();
+        setupMonitor();
 
         MouseListener.setupCallbacks();
         KeyListener.setupCallbacks();
@@ -149,7 +149,7 @@ public class Window {
         }
         FontLoader.loadFonts();
 
-        Window.changeScene(0);
+        Window.changeScene(DevScene.class);
     }
 
     /**
@@ -233,13 +233,13 @@ public class Window {
      *
      * @param newScene the ID of the new scene (0: {@link DevScene}, 1: {@link HomeScene})
      */
-    public static void changeScene(int newScene) {
-        switch (newScene) {
-            case 0 -> currentScene = new DevScene();
-            case 1 -> currentScene = new HomeScene();
-            default -> {
-                assert false : "Unknown scene: '" + newScene + "'";
-            }
+    public static void changeScene(Class<? extends Scene> newScene) {
+        if (newScene.equals(DevScene.class)) {
+            currentScene = new DevScene();
+        } else if (newScene.equals(HomeScene.class)) {
+            currentScene = new HomeScene();
+        } else {
+            assert false : "Unknown scene: '" + newScene + "'";
         }
 
         SceneLoader.loadScene(currentScene);

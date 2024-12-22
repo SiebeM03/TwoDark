@@ -36,4 +36,12 @@ public abstract class Resource {
     public void setAmountPerClick(float amountPerClick) {
         this.amountPerClick = amountPerClick;
     }
+
+    public String getTexturePath() {
+        return texturePath;
+    }
+
+    public float getClickDelay() {
+        return clickDelay;
+    }
 }

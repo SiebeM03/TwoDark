@@ -12,12 +12,22 @@ public abstract class BaseComponent implements UIComponent {
     protected UIComponent parent = null;
     protected List<UIComponent> children = new ArrayList<>();
 
+    public EventConsumer eventConsumer = null;
 
     @Override
     public void update() {
         for (UIComponent child : children) {
             child.update();
         }
+        if (eventConsumer != null) {
+            eventConsumer.update();
+        }
+    }
+
+    @Override
+    public void setEventConsumer(EventConsumer eventConsumer) {
+        System.out.println("Setting event consumer for " + this.name + " to " + eventConsumer);
+        this.eventConsumer = eventConsumer;
     }
 
     @Override
@@ -37,6 +47,10 @@ public abstract class BaseComponent implements UIComponent {
         child.setParent(null);
     }
 
+    public List<UIComponent> getChildren() {
+        return children;
+    }
+
     @Override
     public Vector2f getAbsolutePosition() {
         if (this.parent == null) return new Vector2f(transform.getX(), transform.getY());
@@ -46,5 +60,14 @@ public abstract class BaseComponent implements UIComponent {
     @Override
     public void setTransform(Transform transform) {
         this.transform = transform;
+    }
+
+    @Override
+    public Transform getTransform() {
+        return transform;
+    }
+
+    @Override
+    public void setNoInteraction() {
     }
 }

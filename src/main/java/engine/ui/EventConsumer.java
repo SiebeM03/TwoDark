@@ -1,15 +1,17 @@
 package engine.ui;
 
 
-import engine.ecs.Component;
+import engine.ecs.GameObject;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Window;
 import engine.listeners.MouseListener;
 import engine.util.Color;
 import engine.util.Engine;
+import engine.util.JMath;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class EventConsumer extends Component {
+public abstract class EventConsumer {
     protected abstract void onClick();
 
     protected abstract void onHover();
@@ -19,6 +21,9 @@ public abstract class EventConsumer extends Component {
     protected abstract void onLeave();
 
     private boolean wasMouseOnThis;
+
+    public GameObject gameObject;
+    public UIComponent uiComponent;
 
 
     /** The current color of the UI element. */
@@ -38,7 +43,6 @@ public abstract class EventConsumer extends Component {
 
     private boolean hasCooldownAnimation = false;
 
-    @Override
     public void update() {
         boolean isMouseOnThis = isMouseOnThis();
 
@@ -125,7 +129,13 @@ public abstract class EventConsumer extends Component {
      * @return true if the mouse is on the element, false otherwise
      */
     private boolean isMouseOnThis() {
-        int hoveredUid = Window.readPixel((int) MouseListener.getScreenX(), (int) MouseListener.getScreenY());
-        return hoveredUid == gameObject.getUid();
+        if (gameObject != null) {
+            int hoveredUid = Window.readPixel((int) MouseListener.getScreenX(), (int) MouseListener.getScreenY());
+            return hoveredUid == gameObject.getUid();
+        }
+        if (uiComponent != null) {
+            return JMath.inRect(new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY()), uiComponent.getAbsolutePosition().x(), uiComponent.getAbsolutePosition().y(), uiComponent.getTransform().scale.x, uiComponent.getTransform().scale.y);
+        }
+        return false;
     }
 }

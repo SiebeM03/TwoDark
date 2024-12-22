@@ -1,5 +1,7 @@
 package engine.ecs;
 
+import engine.ui.EventConsumer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class GameObject {
      * The zIndex of the GameObject. This is used to determine the order in which GameObjects are rendered.
      */
     private int zIndex;
+
+    public EventConsumer eventConsumer = null;
 
     public GameObject(String name, Transform transform, int zIndex) {
         this.name = name;
@@ -70,6 +74,9 @@ public class GameObject {
     public void update() {
         for (int i = 0; i < components.size(); i++) {
             components.get(i).update();
+        }
+        if (eventConsumer != null) {
+            eventConsumer.update();
         }
     }
 

@@ -42,7 +42,7 @@ public class RenderableComponent extends BaseComponent {
     @Override
     public void update() {
         super.update();
-        this.hovering = JMath.inRect(new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY()), transform.getX(), transform.getY(), transform.scale.x, transform.scale.y);
+        this.hovering = JMath.inRect(new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY()), getAbsolutePosition().x(), getAbsolutePosition().y(), transform.scale.x, transform.scale.y);
         if (this.hovering) {
             setColor(hoverColor);
         } else {

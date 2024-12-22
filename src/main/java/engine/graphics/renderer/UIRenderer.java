@@ -1,17 +1,15 @@
 package engine.graphics.renderer;
 
-import engine.ecs.Sprite;
-import engine.graphics.Primitive;
-import engine.graphics.Shader;
-import engine.graphics.ShaderDatatype;
-import engine.graphics.Window;
+import engine.graphics.*;
 import engine.ui.RenderableComponent;
+import engine.ui.UIComponent;
 import engine.util.AssetPool;
 import engine.util.Layer;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UIRenderer extends Renderer {
@@ -96,6 +94,11 @@ public class UIRenderer extends Renderer {
     public void add(RenderableComponent component) {
         if (component != null) {
             components.add(component);
+            for (UIComponent child : component.getChildren()) {
+                if (child instanceof RenderableComponent) {
+                    add((RenderableComponent) child);
+                }
+            }
         }
     }
 

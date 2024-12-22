@@ -6,7 +6,6 @@ import engine.graphics.Primitive;
 import engine.graphics.Shader;
 import engine.graphics.ShaderDatatype;
 import engine.graphics.Window;
-import engine.ui.EventConsumer;
 import engine.util.AssetPool;
 import org.joml.Vector2f;
 
