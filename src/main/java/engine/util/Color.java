@@ -3,14 +3,15 @@ package engine.util;
 import org.joml.Vector4f;
 
 public class Color {
-    public static final Color WHITE = new Color(1, 1, 1, 1);
-    public static final Color BLACK = new Color(0, 0, 0, 1);
-    public static final Color RED = new Color(1, 0, 0, 1);
-    public static final Color GREEN = new Color(0, 1, 0, 1);
-    public static final Color BLUE = new Color(0, 0, 1, 1);
-    public static final Color YELLOW = new Color(1, 1, 0, 1);
-    public static final Color CYAN = new Color(0, 1, 1, 1);
-    public static final Color MAGENTA = new Color(1, 0, 1, 1);
+    public static Color WHITE = new Color(1, 1, 1, 1);
+    public static Color BLACK = new Color(0, 0, 0, 1);
+    public static Color RED = new Color(1, 0, 0, 1);
+    public static Color GREEN = new Color(0, 1, 0, 1);
+    public static Color BLUE = new Color(0, 0, 1, 1);
+    public static Color YELLOW = new Color(1, 1, 0, 1);
+    public static Color CYAN = new Color(0, 1, 1, 1);
+    public static Color MAGENTA = new Color(1, 0, 1, 1);
+    public static Color BACKGROUND = new Color("#919191");
 
     private Vector4f color;
 
@@ -71,5 +72,14 @@ public class Color {
 
     public float a() {
         return color.w;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Color) {
+            Color c = (Color) obj;
+            return c.color.equals(this.color);
+        }
+        return false;
     }
 }

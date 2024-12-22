@@ -2,6 +2,7 @@ package scenes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import engine.ecs.Component;
 import engine.ecs.GameObject;
 import engine.ecs.serialization.ComponentSerializer;
@@ -12,12 +13,18 @@ import engine.ecs.serialization.dataStructures.ToolData;
 import engine.graphics.Window;
 import engine.util.Layer;
 import testGame.resources.Resource;
+import testGame.resources.ResourceManager;
+import testGame.resources.types.Metal;
+import testGame.resources.types.Stone;
+import testGame.resources.types.Wood;
 import testGame.tools.Tool;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,32 +33,31 @@ public class SceneLoader {
         if (!Window.get().loadFromFiles()) {
             return;
         }
-        Gson levelGson = new GsonBuilder()
-                                 .setPrettyPrinting()
-                                 .registerTypeAdapter(Component.class, new ComponentSerializer())
-                                 .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
-                                 .create();
+//        Gson levelGson = new GsonBuilder()
+//                                 .setPrettyPrinting()
+//                                 .registerTypeAdapter(Component.class, new ComponentSerializer())
+//                                 .registerTypeAdapter(GameObject.class, new GameObjectSerializer())
+//                                 .create();
         Gson dataGson = new GsonBuilder()
                                 .setPrettyPrinting()
                                 .create();
 
-        List<GameObject> gameObjectsWithoutUI = scene.gameObjects.stream().filter(go -> go.zIndex() != Layer.NO_INTERACTION).toList();
-        List<ResourceData> resources = scene.gameObjects.stream()
-                                               .map(go -> go.getComponent(Resource.class))
-                                               .filter(Objects::nonNull)
-                                               .map(r -> new ResourceData(r.getUid(), r.name(), r.amount(), r.getClass().getCanonicalName()))
+//        List<GameObject> gameObjectsWithoutUI = scene.gameObjects.stream().filter(go -> go.zIndex() != Layer.NO_INTERACTION).toList();
+        List<ResourceData> resources = ResourceManager.getResources().stream()
+                                               .map(r -> new ResourceData(-1, r.name(), r.amount(), r.getClass().getCanonicalName()))
                                                .toList();
 
-        List<ToolData> tools = scene.gameObjects.stream()
-                                       .map(go -> go.getComponent(Tool.class))
-                                       .filter(Objects::nonNull)
-                                       .map(t -> new ToolData(t.getUid(), t.name(), t.level(), t.getClass().getCanonicalName()))
-                                       .toList();
+        List<ToolData> tools = new ArrayList<>();
+//        List<ToolData> tools = scene.gameObjects.stream()
+//                                       .map(go -> go.getComponent(Tool.class))
+//                                       .filter(Objects::nonNull)
+//                                       .map(t -> new ToolData(t.getUid(), t.name(), t.level(), t.getClass().getCanonicalName()))
+//                                       .toList();
 
         try {
-            FileWriter writer = new FileWriter("level.txt");
-            writer.write(levelGson.toJson(gameObjectsWithoutUI));
-            writer.close();
+//             FileWriter writer = new FileWriter("level.txt");
+//            writer.write(levelGson.toJson(gameObjectsWithoutUI));
+//            writer.close();
 
             FileWriter writerUI = new FileWriter("data.txt");
             writerUI.write(dataGson.toJson(new Data(resources, tools)));
@@ -67,7 +73,7 @@ public class SceneLoader {
             return;
         }
         // For now, we will just load the GameObjects and Components from our dev scene
-        loadGameObjectsAndComponents(scene);
+//        loadGameObjectsAndComponents(scene);
         loadGameData(scene);
     }
 
@@ -147,27 +153,46 @@ public class SceneLoader {
         if (!dataFile.equals("")) {
             Data data = gson.fromJson(dataFile, Data.class);
             for (ResourceData rd : data.resources()) {
-                int uid = rd.uid();
-                for (GameObject go : scene.gameObjects) {
-                    Resource r = go.getComponent(Resource.class);
-                    if (r != null && r.getUid() == uid) {
-                        r.setName(rd.name());
-                        r.setAmount(rd.amount());
-                    }
+                try {
+                    String className = rd.type();
+                    Class<?> clazz = Class.forName(className);
+
+                    Object instance = clazz.getDeclaredConstructor().newInstance();
+
+                    Resource resource = (Resource) instance;
+                    resource.setName(rd.name());
+                    resource.setAmount(rd.amount());
+                    ResourceManager.addResource(resource);
+                } catch (ClassNotFoundException e) {
+                    System.err.println("Class not found: " + e.getMessage());
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                         InvocationTargetException e) {
+                    System.err.println("Error creating instance: " + e.getMessage());
                 }
             }
             for (ToolData td : data.tools()) {
-                int uid = td.uid();
-                for (GameObject go : scene.gameObjects) {
-                    Tool t = go.getComponent(Tool.class);
-                    if (t != null && t.getUid() == uid) {
-                        t.setName(td.name());
-                        t.setLevel(td.level());
-                    }
+                try {
+                    String className = td.type();
+                    Class<?> clazz = Class.forName(className);
+
+                    Object instance = clazz.getDeclaredConstructor().newInstance();
+
+                    Tool tool = (Tool) instance;
+                    tool.setName(td.name());
+                    tool.setLevel(td.level());
+                } catch (ClassNotFoundException e) {
+                    System.err.println("Class not found: " + e.getMessage());
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                         InvocationTargetException e) {
+                    System.err.println("Error creating instance: " + e.getMessage());
                 }
             }
             return true;
         } else {
+            ResourceManager.addResource(new Wood());
+            ResourceManager.addResource(new Metal());
+            ResourceManager.addResource(new Stone());
+
             return false;
         }
     }

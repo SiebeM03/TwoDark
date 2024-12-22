@@ -6,7 +6,7 @@ import engine.graphics.Primitive;
 import engine.graphics.Shader;
 import engine.graphics.ShaderDatatype;
 import engine.graphics.Window;
-import engine.ui.MouseEventConsumer;
+import engine.ui.EventConsumer;
 import engine.util.AssetPool;
 import org.joml.Vector2f;
 
@@ -53,6 +53,7 @@ public class DefaultRenderer extends Renderer {
     @Override
     protected void rebuffer() {
         for (SpriteRenderer sprite : sprites) {
+            System.out.println(sprite.gameObject.name + ": " + sprite.getColor().r() + " " + sprite.getColor().g() + " " + sprite.getColor().b() + " " + sprite.getColor().a());
             RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.gameObject.zIndex());
 
             Vector2f pos = sprite.gameObject.transform.position;
@@ -83,7 +84,7 @@ public class DefaultRenderer extends Renderer {
                 batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
 
                 // Load color
-                batch.pushVec4(sprite.getColor().toNormalizedVec4f());
+                batch.pushColor(sprite.getColor());
 
                 // Load texture coordinates
                 batch.pushVec2(texCoords[i]);
@@ -92,9 +93,9 @@ public class DefaultRenderer extends Renderer {
                 batch.pushInt(texID);
 
                 // Load cooldown value
-                MouseEventConsumer mouseEventConsumer = sprite.gameObject.getComponent(MouseEventConsumer.class);
-                if (mouseEventConsumer != null && mouseEventConsumer.hasCooldownAnimation()) {
-                    batch.pushFloat(Math.min(1.0f, mouseEventConsumer.clickDelayTimer() / mouseEventConsumer.clickDelay()));
+                EventConsumer eventConsumer = sprite.gameObject.getComponent(EventConsumer.class);
+                if (eventConsumer != null && eventConsumer.hasCooldownAnimation()) {
+                    batch.pushFloat(Math.min(1.0f, eventConsumer.clickDelayTimer() / eventConsumer.clickDelay()));
                 } else {
                     batch.pushFloat(0.0f);
                 }

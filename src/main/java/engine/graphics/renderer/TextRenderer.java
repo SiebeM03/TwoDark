@@ -51,13 +51,18 @@ public class TextRenderer extends Renderer {
             ArrayList<GlyphRenderer> glyphs = text.getGlyphRenderers();
             for (GlyphRenderer glyph : glyphs) {
                 RenderBatch batch = getAvailableBatch(glyph.getTexture(), text.zIndex());
-                pushGlyph(batch, glyph);
+                pushGlyph(batch, glyph, text);
             }
         }
     }
 
-    private static void pushGlyph(RenderBatch batch, GlyphRenderer glyph) {
-        Vector2f pos = glyph.getLocalTransform().position;
+    private static void pushGlyph(RenderBatch batch, GlyphRenderer glyph, Text text) {
+        Vector2f pos;
+        if (text.getParent() == null) {
+            pos = glyph.getLocalTransform().position;
+        } else {
+            pos = new Vector2f(glyph.getLocalTransform().position).add(text.getParent().getAbsolutePosition());
+        }
         Vector2f scale = glyph.getLocalTransform().scale;
         Vector2f[] texCoords = glyph.getTexCoords();
 
@@ -85,7 +90,7 @@ public class TextRenderer extends Renderer {
             batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
 
             // Load color
-            batch.pushVec4(glyph.getColor().toNormalizedVec4f());
+            batch.pushColor(glyph.getColor());
 
             // Load texture coordinates
             batch.pushVec2(texCoords[i]);

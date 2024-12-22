@@ -119,7 +119,7 @@ public class Window {
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
-        setupMonitor();
+//        setupMonitor();
 
         MouseListener.setupCallbacks();
         KeyListener.setupCallbacks();

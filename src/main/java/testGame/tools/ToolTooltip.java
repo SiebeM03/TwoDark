@@ -17,7 +17,7 @@ public class ToolTooltip {
     static Font font = FontLoader.getOpenSans();
 
     public static GameObject createTooltip(Tool tool) {
-        Transform transform = tool.gameObject.transform;
+        Transform transform = new Transform();
         Vector2f toolTipPosition = new Vector2f(
                 transform.position.x + (transform.scale.x - WIDTH) / 2,
                 transform.position.y - HEIGHT - 10

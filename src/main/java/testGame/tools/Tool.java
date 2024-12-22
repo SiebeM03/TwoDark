@@ -3,7 +3,6 @@ package testGame.tools;
 import engine.ecs.GameObject;
 import engine.ecs.components.SpriteRenderer;
 import engine.graphics.Window;
-import engine.ui.MouseEventConsumer;
 import engine.util.Color;
 
 import testGame.resources.Resource;
@@ -12,39 +11,14 @@ import testGame.resources.ResourceManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Tool extends MouseEventConsumer {
+public class Tool {
     private String name;
     private int level = 1;
     private Map<Class<? extends Resource>, Integer> resourceIncreases;
     private GameObject tooltipGo;
 
     public Tool() {
-        setClickDelay(0.5f);
         resourceIncreases = new HashMap<>();
-    }
-
-    @Override
-    public void onClick() {
-        if (!canClick()) return;
-        upgrade();
-        resetClickDelayTimer();
-    }
-
-    @Override
-    public void onHover() {
-    }
-
-    @Override
-    public void onEnter() {
-        gameObject.getComponent(SpriteRenderer.class).setColor(this.hoverColor);
-        tooltipGo = ToolTooltip.createTooltip(this);
-        Window.getScene().addGameObjectToScene(tooltipGo);
-    }
-
-    @Override
-    public void onLeave() {
-        gameObject.getComponent(SpriteRenderer.class).setColor(Color.WHITE);
-        Window.getScene().removeGameObjectFromScene(tooltipGo);
     }
 
     private void upgrade() {

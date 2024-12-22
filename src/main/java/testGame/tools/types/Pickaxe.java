@@ -10,9 +10,4 @@ public class Pickaxe extends Tool {
         addResourceIncrease(Stone.class, 2 * level());
         addResourceIncrease(Metal.class, 5 * level());
     }
-
-    @Override
-    public void onHover() {
-
-    }
 }

@@ -77,4 +77,18 @@ public class JMath {
     public static boolean compare(Vector2f vec1, Vector2f vec2) {
         return compare(vec1.x, vec2.x) && compare(vec1.y, vec2.y);
     }
+
+    /**
+     * Checks if a set of X and Y coordinates are inside of a rectangle.
+     *
+     * @param in         physics.Vector2f containing coordinates of point to check
+     * @param rectX      X position of rectangle
+     * @param rectY      Y position of rectangle
+     * @param rectWidth  Width of rectangle
+     * @param rectHeight Height of rectangle
+     * @return Returns true if the point is inside the rectangle, otherwise returns false.
+     */
+    public static boolean inRect(Vector2f in, float rectX, float rectY, float rectWidth, float rectHeight) {
+        return in.x >= rectX && in.x <= (rectX + rectWidth) && in.y >= rectY && in.y <= (rectY + rectHeight);
+    }
 }

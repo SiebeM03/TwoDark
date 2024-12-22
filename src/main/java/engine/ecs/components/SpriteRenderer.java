@@ -30,11 +30,6 @@ public class SpriteRenderer extends Component {
      */
     private transient Transform lastTransform;
 
-    /**
-     * Indicates if the rendering state requires updating.
-     */
-    private transient boolean isDirty = true;
-
 
     /**
      * Initializes the component and saves the initial transform state.
@@ -51,7 +46,6 @@ public class SpriteRenderer extends Component {
     public void update() {
         if (!this.lastTransform.equals(this.gameObject.transform)) {
             this.gameObject.transform.copy(this.lastTransform);
-            isDirty = true;
         }
     }
 
@@ -65,7 +59,6 @@ public class SpriteRenderer extends Component {
         float[] imColor = {color.r(), color.g(), color.b(), color.a()};
         if (ImGui.colorPicker4("Color Picker: ", imColor)) {
             this.color.set(imColor[0], imColor[1], imColor[2], imColor[3]);
-            this.isDirty = true;
         }
     }
 
@@ -83,34 +76,14 @@ public class SpriteRenderer extends Component {
 
     public SpriteRenderer setSprite(Sprite sprite) {
         this.sprite = sprite;
-        this.isDirty = true;
         return this;
     }
 
     public SpriteRenderer setColor(Color color) {
         if (!this.color.equals(color)) {
-            this.color.set(color);
-            this.isDirty = true;
+            this.color = color;
         }
         return this;
-    }
-
-    public boolean isDirty() {
-        return this.isDirty;
-    }
-
-    /**
-     * Marks the component's state as dirty, forcing a rendering update.
-     */
-    public void setDirty() {
-        this.isDirty = true;
-    }
-
-    /**
-     * Marks the component's state as clean, indicating no pending updates.
-     */
-    public void setClean() {
-        this.isDirty = false;
     }
 
     public SpriteRenderer setTexture(Texture texture) {

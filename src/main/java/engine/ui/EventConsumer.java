@@ -1,16 +1,25 @@
 package engine.ui;
 
+
 import engine.ecs.Component;
 import engine.ecs.components.SpriteRenderer;
+import engine.graphics.Window;
+import engine.listeners.MouseListener;
 import engine.util.Color;
 import engine.util.Engine;
+import org.lwjgl.glfw.GLFW;
 
-/**
- * Abstract class for handling mouse events on a UI element.
- * This class provides default behavior for handling hover, click, enter, and leave events,
- * along with a click delay mechanism to control interaction timing.
- */
-public abstract class MouseEventConsumer extends Component {
+public abstract class EventConsumer extends Component {
+    protected abstract void onClick();
+
+    protected abstract void onHover();
+
+    protected abstract void onEnter();
+
+    protected abstract void onLeave();
+
+    private boolean wasMouseOnThis;
+
 
     /** The current color of the UI element. */
     protected Color color = Color.WHITE;
@@ -29,19 +38,28 @@ public abstract class MouseEventConsumer extends Component {
 
     private boolean hasCooldownAnimation = false;
 
-
-    public abstract void onClick();
-
-    public abstract void onHover();
-
-    public abstract void onEnter();
-
-    public abstract void onLeave();
-
     @Override
     public void update() {
+        boolean isMouseOnThis = isMouseOnThis();
+
+        if (isMouseOnThis && !wasMouseOnThis) {
+            // If the mouse is on this element and wasn't before, enter
+            onEnter();
+        } else if (!isMouseOnThis && wasMouseOnThis) {
+            // If the mouse isn't on this element and was before, leave
+            onLeave();
+        }
+        if (isMouseOnThis) {
+            if (MouseListener.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+                onClick();
+            } else {
+                onHover();
+            }
+        }
         updateClickDelayTimer();
+        wasMouseOnThis = isMouseOnThis();
     }
+
 
     /**
      * Updates the click delay timer based on the elapsed time since the last frame.
@@ -52,7 +70,6 @@ public abstract class MouseEventConsumer extends Component {
     private void updateClickDelayTimer() {
         if (!canClick()) {
             clickDelayTimer += Engine.deltaTime();
-            gameObject.getComponent(SpriteRenderer.class).setDirty();
         }
     }
 
@@ -71,6 +88,7 @@ public abstract class MouseEventConsumer extends Component {
     protected boolean canClick() {
         return clickDelayTimer >= clickDelay;
     }
+
 
     public float clickDelay() {
         return clickDelay;
@@ -99,5 +117,15 @@ public abstract class MouseEventConsumer extends Component {
 
     public boolean hasCooldownAnimation() {
         return hasCooldownAnimation;
+    }
+
+    /**
+     * Checks if the mouse is currently positioned over the UI element.
+     *
+     * @return true if the mouse is on the element, false otherwise
+     */
+    private boolean isMouseOnThis() {
+        int hoveredUid = Window.readPixel((int) MouseListener.getScreenX(), (int) MouseListener.getScreenY());
+        return hoveredUid == gameObject.getUid();
     }
 }

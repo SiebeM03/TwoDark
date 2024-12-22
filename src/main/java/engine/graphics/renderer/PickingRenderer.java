@@ -6,7 +6,7 @@ import engine.graphics.Primitive;
 import engine.graphics.Shader;
 import engine.graphics.ShaderDatatype;
 import engine.graphics.Window;
-import engine.ui.MouseEventConsumer;
+import engine.ui.EventConsumer;
 import engine.util.AssetPool;
 import org.joml.Vector2f;
 
@@ -82,7 +82,7 @@ public class PickingRenderer extends Renderer {
     @Override
     protected RenderBatch createBatch(int zIndex) {
         return new RenderBatch(MAX_BATCH_SIZE, zIndex, Primitive.QUAD,
-                ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT
+                ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT
         );
     }
 
@@ -129,14 +129,6 @@ public class PickingRenderer extends Renderer {
 
                 // Load entity id
                 batch.pushInt(sprite.gameObject.getUid() + 1);
-
-                // Load cooldown value
-                MouseEventConsumer mouseEventConsumer = sprite.gameObject.getComponent(MouseEventConsumer.class);
-                if (mouseEventConsumer != null && mouseEventConsumer.hasCooldownAnimation()) {
-                    batch.pushFloat(Math.min(1.0f, mouseEventConsumer.clickDelayTimer() / mouseEventConsumer.clickDelay()));
-                } else {
-                    batch.pushFloat(0.0f);
-                }
             }
         }
     }

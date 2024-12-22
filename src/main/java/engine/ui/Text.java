@@ -18,6 +18,8 @@ public class Text {
     private Transform transform = new Transform();
     private int zIndex;
 
+    private UIComponent parent;
+
     private ArrayList<GlyphRenderer> glyphRenderers;
     private Color color = Color.WHITE;
 
@@ -74,7 +76,7 @@ public class Text {
      *
      * @return the width in pixels of the line.
      */
-    private float calculateLineWidth(CharSequence line) {
+    public float calculateLineWidth(CharSequence line) {
         float drawX = 0;
         float lineWidth = 0;
 
@@ -161,6 +163,14 @@ public class Text {
 
     public void setPosition(Vector2f position) {
         this.transform.setPosition(position);
+    }
+
+    public void setParent(UIComponent component) {
+        this.parent = component;
+    }
+
+    public UIComponent getParent() {
+        return this.parent;
     }
 
 }

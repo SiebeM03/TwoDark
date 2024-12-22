@@ -1,5 +1,6 @@
 package testGame.resources;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,15 @@ public class ResourceManager {
                 return r;
             }
         }
-        return null;
+
+        Resource result;
+        try {
+            result = resource.getDeclaredConstructor().newInstance();
+            return result;
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
+            System.err.println("Error creating instance: " + e.getMessage());
+            return null;
+        }
     }
 }

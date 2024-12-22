@@ -2,12 +2,13 @@ package scenes;
 
 import engine.ecs.GameObject;
 import engine.graphics.Camera;
-import engine.graphics.renderer.DefaultRenderer;
-import engine.graphics.renderer.PickingRenderer;
-import engine.graphics.renderer.Renderer;
-import engine.graphics.renderer.TextRenderer;
+import engine.graphics.renderer.*;
+import engine.ui.BaseComponent;
+import engine.ui.RenderableComponent;
 import engine.ui.Text;
+import engine.ui.UIComponent;
 import engine.util.Layer;
+import engine.util.ModifiableList;
 import imgui.ImGui;
 
 import java.util.ArrayList;
@@ -18,12 +19,12 @@ public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
     public PickingRenderer pickingRenderer = new PickingRenderer();
     public TextRenderer textRenderer = new TextRenderer();
+    public UIRenderer uiRenderer = new UIRenderer();
     protected Camera camera;
     private boolean isRunning = false;
 
-    protected List<GameObject> gameObjects = new ArrayList<>();
-    protected List<GameObject> gameObjectsToAdd = new ArrayList<>();
-    protected List<GameObject> gameObjectsToRemove = new ArrayList<>();
+    protected ModifiableList<GameObject> gameObjects = new ModifiableList<>();
+    protected ModifiableList<UIComponent> uiComponents = new ModifiableList<>();
     protected List<Text> texts = new ArrayList<>();
 
     protected GameObject activeGameObject = null;
@@ -40,6 +41,7 @@ public abstract class Scene {
         this.renderer.init();
         this.pickingRenderer.init();
         this.textRenderer.init();
+        this.uiRenderer.init();
     }
 
     public void init() {
@@ -65,36 +67,45 @@ public abstract class Scene {
      * Queues a GameObject to be added to the scene at the end of the frame.
      */
     public void addGameObjectToScene(GameObject go) {
-        gameObjectsToAdd.add(go);
+        gameObjects.add(go);
     }
 
     /**
      * Queues a GameObject to be removed from the scene at the end of the frame.
      */
     public void removeGameObjectFromScene(GameObject go) {
-        gameObjectsToRemove.add(go);
+        gameObjects.remove(go);
     }
 
     /**
      * Called at the end of the frame to apply all queued modifications to the {@link #gameObjects} list.
      */
     public void processPendingModifications() {
-        for (GameObject go : gameObjectsToAdd) {
-            gameObjects.add(go);
+        for (GameObject go : gameObjects.getRemoveTasks()) {
+            if (isRunning) {
+                removeFromRenderers(go);
+            }
+        }
+        for (GameObject go : gameObjects.getAddTasks()) {
             if (isRunning) {
                 go.start();
                 addToRenderers(go);
             }
         }
-        gameObjectsToAdd.clear();
+        gameObjects.applyChanges();
 
-        for (GameObject go : gameObjectsToRemove) {
-            gameObjects.remove(go);
-            if (isRunning) {
-                removeFromRenderers(go);
+
+        for (UIComponent c : uiComponents.getRemoveTasks()) {
+            if (c instanceof RenderableComponent) {
+                this.uiRenderer.remove((RenderableComponent) c);
             }
         }
-        gameObjectsToRemove.clear();
+        for (UIComponent c : uiComponents.getAddTasks()) {
+            if (c instanceof RenderableComponent) {
+                this.uiRenderer.add((RenderableComponent) c);
+            }
+        }
+        uiComponents.applyChanges();
     }
 
     public void addTextToScene(Text t) {
@@ -105,6 +116,14 @@ public abstract class Scene {
     public void removeTextFromScene(Text t) {
         this.textRenderer.remove(t);
         this.texts.remove(t);
+    }
+
+    public void addUIComponent(UIComponent c) {
+        System.out.println("Adding UI component");
+        this.uiComponents.add(c);
+        if (c instanceof RenderableComponent) {
+            this.uiRenderer.add((RenderableComponent) c);
+        }
     }
 
 
@@ -127,7 +146,9 @@ public abstract class Scene {
         for (Text t : this.texts) {
             t.update();
         }
-        this.textRenderer.render();
+        for (UIComponent c : this.uiComponents) {
+            c.update();
+        }
     }
 
     // =================================================================================================================
@@ -157,6 +178,8 @@ public abstract class Scene {
     public void render() {
         this.pickingRenderer.render();
         this.renderer.render();
+        this.uiRenderer.render();
+        this.textRenderer.render();
     }
 
 
