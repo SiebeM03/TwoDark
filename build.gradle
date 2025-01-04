@@ -9,13 +9,13 @@ repositories {
     mavenCentral()
 }
 
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'Main'
-        )
+sourceSets {
+    main {
+        resources {
+            srcDirs += 'src/main/java'
+            include '**/*.glsl'
+        }
     }
-
 }
 
 project.ext.lwjglVersion = "3.3.4"
