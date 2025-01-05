@@ -3,7 +3,12 @@ package woareXengine.mainEngine.gameObjects;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import woareXengine.mainEngine.Engine;
+import woareXengine.util.Transform;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Camera {
     private float nearPlane;
@@ -24,6 +29,10 @@ public abstract class Camera {
         this.position = new Vector2f();
         this.nearPlane = nearPlane;
         this.farPlane = farPlane;
+        Engine.window().addSizeChangeListener((width, height) -> {
+            projectionSize.set(width, height);
+            dirtyProjection = true;
+        });
     }
 
     public void setPosition(float x, float y) {
@@ -78,4 +87,43 @@ public abstract class Camera {
     public abstract float getMouseWorldY();
 
 
+    protected Vector4f transformScreenToWorld(float x, float y) {
+        Vector4f tmp = new Vector4f(x, y, 0, 1);
+
+        Matrix4f viewProjection = new Matrix4f();
+        Matrix4f inverseView = new Matrix4f();
+        Matrix4f inverseProjection = new Matrix4f();
+
+        getViewMatrix().invert(inverseView);
+        getProjectionMatrix().invert(inverseProjection);
+        inverseView.mul(inverseProjection, viewProjection);
+
+        tmp.mul(viewProjection);
+
+        return tmp;
+    }
+
+
+    public boolean isOnScreen(Transform transform) {
+        return transform.getX() + transform.getWidth() > getMinX() - 100 &&
+                       transform.getX() < getMaxX() + 100 &&
+                       transform.getY() + transform.getHeight() > getMinY() - 100 &&
+                       transform.getY() < getMaxY() + 100;
+    }
+
+    public float getMinX() {
+        return transformScreenToWorld(-1, 0).x;
+    }
+
+    public float getMaxX() {
+        return transformScreenToWorld(1, 0).x;
+    }
+
+    public float getMinY() {
+        return transformScreenToWorld(0, -1).y;
+    }
+
+    public float getMaxY() {
+        return transformScreenToWorld(0, 1).y;
+    }
 }

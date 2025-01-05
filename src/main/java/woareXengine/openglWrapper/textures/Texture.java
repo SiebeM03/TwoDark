@@ -15,7 +15,7 @@ public class Texture {
     public int width;
     public int height;
 
-    private int textureID;
+    public int textureID;
 
     public Texture(String filepath) {
         this.width = 100;

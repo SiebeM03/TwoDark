@@ -1,6 +1,6 @@
 package woareXengine.openglWrapper.shaders;
 
-import game.main.GameManager;
+import TDA.main.GameManager;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 

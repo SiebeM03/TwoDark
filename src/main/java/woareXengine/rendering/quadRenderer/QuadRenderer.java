@@ -1,6 +1,6 @@
 package woareXengine.rendering.quadRenderer;
 
-import game.main.GameManager;
+import TDA.main.GameManager;
 import org.joml.Vector2f;
 import woareXengine.openglWrapper.shaders.Shader;
 import woareXengine.rendering.RenderBatch;
@@ -47,15 +47,21 @@ public class QuadRenderer extends Renderer<Quad> {
 
     @Override
     protected void rebuffer() {
+        data.sort((quad1, quad2) -> Float.compare(quad2.transform.getY(), quad1.transform.getY()));
+
         for (Quad quad : data) {
+            if (!GameManager.currentScene.camera.isOnScreen(quad.transform)) {
+                continue;
+            }
+
             RenderBatch batch = getAvailableBatch(quad.texture, quad.zIndex);
 
             int texID = batch.addTexture(quad.texture);
 
             for (int i = 0; i < Quad.primitive.vertexCount; i++) {
                 batch.pushVec2(new Vector2f(
-                        quad.position.x + (i == 0 || i == 1 ? quad.width : 0),
-                        quad.position.y + (i == 0 || i == 3 ? quad.height : 0)
+                        quad.transform.getX() + (i == 0 || i == 1 ? quad.transform.getWidth() : 0),
+                        quad.transform.getY() + (i == 0 || i == 3 ? quad.transform.getHeight() : 0)
                 ));
 
                 batch.pushColor(quad.color);

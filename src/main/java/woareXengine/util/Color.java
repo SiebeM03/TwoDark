@@ -42,11 +42,6 @@ public class Color {
         this.a = a;
     }
 
-    /** Create a color from rgb values ranging from 0-255 */
-    public Color(int r, int g, int b) {
-        col.set(r / 255f, g / 255f, b / 255f);
-    }
-
     public Color(String hex) {
         this.col = new Vector3f(
                 Integer.valueOf(hex.substring(1, 3), 16) / 255f,

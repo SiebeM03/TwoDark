@@ -2,8 +2,11 @@ package woareXengine.io.window;
 
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
+import woareXengine.rendering.debug.DebugDraw;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -17,6 +20,8 @@ public class Window {
     private int pixelWidth, pixelHeight;
     private int desiredWidth, desiredHeight;
     private int widthScreenCoords, heightScreenCoords;
+
+    private List<WindowSizeListener> windowSizeListeners = new ArrayList<>();
 
     private DisplayMode displayMode;
     private boolean vsync;
@@ -43,6 +48,9 @@ public class Window {
     }
 
     public void update() {
+        DebugDraw.beginFrame();
+        DebugDraw.draw();
+
         glfwSwapBuffers(id);
         glfwPollEvents();
     }
@@ -119,7 +127,6 @@ public class Window {
     private void switchToWindowed(GLFWVidMode vidMode) {
         glfwSetWindowMonitor(id, NULL, 0, 0, desiredWidth, desiredHeight, vidMode.refreshRate());
         glfwSetWindowPos(id, (vidMode.width() - desiredWidth) / 2, (vidMode.height() - desiredHeight) / 2);
-
     }
 
     private void addScreenSizeListener() {
@@ -136,7 +143,9 @@ public class Window {
             if (validSizeChange(width, height, pixelWidth, pixelHeight)) {
                 this.pixelWidth = width;
                 this.pixelHeight = height;
+                // Update the viewport and notify listeners (e.g. cameras)
                 glViewport(0, 0, pixelWidth, pixelHeight);
+                windowSizeListeners.forEach(listener -> listener.sizeChanged(pixelWidth, pixelHeight));
             }
         });
     }
@@ -162,6 +171,8 @@ public class Window {
         glfwGetFramebufferSize(id, widthBuff, heightBuff);
         this.pixelWidth = widthBuff.get(0);
         this.pixelHeight = heightBuff.get(0);
+        widthBuff.clear();
+        heightBuff.clear();
     }
 
     private boolean validSizeChange(int newWidth, int newHeight, int oldWidth, int oldHeight) {
@@ -171,4 +182,7 @@ public class Window {
         return newWidth != oldWidth || newHeight != oldHeight;
     }
 
+    public void addSizeChangeListener(WindowSizeListener listener) {
+        windowSizeListeners.add(listener);
+    }
 }

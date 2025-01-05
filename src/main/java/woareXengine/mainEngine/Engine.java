@@ -6,6 +6,7 @@ import woareXengine.io.userInputs.Mouse;
 import woareXengine.io.window.Window;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 
 public class Engine {
     private static Engine currentInstance;
@@ -19,12 +20,18 @@ public class Engine {
     private final Timer timer;
     private boolean closeFlag = false;
 
+    public int defaultFboId;
+
+    public boolean debugging = false;
+
+
     public Engine(EngineConfigs configs, Window window, Mouse mouse, Keyboard keyboard, Timer timer) {
         this.configs = configs;
         this.window = window;
         this.mouse = mouse;
         this.keyboard = keyboard;
         this.timer = timer;
+        defaultFboId = glGenFramebuffers();
     }
 
     public static Engine instance() {
@@ -33,17 +40,17 @@ public class Engine {
         return currentInstance;
     }
 
+    public boolean isCloseRequested() {
+        return closeFlag || window.closeButtonPressed();
+    }
+
     public void update() {
+        timer.update();
         keyboard.update();
         mouse.update();
         window.update();
-        timer.update();
         glClearColor(configs.backgroundColor.getR(), configs.backgroundColor.getG(), configs.backgroundColor.getB(), configs.backgroundColor.getA());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
-    public boolean isCloseRequested() {
-        return closeFlag || window.closeButtonPressed();
     }
 
     public void requestClose() {

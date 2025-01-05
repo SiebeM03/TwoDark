@@ -2,20 +2,20 @@ package woareXengine.rendering;
 
 import woareXengine.openglWrapper.shaders.Shader;
 import woareXengine.openglWrapper.textures.Texture;
+import woareXengine.rendering.renderData.RenderObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL11.*;
 
-public abstract class Renderer<T> {
-    protected final int MAX_BATCH_SIZE = 500;
+public abstract class Renderer<T extends RenderObject> {
+    protected final int MAX_BATCH_SIZE = 2;
     protected double start, end;
 
     protected List<RenderBatch> batches;
-    protected List<T> data;
+    public List<T> data;
     protected Shader currentShader;
     protected final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
