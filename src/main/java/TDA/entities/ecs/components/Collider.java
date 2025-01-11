@@ -6,6 +6,7 @@ import TDA.main.GameManager;
 import org.joml.Vector2f;
 import woareXengine.mainEngine.Engine;
 import woareXengine.rendering.debug.DebugDraw;
+import woareXengine.util.Color;
 import woareXengine.util.Transform;
 
 import javax.swing.plaf.ColorUIResource;
@@ -47,18 +48,6 @@ public class Collider extends Component {
         DebugDraw.addBox2D(boxTransform.getCenter(), boxTransform.getDimensions());
     }
 
-    public boolean willXCollide(float newX) {
-        Transform testTransform = entity.transform.copy();
-        testTransform.setX(newX);
-        return isColliding(testTransform);
-    }
-
-    public boolean willYCollide(float newY) {
-        Transform testTransform = entity.transform.copy();
-        testTransform.setY(newY);
-        return isColliding(testTransform);
-    }
-
     private void updateTransform() {
         this.boxTransform.setDimensions(
                 currentTransform.getWidth() * (1 - leftOffsetPercentage - rightOffsetPercentage),
@@ -70,27 +59,60 @@ public class Collider extends Component {
         );
     }
 
-    private boolean isColliding(Transform transformToCheck) {
+    public float getXCollisionAdjustment(float newX) {
+        Transform testTransform = entity.transform.copy();
+        testTransform.setX(newX);
+
+        for (Collider other : GameManager.currentScene.entityManager.getColliders()) {
+            if (other == this) continue;
+
+            if (isColliding(testTransform, other)) {
+                if (newX > other.entity.transform.getX()) {
+                    // Collision on the right
+                    return other.entity.transform.getX() + other.entity.transform.getWidth() * (1 - other.rightOffsetPercentage) - testTransform.getWidth() * leftOffsetPercentage;
+                } else {
+                    // Collision on the left
+                    return other.entity.transform.getX() + other.entity.transform.getWidth() * other.leftOffsetPercentage - testTransform.getWidth() * (1 - rightOffsetPercentage);
+                }
+            }
+        }
+        return newX; // No collision, return original newX
+    }
+
+    public float getYCollisionAdjustment(float newY) {
+        Transform testTransform = entity.transform.copy();
+        testTransform.setY(newY);
+
+        for (Collider other : GameManager.currentScene.entityManager.getColliders()) {
+            if (other == this) continue;
+
+            if (isColliding(testTransform, other)) {
+                if (newY > other.entity.transform.getY()) {
+                    // Collision on the top
+                    return other.entity.transform.getY() + other.entity.transform.getHeight() * (1 - other.topOffsetPercentage) - testTransform.getHeight() * bottomOffsetPercentage;
+                } else {
+                    // Collision on the bottom
+                    return other.entity.transform.getY() + other.entity.transform.getHeight() * other.bottomOffsetPercentage - testTransform.getHeight() * (1 - topOffsetPercentage);
+                }
+            }
+        }
+        return newY; // No collision, return original newY
+    }
+
+    private boolean isColliding(Transform transformToCheck, Collider other) {
         float thisLeft = transformToCheck.getX() + (transformToCheck.getWidth() * leftOffsetPercentage);
         float thisRight = transformToCheck.getX() + (transformToCheck.getWidth() * (1 - rightOffsetPercentage));
         float thisTop = transformToCheck.getY() + (transformToCheck.getHeight() * (1 - topOffsetPercentage));
         float thisBottom = transformToCheck.getY() + (transformToCheck.getHeight() * bottomOffsetPercentage);
 
-        for (Collider other : GameManager.currentScene.entityManager.getColliders()) {
-            if (other == this) continue;
+        float otherLeft = other.currentTransform.getX() + (other.currentTransform.getWidth() * other.leftOffsetPercentage);
+        float otherRight = other.currentTransform.getX() + (other.currentTransform.getWidth() * (1 - other.rightOffsetPercentage));
+        float otherTop = other.currentTransform.getY() + (other.currentTransform.getHeight() * (1 - other.topOffsetPercentage));
+        float otherBottom = other.currentTransform.getY() + (other.currentTransform.getHeight() * other.bottomOffsetPercentage);
 
-            float otherLeft = other.currentTransform.getX() + (other.currentTransform.getWidth() * other.leftOffsetPercentage);
-            float otherRight = other.currentTransform.getX() + (other.currentTransform.getWidth() * (1 - other.rightOffsetPercentage));
-            float otherTop = other.currentTransform.getY() + (other.currentTransform.getHeight() * (1 - other.topOffsetPercentage));
-            float otherBottom = other.currentTransform.getY() + (other.currentTransform.getHeight() * other.bottomOffsetPercentage);
-
-            if (thisLeft < otherRight
-                        && thisRight > otherLeft
-                        && thisTop > otherBottom
-                        && thisBottom < otherTop) {
-                return true;
-            }
-        }
-        return false;
+        return thisLeft < otherRight
+                       && thisRight > otherLeft
+                       && thisTop > otherBottom
+                       && thisBottom < otherTop;
     }
 }

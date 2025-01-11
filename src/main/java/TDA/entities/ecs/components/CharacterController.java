@@ -63,12 +63,13 @@ public class CharacterController extends Component {
 
         Collider collider = entity.getComponent(Collider.class);
         if (collider != null) {
-            if (!collider.willXCollide(entity.transform.getX() + addX)) {
-                entity.transform.addX(addX);
-            }
-            if (!collider.willYCollide(entity.transform.getY() + addY)) {
-                entity.transform.addY(addY);
-            }
+            float newX = entity.transform.getX() + addX;
+            float adjustedX = collider.getXCollisionAdjustment(newX);
+            entity.transform.setX(adjustedX);
+
+            float newY = entity.transform.getY() + addY;
+            float adjustedY = collider.getYCollisionAdjustment(newY);
+            entity.transform.setY(adjustedY);
         } else {
             entity.transform.addX(addX);
             entity.transform.addY(addY);
