@@ -2,7 +2,7 @@ package TDA.main;
 
 import TDA.main.configs.BuildConfigs;
 
-public class IdleArkGame {
+public class TwoDarkGame {
     public static void main(String[] args) {
         GameManager.init(new BuildConfigs());
 
