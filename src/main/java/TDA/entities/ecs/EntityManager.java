@@ -3,22 +3,24 @@ package TDA.entities.ecs;
 
 import TDA.entities.ecs.components.Collider;
 import TDA.main.GameManager;
+import woareXengine.util.SafeList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EntityManager {
 
-    public List<Entity> entities;
+    public SafeList<Entity> entities;
 
     public EntityManager() {
-        this.entities = new ArrayList<>();
+        this.entities = new SafeList<>();
     }
 
     public void update() {
         for (Entity entity : entities) {
             entity.update();
         }
+        entities.applyChanges();
     }
 
     public List<Collider> getColliders() {

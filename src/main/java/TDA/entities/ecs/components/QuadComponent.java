@@ -26,4 +26,9 @@ public class QuadComponent extends Component {
         }
         TDARenderSystem.get().renderer.getRenderer(Quad.class).add(this.quad);
     }
+
+    @Override
+    public void destroy() {
+        TDARenderSystem.get().renderer.getRenderer(Quad.class).remove(quad);
+    }
 }

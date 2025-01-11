@@ -2,6 +2,7 @@
 package TDA.entities.ecs.components;
 
 import TDA.entities.ecs.Component;
+import TDA.entities.ecs.Entity;
 import TDA.main.GameManager;
 import woareXengine.rendering.debug.DebugDraw;
 import woareXengine.util.Transform;
@@ -58,16 +59,17 @@ public class Collider extends Component {
         Transform testTransform = entity.transform.copy();
         testTransform.setX(newX);
 
-        for (Collider other : GameManager.currentScene.entityManager.getColliders()) {
-            if (other == this) continue;
+        for (Entity other : GameManager.currentScene.getEntitiesWithComponents(Collider.class)) {
+            Collider otherCollider = other.getComponent(Collider.class);
+            if (otherCollider == this) continue;
 
-            if (isColliding(testTransform, other)) {
-                if (newX > other.entity.transform.getX()) {
+            if (isColliding(testTransform, otherCollider)) {
+                if (newX > otherCollider.entity.transform.getX()) {
                     // Collision on the right
-                    return other.entity.transform.getX() + other.entity.transform.getWidth() * (1 - other.rightOffsetPercentage) - testTransform.getWidth() * leftOffsetPercentage;
+                    return otherCollider.entity.transform.getX() + otherCollider.entity.transform.getWidth() * (1 - otherCollider.rightOffsetPercentage) - testTransform.getWidth() * leftOffsetPercentage;
                 } else {
                     // Collision on the left
-                    return other.entity.transform.getX() + other.entity.transform.getWidth() * other.leftOffsetPercentage - testTransform.getWidth() * (1 - rightOffsetPercentage);
+                    return otherCollider.entity.transform.getX() + otherCollider.entity.transform.getWidth() * otherCollider.leftOffsetPercentage - testTransform.getWidth() * (1 - rightOffsetPercentage);
                 }
             }
         }

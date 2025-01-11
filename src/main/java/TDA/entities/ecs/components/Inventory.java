@@ -1,16 +1,14 @@
-package TDA.entities.inventory;
+package TDA.entities.ecs.components;
 
+import TDA.entities.ecs.Component;
 import TDA.entities.resources.types.Metal;
 import TDA.entities.resources.types.Stone;
 import woareXengine.util.Logger;
 
 import java.util.Arrays;
 
-public class Inventory {
-    private static Inventory instance;
-
+public class Inventory extends Component {
     private final InventoryItem[] inventoryItems;
-
 
     public Inventory(int size) {
         this.inventoryItems = new InventoryItem[size];
@@ -36,10 +34,21 @@ public class Inventory {
         }
     }
 
-    public static Inventory get() {
-        if (instance == null) {
-            instance = new Inventory(20);
+    public static class InventoryItem {
+        public Object item;
+        public int amount;
+
+        public InventoryItem(Object item, int amount) {
+            this.item = item;
+            this.amount = amount;
         }
-        return instance;
+
+        @Override
+        public String toString() {
+            return "{" +
+                           "item=" + item.getClass().getSimpleName() +
+                           ", amount=" + amount +
+                           '}';
+        }
     }
 }

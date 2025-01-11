@@ -8,4 +8,7 @@ public abstract class Component {
 
     public void update() {
     }
+
+    public void destroy() {
+    }
 }

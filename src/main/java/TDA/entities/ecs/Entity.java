@@ -1,6 +1,9 @@
 package TDA.entities.ecs;
 
+import TDA.entities.ecs.components.QuadComponent;
 import TDA.main.GameManager;
+import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
+import woareXengine.rendering.quadRenderer.Quad;
 import woareXengine.util.Id;
 import woareXengine.util.Transform;
 
@@ -10,6 +13,7 @@ import java.util.List;
 public class Entity {
     private final Id id = new Id();
     private boolean updateWhenOutOfView = false;
+    private boolean isDead = false;
 
     private List<Component> components = new ArrayList<>();
 
@@ -52,5 +56,12 @@ public class Entity {
             }
         }
         return null;
+    }
+
+    public void destroy() {
+        for (Component component : components) {
+            component.destroy();
+        }
+        GameManager.currentScene.entityManager.entities.remove(this);
     }
 }

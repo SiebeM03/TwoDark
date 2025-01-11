@@ -55,7 +55,6 @@ public class GameManager {
         engine.update();
     }
 
-
     public static boolean readyToClose() {
         return engine.isCloseRequested();
     }
