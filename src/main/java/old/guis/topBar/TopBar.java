@@ -5,11 +5,11 @@ import old.engine.ecs.Transform;
 import old.engine.ui.RenderableComponent;
 import old.engine.util.Color;
 import old.engine.util.Settings;
-import org.joml.Vector2f;
 import old.scenes.HomeScene;
 import old.testGame.resources.types.Metal;
 import old.testGame.resources.types.Stone;
 import old.testGame.resources.types.Wood;
+import org.joml.Vector2f;
 
 public class TopBar extends RenderableComponent {
 

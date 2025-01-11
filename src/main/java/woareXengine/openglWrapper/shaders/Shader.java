@@ -3,6 +3,7 @@ package woareXengine.openglWrapper.shaders;
 import TDA.main.GameManager;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
+import woareXengine.util.Logger;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -68,8 +69,8 @@ public class Shader {
         success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.err.println("ERROR: '" + filepath + "'\n\tVertex shader compilation failed.");
-            System.err.println(glGetShaderInfoLog(vertexID, len));
+            Logger.error(filepath + "'\n\tVertex shader compilation failed.");
+            Logger.error(glGetShaderInfoLog(vertexID, len));
             assert false : "";
         }
 
@@ -80,8 +81,8 @@ public class Shader {
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.err.println("ERROR: '" + filepath + "'\n\tFragment shader compilation failed.");
-            System.err.println(glGetShaderInfoLog(vertexID, len));
+            Logger.error(filepath + "'\n\tFragment shader compilation failed.");
+            Logger.error(glGetShaderInfoLog(vertexID, len));
             assert false : "";
         }
 
@@ -93,8 +94,8 @@ public class Shader {
         success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             int len = glGetProgrami(shaderProgramID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: '" + filepath + "'\n\tLinking of shaders failed.");
-            System.out.println(glGetProgramInfoLog(shaderProgramID, len));
+            Logger.error(filepath + "'\n\tLinking of shaders failed.");
+            Logger.error(glGetProgramInfoLog(shaderProgramID, len));
             assert false : "";
         }
 

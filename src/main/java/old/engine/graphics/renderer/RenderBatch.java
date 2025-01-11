@@ -3,7 +3,6 @@ package old.engine.graphics.renderer;
 import old.engine.graphics.Primitive;
 import old.engine.graphics.ShaderDatatype;
 import old.engine.util.Color;
-
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;

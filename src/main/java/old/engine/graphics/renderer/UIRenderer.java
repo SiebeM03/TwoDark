@@ -1,13 +1,13 @@
 package old.engine.graphics.renderer;
 
+import old.engine.graphics.Primitive;
+import old.engine.graphics.Shader;
 import old.engine.graphics.ShaderDatatype;
 import old.engine.graphics.Window;
 import old.engine.ui.RenderableComponent;
 import old.engine.ui.UIComponent;
 import old.engine.util.AssetPool;
 import old.engine.util.Layer;
-import old.engine.graphics.Primitive;
-import old.engine.graphics.Shader;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;

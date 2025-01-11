@@ -3,13 +3,8 @@ package TDA.entities.ecs.components;
 
 import TDA.entities.ecs.Component;
 import TDA.main.GameManager;
-import org.joml.Vector2f;
-import woareXengine.mainEngine.Engine;
 import woareXengine.rendering.debug.DebugDraw;
-import woareXengine.util.Color;
 import woareXengine.util.Transform;
-
-import javax.swing.plaf.ColorUIResource;
 
 public class Collider extends Component {
     protected final float topOffsetPercentage;

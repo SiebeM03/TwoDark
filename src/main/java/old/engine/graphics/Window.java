@@ -8,15 +8,16 @@ import old.engine.ui.fonts.FontLoader;
 import old.engine.util.Engine;
 import old.engine.util.ImGuiLayer;
 import old.engine.util.Settings;
+import old.scenes.DevScene;
+import old.scenes.HomeScene;
+import old.scenes.Scene;
+import old.scenes.SceneLoader;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import old.scenes.DevScene;
-import old.scenes.HomeScene;
-import old.scenes.Scene;
-import old.scenes.SceneLoader;
+import woareXengine.util.Logger;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -81,7 +82,7 @@ public class Window {
      * resources and rendering until the window is closed.
      */
     public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+        Logger.debug("Hello LWJGL " + Version.getVersion() + "!");
 
         init();
         loop();

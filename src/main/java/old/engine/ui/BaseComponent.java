@@ -2,6 +2,7 @@ package old.engine.ui;
 
 import old.engine.ecs.Transform;
 import org.joml.Vector2f;
+import woareXengine.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public abstract class BaseComponent implements UIComponent {
 
     @Override
     public void setEventConsumer(EventConsumer eventConsumer) {
-        System.out.println("Setting event consumer for " + this.name + " to " + eventConsumer);
+        Logger.info("Setting event consumer for " + this.name + " to " + eventConsumer);
         this.eventConsumer = eventConsumer;
     }
 

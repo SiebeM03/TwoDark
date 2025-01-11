@@ -8,6 +8,7 @@ import old.engine.graphics.ShaderDatatype;
 import old.engine.graphics.Window;
 import old.engine.util.AssetPool;
 import org.joml.Vector2f;
+import woareXengine.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +185,7 @@ public class PickingRenderer extends Renderer {
 
     public int readPixel(int x, int y) {
         if (framebuffer == null) {
-            System.out.println("Framebuffer is null");
+            Logger.error("Framebuffer is null");
             return -1;
         }
 

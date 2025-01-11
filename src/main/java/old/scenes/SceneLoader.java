@@ -16,6 +16,7 @@ import old.testGame.resources.types.Metal;
 import old.testGame.resources.types.Stone;
 import old.testGame.resources.types.Wood;
 import old.testGame.tools.Tool;
+import woareXengine.util.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -161,10 +162,10 @@ public class SceneLoader {
                     resource.setAmount(rd.amount());
                     ResourceManager.addResource(resource);
                 } catch (ClassNotFoundException e) {
-                    System.err.println("Class not found: " + e.getMessage());
+                    Logger.error("Class not found: " + e.getMessage());
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                          InvocationTargetException e) {
-                    System.err.println("Error creating instance: " + e.getMessage());
+                    Logger.error("Error creating instance: " + e.getMessage());
                 }
             }
             for (ToolData td : data.tools()) {
@@ -178,10 +179,10 @@ public class SceneLoader {
                     tool.setName(td.name());
                     tool.setLevel(td.level());
                 } catch (ClassNotFoundException e) {
-                    System.err.println("Class not found: " + e.getMessage());
+                    Logger.error("Class not found: " + e.getMessage());
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                          InvocationTargetException e) {
-                    System.err.println("Error creating instance: " + e.getMessage());
+                    Logger.error("Error creating instance: " + e.getMessage());
                 }
             }
             return true;

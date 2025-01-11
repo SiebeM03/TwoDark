@@ -1,6 +1,5 @@
 package woareXengine.rendering;
 
-import old.engine.ecs.components.FontRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

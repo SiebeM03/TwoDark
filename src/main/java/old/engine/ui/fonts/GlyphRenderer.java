@@ -4,7 +4,6 @@ import old.engine.ecs.Transform;
 import old.engine.graphics.renderer.Texture;
 import old.engine.ui.Text;
 import old.engine.util.Color;
-
 import org.joml.Vector2f;
 
 public class GlyphRenderer {

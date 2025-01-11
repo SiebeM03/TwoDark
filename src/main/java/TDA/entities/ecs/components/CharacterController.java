@@ -8,7 +8,6 @@ import org.joml.Vector2f;
 import woareXengine.mainEngine.Engine;
 
 import static TDA.entities.player.PlayerConfigs.*;
-import static TDA.entities.player.PlayerConfigs.MOVE_SPEED;
 
 public class CharacterController extends Component {
     private static final PlayerControls playerControls = GameManager.gameControls.playerControls;

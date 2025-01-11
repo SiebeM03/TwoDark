@@ -7,9 +7,6 @@ import org.joml.Vector4f;
 import woareXengine.mainEngine.Engine;
 import woareXengine.util.Transform;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class Camera {
     private float nearPlane;
     private float farPlane;

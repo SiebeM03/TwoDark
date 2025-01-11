@@ -9,8 +9,8 @@ import old.engine.ui.Text;
 import old.engine.ui.UIComponent;
 import old.engine.ui.fonts.FontLoader;
 import old.engine.util.Color;
-import org.joml.Vector2f;
 import old.scenes.Scene;
+import org.joml.Vector2f;
 
 public class SceneButton extends EventConsumer {
 

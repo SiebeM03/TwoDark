@@ -1,10 +1,10 @@
 package woareXengine.mainEngine;
 
-import org.lwjgl.glfw.GLFWImage.Buffer;
 import woareXengine.io.Timer;
 import woareXengine.io.userInputs.Keyboard;
 import woareXengine.io.userInputs.Mouse;
 import woareXengine.io.window.Window;
+import woareXengine.util.Logger;
 
 import static org.lwjgl.opengl.GL.createCapabilities;
 
@@ -51,6 +51,7 @@ public class EngineCreator {
                                 // .withIcon(buffer)
                                 .setMSAA(configs.msaa)
                                 .create();
+        Logger.success("Window created");
         return window;
     }
 

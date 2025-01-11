@@ -1,7 +1,5 @@
 package TDA.rendering.TDARenderEngine.renderSystem;
 
-import TDA.entities.player.Player;
-import TDA.entities.resources.Resource;
 import TDA.main.world.tiles.Tile;
 import TDA.rendering.SceneRenderSystem;
 import TDA.rendering.TDARenderEngine.renderer.RendererManager;

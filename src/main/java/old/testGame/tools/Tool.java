@@ -1,9 +1,9 @@
 package old.testGame.tools;
 
 import old.engine.ecs.GameObject;
-
 import old.testGame.resources.Resource;
 import old.testGame.resources.ResourceManager;
+import woareXengine.util.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class Tool {
 
     private void upgrade() {
         this.level++;
-        System.out.println(this.name + " has been upgraded to level " + this.level);
+        Logger.info(this.name + " has been upgraded to level " + this.level);
 
         for (Class<? extends Resource> resource : resourceIncreases.keySet()) {
             ResourceManager.getResource(resource).setAmountPerClick(resourceIncreases.get(resource) * level);

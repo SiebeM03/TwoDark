@@ -5,6 +5,7 @@ import TDA.main.world.tiles.Tile;
 import TDA.main.world.tiles.types.Grass;
 import TDA.main.world.tiles.types.Path;
 import TDA.main.world.tiles.types.Water;
+import woareXengine.util.Logger;
 
 import static TDA.main.world.WorldConfigs.MAP_HEIGHT;
 import static TDA.main.world.WorldConfigs.MAP_WIDTH;
@@ -24,6 +25,7 @@ public class World {
         generateTiles();
 
         giveWaterTilesCollision();
+        Logger.success("World initialized");
     }
 
     private void generateTiles() {

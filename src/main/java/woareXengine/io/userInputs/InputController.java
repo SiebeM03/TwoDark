@@ -1,6 +1,7 @@
 package woareXengine.io.userInputs;
 
 import woareXengine.mainEngine.Engine;
+import woareXengine.util.Logger;
 
 /**
  * A wrapper for {@link Mouse} and {@link Keyboard} that can enable both inputs independently
@@ -17,7 +18,7 @@ public class InputController {
         this.keyboard = Engine.keyboard();
 
         if (mouse == null || keyboard == null) {
-            System.err.println("InputController: Mouse or Keyboard is null");
+            Logger.error("InputController: Mouse or Keyboard is null");
         }
     }
 

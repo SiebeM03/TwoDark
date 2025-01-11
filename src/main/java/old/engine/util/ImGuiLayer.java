@@ -1,9 +1,5 @@
 package old.engine.util;
 
-import old.engine.editor.GameViewWindow;
-import old.engine.graphics.Window;
-import old.engine.listeners.KeyListener;
-import old.engine.listeners.MouseListener;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
 import imgui.ImGui;
@@ -14,6 +10,10 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
+import old.engine.editor.GameViewWindow;
+import old.engine.graphics.Window;
+import old.engine.listeners.KeyListener;
+import old.engine.listeners.MouseListener;
 import old.scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;

@@ -8,6 +8,7 @@ import TDA.scene.prefabs.HomeScene;
 import woareXengine.io.window.DisplayMode;
 import woareXengine.io.window.Window;
 import woareXengine.mainEngine.Engine;
+import woareXengine.util.Logger;
 
 public class GameManager {
     private static Engine engine;
@@ -20,6 +21,7 @@ public class GameManager {
     public static World world;
 
     public static void init(GameConfigs gameConfigs) {
+        Logger.info("Initializing Game manager");
         configs = gameConfigs;
         engine = Engine.init(gameConfigs);
 
@@ -44,7 +46,7 @@ public class GameManager {
         }
         if (gameControls.developerControls.isDevModeToggled()) {
             Engine.instance().debugging = !Engine.instance().debugging;
-            System.out.println("Debugging: " + Engine.instance().debugging);
+            Logger.debug("Toggled debugging: " + Engine.instance().debugging);
         }
 
         currentScene.update();

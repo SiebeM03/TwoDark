@@ -1,7 +1,6 @@
 package TDA.main.world;
 
 import org.lwjgl.BufferUtils;
-import woareXengine.mainEngine.Engine;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.util.Assets;
 

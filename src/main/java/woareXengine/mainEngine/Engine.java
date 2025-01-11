@@ -4,6 +4,7 @@ import woareXengine.io.Timer;
 import woareXengine.io.userInputs.Keyboard;
 import woareXengine.io.userInputs.Mouse;
 import woareXengine.io.window.Window;
+import woareXengine.util.Logger;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
@@ -32,6 +33,7 @@ public class Engine {
         this.keyboard = keyboard;
         this.timer = timer;
         defaultFboId = glGenFramebuffers();
+        Logger.success("Engine initialized");
     }
 
     public static Engine instance() {
@@ -71,8 +73,9 @@ public class Engine {
      */
     public static Engine init(EngineConfigs configs) {
         if (currentInstance != null) {
-            System.err.println("Engine has already been initialized!");
+            Logger.error("Engine has already been initialized!");
         } else {
+            Logger.info("Initializing engine...");
             currentInstance = new EngineCreator().init(configs);
         }
         return currentInstance;

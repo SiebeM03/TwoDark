@@ -6,6 +6,7 @@ import woareXengine.rendering.Renderer;
 import woareXengine.rendering.quadRenderer.Quad;
 import woareXengine.rendering.quadRenderer.QuadRenderer;
 import woareXengine.rendering.renderData.RenderObject;
+import woareXengine.util.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,12 +22,13 @@ public class RendererManager {
     public RendererManager() {
         quadRenderer = new QuadRenderer();
 
-        rendererMap.put(Quad.class, quadRenderer);
+        putRenderer(Quad.class, quadRenderer);
         // TODO init all renderers
     }
 
     private <T extends RenderObject> void putRenderer(Class<T> clazz, Renderer<T> renderer) {
         rendererMap.put(clazz, renderer);
+        Logger.success("Renderer for " + clazz.getSimpleName() + " added");
     }
 
     @SuppressWarnings("unchecked")

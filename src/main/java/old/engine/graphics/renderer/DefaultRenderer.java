@@ -88,7 +88,6 @@ public class DefaultRenderer extends Renderer {
                 // Load texture coordinates
                 batch.pushVec2(texCoords[i]);
 
-                System.out.println(texID);
                 // Load texture id
                 batch.pushInt(texID);
 

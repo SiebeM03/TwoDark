@@ -1,5 +1,7 @@
 package old.testGame.resources;
 
+import woareXengine.util.Logger;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ public class ResourceManager {
 
     public static void addResource(Resource resource) {
         resources.add(resource);
-        System.out.println(resource.getClass().getSimpleName() + " has been added to the resource manager");
+        Logger.info(resource.getClass().getSimpleName() + " has been added to the resource manager");
     }
 
     public static List<Resource> getResources() {
@@ -29,7 +31,7 @@ public class ResourceManager {
             return result;
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {
-            System.err.println("Error creating instance: " + e.getMessage());
+            Logger.error("Error creating instance: " + e.getMessage());
             return null;
         }
     }

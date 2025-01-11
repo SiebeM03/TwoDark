@@ -1,5 +1,6 @@
 package old.scenes;
 
+import imgui.ImGui;
 import old.engine.ecs.GameObject;
 import old.engine.graphics.Camera;
 import old.engine.graphics.renderer.*;
@@ -8,7 +9,7 @@ import old.engine.ui.Text;
 import old.engine.ui.UIComponent;
 import old.engine.util.Layer;
 import old.engine.util.ModifiableList;
-import imgui.ImGui;
+import woareXengine.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,7 @@ public abstract class Scene {
     }
 
     public void addUIComponent(UIComponent c) {
-        System.out.println("Adding UI component");
+        Logger.info("Adding UI component");
         this.uiComponents.add(c);
         if (c instanceof RenderableComponent) {
             this.uiRenderer.add((RenderableComponent) c);
