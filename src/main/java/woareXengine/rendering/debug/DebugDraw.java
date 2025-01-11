@@ -3,8 +3,11 @@ package woareXengine.rendering.debug;
 import TDA.main.GameManager;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import woareXengine.mainEngine.Engine;
 import woareXengine.openglWrapper.shaders.Shader;
 import woareXengine.util.Assets;
+import woareXengine.util.Color;
+import woareXengine.util.MathUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,15 +130,15 @@ public class DebugDraw {
     // Add Line2D methods
     // =================================================================================================================
     public static void addLine2D(Vector2f from, Vector2f to) {
-        // TODO add constants for common color
-        addLine2D(from, to, new Vector3f(0, 1, 0), 1);
+        addLine2D(from, to, Color.GREEN, 1);
     }
 
-    public static void addLine2D(Vector2f from, Vector2f to, Vector3f color) {
+    public static void addLine2D(Vector2f from, Vector2f to, Color color) {
         addLine2D(from, to, color, 1);
     }
 
-    public static void addLine2D(Vector2f from, Vector2f to, Vector3f color, int lifetime) {
+    public static void addLine2D(Vector2f from, Vector2f to, Color color, int lifetime) {
+        if (!Engine.instance().debugging) return;
         if (lines.size() >= MAX_LINES) return;
         DebugDraw.lines.add(new Line2D(from, to, color, lifetime));
     }
@@ -143,15 +146,19 @@ public class DebugDraw {
     // =================================================================================================================
     // Add Box2D methods
     // =================================================================================================================
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
-        addBox2D(center, dimensions, rotation, new Vector3f(1, 0, 0), 1);
+    public static void addBox2D(Vector2f center, Vector2f dimensions) {
+        addBox2D(center, dimensions, 0, Color.GREEN, 1);
     }
 
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color) {
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
+        addBox2D(center, dimensions, rotation, Color.GREEN, 1);
+    }
+
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Color color) {
         addBox2D(center, dimensions, rotation, color, 1);
     }
 
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color, int lifetime) {
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Color color, int lifetime) {
         Vector2f min = new Vector2f(center).sub(new Vector2f(dimensions).div(2.0f));    // Bottom left corner
         Vector2f max = new Vector2f(center).add(new Vector2f(dimensions).div(2.0f));    // Top right corner
 
@@ -162,12 +169,11 @@ public class DebugDraw {
                 new Vector2f(max.x, min.y)  // Bottom right
         };
 
-        // TODO fix rotation
-//        if (rotation != 0.0f) {
-//            for (Vector2f vertex : vertices) {
-//                JMath.rotate(vertex, rotation, center);
-//            }
-//        }
+        if (rotation != 0.0f) {
+            for (Vector2f vertex : vertices) {
+                MathUtils.rotate(vertex, rotation, center);
+            }
+        }
 
         addLine2D(vertices[0], vertices[1], color, lifetime);
         addLine2D(vertices[1], vertices[2], color, lifetime);
@@ -178,34 +184,30 @@ public class DebugDraw {
     // =================================================================================================================
     // Add Circle methods
     // =================================================================================================================
-    // TODO fix rotation
-//    public static void addCircle(Vector2f center, float radius) {
-//        addCircle(center, radius, new Vector3f(0, 1, 0), 1);
-//    }
-//
-//    public static void addCircle(Vector2f center, float radius, Vector3f color) {
-//        addCircle(center, radius, color, 1);
-//    }
-//
-//    public static void addCircle(Vector2f center, float radius, Vector3f color, int lifetime) {
-//        int CIRCLE_SEGMENTS = 20;
-//        Vector2f[] points = new Vector2f[CIRCLE_SEGMENTS];
-//        int increment = 360 / points.length;
-//        int currentAngle = 0;
-//
-//        for (int i = 0; i < points.length; i++) {
-//            // Create a temporary point from 0, 0
-//            Vector2f tmp = new Vector2f(radius, 0);
-//            JMath.rotate(tmp, currentAngle, new Vector2f());
-//            // Add the center of the circle to the temporary point so that it is placed around the given center
-//            points[i] = new Vector2f(tmp).add(center);
-//
-//            // Draw the lines between each point
-//            if (i > 0) {
-//                addLine2D(points[i - 1], points[i], color, lifetime);
-//            }
-//            currentAngle += increment;
-//        }
-//        addLine2D(points[points.length - 1], points[0], color, lifetime);
-//    }
+    public static void addCircle(Vector2f center, float radius) {
+        addCircle(center, radius, Color.GREEN, 1);
+    }
+
+    public static void addCircle(Vector2f center, float radius, Color color) {
+        addCircle(center, radius, color, 1);
+    }
+
+    public static void addCircle(Vector2f center, float radius, Color color, int lifetime) {
+        int CIRCLE_SEGMENTS = 20;
+        Vector2f[] points = new Vector2f[CIRCLE_SEGMENTS];
+        int increment = 360 / points.length;
+        int currentAngle = 0;
+
+        for (int i = 0; i < points.length; i++) {
+            Vector2f tmp = new Vector2f(radius, 0);
+            MathUtils.rotate(tmp, currentAngle, new Vector2f());
+            points[i] = new Vector2f(tmp).add(center);
+
+            if (i > 0) {
+                addLine2D(points[i - 1], points[i], color, lifetime);
+            }
+            currentAngle += increment;
+        }
+        addLine2D(points[points.length - 1], points[0], color, lifetime);
+    }
 }

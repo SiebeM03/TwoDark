@@ -1,12 +1,8 @@
 package TDA.scene;
 
-import TDA.entities.player.Player;
-import TDA.entities.resources.Resource;
-import TDA.entities.resources.types.Metal;
-import TDA.entities.resources.types.Stone;
-import TDA.entities.resources.types.Tree;
+import TDA.entities.ecs.Entity;
+import TDA.entities.ecs.EntityManager;
 import TDA.rendering.SceneRenderSystem;
-import org.joml.Vector2f;
 import woareXengine.mainEngine.gameObjects.Camera;
 
 import java.util.HashMap;
@@ -15,10 +11,10 @@ import java.util.Map;
 public class Scene {
 
     public final Camera camera;
-    public final Player player;
 
     public final SceneRenderSystem renderer;
-    // TODO add entity manager
+    public final EntityManager entityManager;
+
 
     private final Map<Integer, SceneSystem> sceneSystems = new HashMap<>();
 
@@ -27,21 +23,15 @@ public class Scene {
         this.renderer = renderSystem;
         this.camera = camera;
 
-        this.player = new Player(camera);
-        renderer.registerPlayer(player);
-
-        Resource stone = new Stone(new Vector2f(1000, 300));
-        renderer.registerResource(stone);
-
-        Resource tree = new Tree(new Vector2f(1300, 300));
-        renderer.registerResource(tree);
-
-        Resource metal = new Metal(new Vector2f(1600, 300));
-        renderer.registerResource(metal);
+        this.entityManager = new EntityManager();
     }
 
     public void update() {
-        player.update();
+        entityManager.update();
+    }
+
+    public void addEntity(Entity entity) {
+        entityManager.entities.add(entity);
     }
 
     public void render() {

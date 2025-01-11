@@ -2,6 +2,7 @@ package woareXengine.rendering.debug;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import woareXengine.util.Color;
 
 public class Line2D {
     private Vector2f from;
@@ -12,10 +13,10 @@ public class Line2D {
      */
     private int lifetime;
 
-    public Line2D(Vector2f from, Vector2f to, Vector3f color, int lifetime) {
+    public Line2D(Vector2f from, Vector2f to, Color color, int lifetime) {
         this.from = from;
         this.to = to;
-        this.color = color;
+        this.color = color.toVec3();
         this.lifetime = lifetime;
     }
 

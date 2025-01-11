@@ -1,6 +1,5 @@
 package TDA.main;
 
-import TDA.entities.player.controller.collisions.GameCollisionManager;
 import TDA.main.configs.GameConfigs;
 import TDA.main.controls.GameControls;
 import TDA.main.world.World;
@@ -29,6 +28,7 @@ public class GameManager {
         currentScene = HomeScene.init();
 
         world = new World();
+        world.init();
     }
 
     public static void update() {
@@ -44,10 +44,10 @@ public class GameManager {
         }
         if (gameControls.developerControls.isDevModeToggled()) {
             Engine.instance().debugging = !Engine.instance().debugging;
+            System.out.println("Debugging: " + Engine.instance().debugging);
         }
 
         currentScene.update();
-        GameCollisionManager.get().update();
         currentScene.render();
 
         engine.update();

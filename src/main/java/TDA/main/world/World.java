@@ -18,8 +18,11 @@ public class World {
         generator.generatePixelBuffer();
 
         tiles = new Tile[MAP_HEIGHT][MAP_WIDTH];
+    }
 
+    public void init() {
         generateTiles();
+
         giveWaterTilesCollision();
     }
 
@@ -44,7 +47,7 @@ public class World {
                 assert tile != null;
                 if (tile.getClass().isAssignableFrom(Water.class)) {
                     Water water = (Water) tile;
-                    water.createCollisionBox(this);
+                    water.createCollisionBox();
                 }
             }
         }

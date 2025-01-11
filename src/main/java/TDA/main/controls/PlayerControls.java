@@ -1,6 +1,7 @@
 package TDA.main.controls;
 
 import woareXengine.io.userInputs.InputController;
+import woareXengine.io.userInputs.MouseButton;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -32,5 +33,9 @@ public class PlayerControls extends InputController {
 
     public boolean isSprintHeld() {
         return isKeyboardEnabled && keyboard.isKeyDown(GLFW_KEY_LEFT_SHIFT);
+    }
+
+    public boolean isHarvestPressed() {
+        return isMouseEnabled && mouse.isClickEvent(MouseButton.LEFT);
     }
 }

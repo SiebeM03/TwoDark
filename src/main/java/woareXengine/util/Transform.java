@@ -96,4 +96,12 @@ public class Transform {
     public void addY(float y) {
         this.position.y += y;
     }
+
+    public Vector2f getCenter() {
+        return new Vector2f(position.x + dimensions.x / 2, position.y + dimensions.y / 2);
+    }
+
+    public Transform copy() {
+        return new Transform(new Vector2f(position), new Vector2f(dimensions));
+    }
 }

@@ -1,6 +1,7 @@
 package TDA.entities.player;
 
-import TDA.entities.player.controller.Deadzone;
+
+import TDA.scene.prefabs.HomeCamera.Deadzone;
 
 public class PlayerConfigs {
     // MOVEMENT

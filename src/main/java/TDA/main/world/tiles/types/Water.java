@@ -1,6 +1,7 @@
 package TDA.main.world.tiles.types;
 
-import TDA.entities.player.controller.collisions.GameCollisionBox;
+import TDA.entities.ecs.Entity;
+import TDA.entities.ecs.components.Collider;
 import TDA.main.GameManager;
 import TDA.main.world.World;
 import TDA.main.world.tiles.Tile;
@@ -24,15 +25,17 @@ public class Water extends Tile {
         renderObject.texture = Assets.getTexture("src/assets/images/tiles/water.png");
 
         GameManager.currentScene.renderer.registerTile(this);
-
     }
 
-    public void createCollisionBox(World world) {
-        if (isSurroundedByWater(world)) return;
-        new GameCollisionBox(transform);
+    public void createCollisionBox() {
+        if (isSurroundedByWater()) return;
+        GameManager.currentScene.addEntity(new Entity(transform)
+                                                   .addComponent(new Collider()));
     }
 
-    private boolean isSurroundedByWater(World world) {
+    private boolean isSurroundedByWater() {
+        World world = GameManager.world;
+
         return world.getTile((int) normalizedCoordinates.x, (int) normalizedCoordinates.y - 1) instanceof Water
                        && world.getTile((int) normalizedCoordinates.x, (int) normalizedCoordinates.y + 1) instanceof Water
                        && world.getTile((int) normalizedCoordinates.x - 1, (int) normalizedCoordinates.y) instanceof Water

@@ -9,14 +9,12 @@ import TDA.scene.Scene;
 import woareXengine.rendering.quadRenderer.Quad;
 
 public class TDARenderSystem implements SceneRenderSystem {
+    private static TDARenderSystem instance;
 
-    private final RendererManager renderer;
+
+    public final RendererManager renderer;
     // TODO handle entity data here
 
-
-    public TDARenderSystem(RendererManager renderer) {
-        this.renderer = renderer;
-    }
 
     @Override
     public void render(Scene scene) {
@@ -28,18 +26,21 @@ public class TDARenderSystem implements SceneRenderSystem {
         this.renderer.cleanUp();
     }
 
-    @Override
-    public void registerPlayer(Player player) {
-        this.renderer.getRenderer(Quad.class).add(player.renderObject);
-    }
-
-    @Override
-    public void registerResource(Resource resource) {
-        this.renderer.getRenderer(Quad.class).add(resource.renderObject);
-    }
 
     @Override
     public void registerTile(Tile tile) {
         this.renderer.getRenderer(Quad.class).add(tile.renderObject);
+    }
+
+
+    public static TDARenderSystem get() {
+        if (instance == null) {
+            instance = new TDARenderSystem(new RendererManager());
+        }
+        return instance;
+    }
+
+    private TDARenderSystem(RendererManager renderer) {
+        this.renderer = renderer;
     }
 }

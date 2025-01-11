@@ -84,6 +84,10 @@ public class Color {
         return new Vector4f(getR(), getG(), getB(), getA());
     }
 
+    public Vector3f toVec3() {
+        return new Vector3f(getR(), getG(), getB());
+    }
+
 
     public float getR() {
         return col.x;
