@@ -25,4 +25,17 @@ public class MathUtils {
         vec.x = xPrime;
         vec.y = yPrime;
     }
+
+    public static float randomInRange(float min, float max) {
+        return randomInRange(min, max, false);
+    }
+
+    public static float randomInRange(float min, float max, boolean positiveAndNegative) {
+        return (float) Math.random() * (max - min) + min * (Math.random() > 0.5f ? 1 : -1);
+    }
+
+    /** @param chance the chance of returning true */
+    public static boolean randomChance(float chance) {
+        return Math.random() < chance;
+    }
 }

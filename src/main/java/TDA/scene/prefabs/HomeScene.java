@@ -1,5 +1,6 @@
 package TDA.scene.prefabs;
 
+import TDA.entities.dinos.Dino;
 import TDA.entities.player.Player;
 import TDA.entities.resources.ResourceFactory;
 import TDA.entities.resources.types.Metal;
@@ -24,6 +25,8 @@ public class HomeScene {
         scene.addEntity(ResourceFactory.createResourceOfType(Tree.class));
         scene.addEntity(ResourceFactory.createResourceOfType(Stone.class));
         scene.addEntity(ResourceFactory.createResourceOfType(Metal.class));
+
+        scene.addEntity(Dino.createEntity());
 
         Logger.success("Home Scene initialized");
         return scene;

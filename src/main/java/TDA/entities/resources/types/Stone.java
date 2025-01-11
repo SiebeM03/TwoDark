@@ -7,12 +7,13 @@ import TDA.entities.resources.Resource;
 import TDA.main.GameManager;
 import org.joml.Vector2f;
 import woareXengine.util.Layer;
+import woareXengine.util.MathUtils;
 import woareXengine.util.Transform;
 
 public class Stone extends Resource {
     @Override
     protected void spawnItem() {
-        Entity item = new Entity(new Transform(new Vector2f((float) (entity.transform.getX() + (Math.random() * entity.transform.getWidth())), entity.transform.getCenter().y - 150), new Vector2f(50, 50)))
+        Entity item = new Entity(new Transform(new Vector2f(MathUtils.randomInRange(entity.transform.getX(), entity.transform.getX() + entity.transform.getWidth()), entity.transform.getCenter().y - 150), new Vector2f(50, 50)))
                               .addComponent(new QuadComponent("src/assets/images/seperateImages/stone2.png", Layer.UI))
                               .addComponent(new Pickup(new Stone()));
 

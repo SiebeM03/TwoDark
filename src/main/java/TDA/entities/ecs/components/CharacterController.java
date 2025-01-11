@@ -54,6 +54,7 @@ public class CharacterController extends Component {
     private void move() {
         if (moveDirection.x == 0 && moveDirection.y == 0) return;
         float dt = Engine.getDelta();
+        // TODO - this is a temporary fix for the diagonal movement speed being faster than the horizontal/vertical movement speed, check if Vector2f.normalize() is the correct way to fix this
         float normalizedMoveDistance = (playerControls.isSprintHeld() ? SPRINT_SPEED : MOVE_SPEED) / Math.sqrt(Math.abs(moveDirection.x) + Math.abs(moveDirection.y));
         float addX = normalizedMoveDistance * moveDirection.x * dt;
         float addY = normalizedMoveDistance * moveDirection.y * dt;
