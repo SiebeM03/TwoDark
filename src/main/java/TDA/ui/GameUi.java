@@ -30,10 +30,11 @@ public class GameUi extends UiComponent {
     }
 
     public void update() {
+        if (GameManager.gameControls.windowControls.isEscapeKeyPressed() && !playerInventoryUi.isVisible()) showPauseMenu(!pauseUi.isShown());
+
         if (GameManager.gameControls.inventoryControls.shouldOpenInventory()) showInventory(true);
         if (GameManager.gameControls.inventoryControls.shouldCloseInventory()) showInventory(false);
 
-        if (GameManager.gameControls.windowControls.isEscapeKeyPressed()) showPauseMenu(!pauseUi.isShown());
     }
 
     /** Used to check if there is UI that should close when ESC is pressed */
@@ -52,6 +53,8 @@ public class GameUi extends UiComponent {
     public void showInventory(boolean show) {
         GameManager.gameControls.playerControls.enableKeyboardUse(!show);
         GameManager.gameControls.playerControls.enableMouseUse(!show);
+        GameManager.gameControls.windowControls.enableKeyboardUse(!show);
+        GameManager.gameControls.windowControls.enableMouseUse(!show);
         playerInventoryUi.show(show);
     }
 }
