@@ -20,7 +20,7 @@ public class WanderAI extends Component {
 
     @Override
     public void update() {
-        if (MathUtils.randomChance(0.001f)) {
+        if (MathUtils.randomChance(0.0001f)) {
             Logger.debug("IDLING");
             currentState = State.IDLE;
         } else if (idleTime > 5 && MathUtils.randomChance(0.01f)) {

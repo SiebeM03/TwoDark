@@ -14,7 +14,7 @@ public class QuadRenderer extends Renderer<Quad> {
 
     public QuadRenderer() {
         this.data = new ArrayList<>();
-        this.currentShader = new QuadShader();
+        this.currentShader = createShader();
     }
 
     @Override

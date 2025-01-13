@@ -4,6 +4,7 @@ import woareXengine.io.Timer;
 import woareXengine.io.userInputs.Keyboard;
 import woareXengine.io.userInputs.Mouse;
 import woareXengine.io.window.Window;
+import woareXengine.ui.main.Ui;
 import woareXengine.util.Logger;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -47,6 +48,7 @@ public class Engine {
     }
 
     public void update() {
+        Ui.update();
         timer.update();
         keyboard.update();
         mouse.update();

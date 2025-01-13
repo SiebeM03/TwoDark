@@ -2,6 +2,7 @@ package TDA.entities.ecs.components;
 
 import TDA.entities.ecs.Component;
 import TDA.entities.ecs.Entity;
+import TDA.entities.inventory.ItemStack;
 import TDA.entities.resources.Resource;
 import TDA.main.GameManager;
 import org.joml.Vector2f;
@@ -16,9 +17,11 @@ public class Pickup extends Component {
     public final static int PICKUP_RANGE = 20;
 
     private final Resource item;
+    private final int amount;
 
-    public Pickup(Resource item) {
+    public Pickup(Resource item, int amount) {
         this.item = item;
+        this.amount = amount;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class Pickup extends Component {
 
                 if (MathUtils.dist(inventoryEntity.transform.getCenter(), entity.transform.getCenter()) <= PICKUP_RANGE) {
                     Logger.debug("Picked up item");
-                    inventoryEntity.getComponent(Inventory.class).addItem(new Inventory.InventoryItem(item, 10));
+                    inventoryEntity.getComponent(Inventory.class).addItem(new ItemStack(item, amount));
                     entity.destroy();
                 }
             }

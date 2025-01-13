@@ -39,6 +39,11 @@ public class SafeList<E> extends AbstractList<E> {
         }
     }
 
+    @Override
+    public void clear() {
+        toRemove.addAll(actualList);
+    }
+
     public void applyChanges() {
         actualList.addAll(toAdd);
         actualList.removeAll(toRemove);

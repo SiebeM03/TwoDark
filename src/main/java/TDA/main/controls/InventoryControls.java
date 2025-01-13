@@ -1,6 +1,7 @@
 package TDA.main.controls;
 
 import woareXengine.io.userInputs.InputController;
+import woareXengine.util.Logger;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -24,5 +25,13 @@ public class InventoryControls extends InputController {
         if (keyboard.keyPressEvent(GLFW_KEY_0)) return 9;
 
         return -1;
+    }
+
+    public boolean shouldOpenInventory() {
+        return isKeyboardEnabled && keyboard.keyPressEvent(GLFW_KEY_J);
+    }
+
+    public boolean shouldCloseInventory() {
+        return isKeyboardEnabled && keyboard.keyPressEvent(GLFW_KEY_ESCAPE);
     }
 }

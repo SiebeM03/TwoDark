@@ -5,6 +5,7 @@ import TDA.main.controls.GameControls;
 import TDA.main.world.World;
 import TDA.scene.Scene;
 import TDA.scene.prefabs.HomeScene;
+import TDA.ui.TDAUi;
 import woareXengine.io.window.DisplayMode;
 import woareXengine.io.window.Window;
 import woareXengine.mainEngine.Engine;
@@ -34,9 +35,6 @@ public class GameManager {
     }
 
     public static void update() {
-        if (gameControls.windowControls.isEscapeKeyPressed()) {
-            Engine.instance().requestClose();
-        }
         if (gameControls.windowControls.isDisplayModeSwitchPressed()) {
             Window window = Engine.window();
             switch (window.getDisplayMode()) {
@@ -44,11 +42,13 @@ public class GameManager {
                 case WINDOWED -> window.changeDisplayMode(DisplayMode.FULLSCREEN);
             }
         }
+
         if (gameControls.developerControls.isDevModeToggled()) {
             Engine.instance().debugging = !Engine.instance().debugging;
             Logger.debug("Toggled debugging: " + Engine.instance().debugging);
         }
 
+        TDAUi.get().gameUi.update();
         currentScene.update();
         currentScene.render();
 

@@ -31,7 +31,7 @@ public class MathUtils {
     }
 
     public static float randomInRange(float min, float max, boolean positiveAndNegative) {
-        return (float) Math.random() * (max - min) + min * (Math.random() > 0.5f ? 1 : -1);
+        return (float) Math.random() * (max - min) + min * (positiveAndNegative ? (Math.random() < 0.5 ? -1 : 1) : 1);
     }
 
     /** @param chance the chance of returning true */

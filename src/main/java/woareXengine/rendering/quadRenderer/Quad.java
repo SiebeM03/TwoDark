@@ -11,13 +11,6 @@ public class Quad extends RenderObject {
 
     public Transform transform;
 
-    public Vector2f[] textureCoords = {
-            new Vector2f(1, 1),
-            new Vector2f(1, 0),
-            new Vector2f(0, 0),
-            new Vector2f(0, 1),
-    };
-
 
     public Quad(float width, float height, Vector2f position, int zIndex) {
         this(width, height, Color.WHITE, position, zIndex);

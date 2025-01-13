@@ -4,6 +4,7 @@ import woareXengine.io.Timer;
 import woareXengine.io.userInputs.Keyboard;
 import woareXengine.io.userInputs.Mouse;
 import woareXengine.io.window.Window;
+import woareXengine.ui.main.Ui;
 import woareXengine.util.Logger;
 
 import static org.lwjgl.opengl.GL.createCapabilities;
@@ -32,6 +33,7 @@ public class EngineCreator {
         this.timer = new Timer();
         this.keyboard = new Keyboard(window.getId());
         this.mouse = new Mouse(window);
+        Ui.init(window, mouse, keyboard);
     }
 
     /**

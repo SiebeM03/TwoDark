@@ -1,23 +1,21 @@
 package TDA.entities.ecs.components;
 
+
 import TDA.entities.ecs.Component;
-import TDA.entities.resources.types.Metal;
-import TDA.entities.resources.types.Stone;
+import TDA.entities.inventory.ItemStack;
 import woareXengine.util.Logger;
 
 import java.util.Arrays;
 
 public class Inventory extends Component {
-    private final InventoryItem[] inventoryItems;
+    private final ItemStack[] inventoryItems;
 
     public Inventory(int size) {
-        this.inventoryItems = new InventoryItem[size];
-        inventoryItems[3] = new InventoryItem(new Stone(), 10);
-        inventoryItems[10] = new InventoryItem(new Metal(), 100);
+        this.inventoryItems = new ItemStack[size];
     }
 
 
-    public void addItem(InventoryItem item) {
+    public void addItem(ItemStack item) {
         for (int i = 0; i < inventoryItems.length; i++) {
             if (inventoryItems[i] != null && inventoryItems[i].item.getClass().equals(item.item.getClass())) {
                 inventoryItems[i].amount += item.amount;
@@ -34,21 +32,9 @@ public class Inventory extends Component {
         }
     }
 
-    public static class InventoryItem {
-        public Object item;
-        public int amount;
-
-        public InventoryItem(Object item, int amount) {
-            this.item = item;
-            this.amount = amount;
-        }
-
-        @Override
-        public String toString() {
-            return "{" +
-                           "item=" + item.getClass().getSimpleName() +
-                           ", amount=" + amount +
-                           '}';
-        }
+    public ItemStack[] getInventoryItems() {
+        return inventoryItems;
     }
+
+
 }

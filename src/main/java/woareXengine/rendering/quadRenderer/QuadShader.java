@@ -12,12 +12,4 @@ public class QuadShader extends Shader {
         super.use();
         super.detach();
     }
-
-    public void uploadUniforms(int[] textureSlots) {
-    }
-
-    public void enableAttributes() {
-
-    }
-
 }

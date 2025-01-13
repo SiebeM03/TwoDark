@@ -2,16 +2,17 @@ package TDA.entities.ecs.components;
 
 import TDA.entities.ecs.Component;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
+import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.rendering.quadRenderer.Quad;
 import woareXengine.util.Assets;
 import woareXengine.util.Layer;
 
 public class QuadComponent extends Component {
     public Quad quad;
-    private String filepath;
+    private Texture texture;
 
-    public QuadComponent(String filepath, int zIndex) {
-        this.filepath = filepath;
+    public QuadComponent(Texture texture, int zIndex) {
+        this.texture = texture;
     }
 
     @Override
@@ -21,9 +22,7 @@ public class QuadComponent extends Component {
                 entity.transform.getPosition(),
                 Layer.FOREGROUND
         );
-        if (!filepath.isBlank()) {
-            this.quad.texture = Assets.getTexture(filepath);
-        }
+        this.quad.texture = texture;
         TDARenderSystem.get().renderer.getRenderer(Quad.class).add(this.quad);
     }
 
