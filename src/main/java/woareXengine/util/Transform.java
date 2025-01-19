@@ -111,4 +111,15 @@ public class Transform {
                        && y >= getY()
                        && y <= getY() + getHeight();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Transform transform = (Transform) obj;
+        return getX() == transform.getX() &&
+                       getY() == transform.getY() &&
+                       getWidth() == transform.getWidth() &&
+                       getHeight() == transform.getHeight();
+    }
 }

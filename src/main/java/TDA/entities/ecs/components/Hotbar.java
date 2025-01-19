@@ -8,7 +8,7 @@ import TDA.main.GameManager;
 
 public class Hotbar extends Component {
     public ItemStack[] hotbar = new ItemStack[10];
-    private int selected = -1;
+    private int selected = 0;
 
     @Override
     public void init() {
@@ -21,12 +21,7 @@ public class Hotbar extends Component {
         int buttonPressed = GameManager.gameControls.inventoryControls.isHotbarItemSelected();
         if (buttonPressed == -1) return;
 
-        if (hotbar[buttonPressed] == null) return;
-        if (buttonPressed == selected) {
-            selected = -1;
-        } else {
-            selected = buttonPressed;
-        }
+        selected = buttonPressed;
     }
 
     public ItemStack[] getHotbarItems() {
@@ -34,7 +29,6 @@ public class Hotbar extends Component {
     }
 
     public ItemStack getSelectedItem() {
-        if (selected == -1) return null;
         return hotbar[selected];
     }
 

@@ -83,9 +83,9 @@ public class Mouse {
         return x;
     }
 
-    /** @return A number between 0-1 showing how far down the screen the cursor is (0 is top edge). */
+    /** @return A number between 0-1 showing how far down the screen the cursor is (0 is bottom edge). */
     public float getY() {
-        return y;
+        return 1 - y;
     }
 
     /** @return The change in x position since the last frame. Positive is right, using screen coordinates (0,0 top left, 1,1 bottom right). */

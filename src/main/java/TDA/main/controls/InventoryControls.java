@@ -1,7 +1,7 @@
 package TDA.main.controls;
 
 import woareXengine.io.userInputs.InputController;
-import woareXengine.util.Logger;
+import woareXengine.io.userInputs.MouseButton;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -33,5 +33,9 @@ public class InventoryControls extends InputController {
 
     public boolean shouldCloseInventory() {
         return isKeyboardEnabled && keyboard.keyPressEvent(GLFW_KEY_ESCAPE);
+    }
+
+    public boolean isClicked() {
+        return isMouseEnabled && mouse.isClickEvent(MouseButton.LEFT);
     }
 }

@@ -21,7 +21,7 @@ public class HomeCamera extends Camera {
 
     @Override
     public float getMouseWorldY() {
-        float currentY = -(Engine.mouse().getY() * 2.0f - 1.0f);
+        float currentY = Engine.mouse().getY() * 2.0f - 1.0f;
         return transformScreenToWorld(0, currentY).y;
     }
 

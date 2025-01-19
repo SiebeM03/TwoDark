@@ -1,6 +1,7 @@
 package TDA.scene.prefabs;
 
 import TDA.entities.dinos.Dino;
+import TDA.entities.inventory.InventoryManager;
 import TDA.entities.inventory.ItemStack;
 import TDA.entities.player.Player;
 import TDA.entities.resources.ResourceFactory;
@@ -30,6 +31,9 @@ public class HomeScene {
         scene.addEntity(ResourceFactory.createResourceOfType(Metal.class));
 
         scene.addEntity(Dino.createEntity());
+
+
+        scene.addSystem(new InventoryManager());
 
         Logger.success("Home Scene initialized");
         return scene;

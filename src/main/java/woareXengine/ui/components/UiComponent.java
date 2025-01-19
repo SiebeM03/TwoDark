@@ -23,6 +23,7 @@ public abstract class UiComponent extends RenderObject {
     private boolean visible = true;
 
     private int level = 0;
+    private int padding = 0;
 
     public UiComponent() {
 
@@ -33,6 +34,11 @@ public abstract class UiComponent extends RenderObject {
         component.parent = this;
         children.add(component);
         component.init();
+    }
+
+    public void remove(UiComponent component) {
+        component.parent = null;
+        children.remove(component);
     }
 
     public void show(boolean show) {
@@ -101,13 +107,30 @@ public abstract class UiComponent extends RenderObject {
         if (!Ui.isMouseEnabled() || !isShown()) return false;
         Mouse mouse = Ui.mouse;
 
-        return getAbsoluteTransform().contains(mouse.getX() * Engine.window().getPixelWidth(), (1 - mouse.getY()) * Engine.window().getPixelHeight());
+        return getAbsoluteTransform().contains(mouse.getX() * Engine.window().getPixelWidth(), mouse.getY() * Engine.window().getPixelHeight());
     }
 
-    protected void setTransform(int margin) {
+    public void setTransform(int margin) {
         transform = new Transform(
-                new Vector2f(margin, margin),
-                new Vector2f(parent.transform.getWidth() - margin * 2, parent.transform.getHeight() - margin * 2)
+                new Vector2f(margin + parent.padding, margin + parent.padding),
+                new Vector2f(parent.transform.getWidth() - (margin + parent.padding) * 2, parent.transform.getHeight() - (margin + parent.padding) * 2)
         );
+    }
+
+    public void setPadding(int padding) {
+        this.padding = padding;
+    }
+
+    public int getPadding() {
+        return padding;
+    }
+
+    public UiComponent getParent() {
+        return parent;
+    }
+
+    public void setParent(UiComponent newParent) {
+        parent.remove(this);
+        newParent.add(this);
     }
 }

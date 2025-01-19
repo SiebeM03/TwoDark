@@ -23,7 +23,7 @@ public class Ui {
 
     public static void init(Window window, Mouse mouse, Keyboard keyboard) {
         Ui.uiRenderer = new UiRenderer();
-        uiRenderer.add(CONTAINER);
+        Ui.uiRenderer.add(CONTAINER);
         Ui.displayWidthPixels = window.getPixelWidth();
         Ui.displayHeightPixels = window.getPixelHeight();
         Ui.mouse = mouse;

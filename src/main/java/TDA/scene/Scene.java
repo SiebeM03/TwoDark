@@ -6,11 +6,9 @@ import TDA.entities.ecs.EntityManager;
 import TDA.entities.ecs.components.Collider;
 import TDA.rendering.SceneRenderSystem;
 import woareXengine.mainEngine.gameObjects.Camera;
+import woareXengine.util.Id;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Scene {
 
@@ -20,7 +18,7 @@ public class Scene {
     public final EntityManager entityManager;
 
 
-    private final List<SceneSystem> sceneSystems = new ArrayList<>();
+    private Map<Id, SceneSystem> sceneSystems = new LinkedHashMap<>();
 
 
     public Scene(SceneRenderSystem renderSystem, Camera camera) {
@@ -31,7 +29,7 @@ public class Scene {
     }
 
     public void update() {
-        for (SceneSystem system : sceneSystems) {
+        for (SceneSystem system : sceneSystems.values()) {
             system.update();
         }
         entityManager.update();
@@ -42,7 +40,11 @@ public class Scene {
     }
 
     public void addSystem(SceneSystem system) {
-        sceneSystems.add(system);
+        sceneSystems.put(system.getId(), system);
+    }
+
+    public SceneSystem getSystem(Id id) {
+        return sceneSystems.get(id);
     }
 
     public void render() {
@@ -51,7 +53,7 @@ public class Scene {
     }
 
     public void cleanUp() {
-        for (SceneSystem system : sceneSystems) {
+        for (SceneSystem system : sceneSystems.values()) {
             system.cleanUp();
         }
         renderer.cleanUp();

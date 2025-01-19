@@ -3,13 +3,13 @@ package TDA.ui;
 import TDA.entities.player.Player;
 import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarUi;
-import TDA.ui.menus.inventory.InventoryUi;
+import TDA.ui.menus.inventory.PlayerInventoryUi;
 import TDA.ui.menus.pause.PauseUi;
 import woareXengine.ui.components.UiComponent;
 
 public class GameUi extends UiComponent {
 
-    private InventoryUi playerInventoryUi = new InventoryUi(Player.inventory);
+    private PlayerInventoryUi playerInventoryUi = new PlayerInventoryUi(Player.inventory);
     private HotbarUi hotbarUi = new HotbarUi();
 
     private PauseUi pauseUi = new PauseUi();

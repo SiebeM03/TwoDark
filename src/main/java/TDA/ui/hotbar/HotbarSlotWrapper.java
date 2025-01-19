@@ -1,20 +1,23 @@
 package TDA.ui.hotbar;
 
-import TDA.entities.ecs.components.Hotbar;
+import TDA.entities.inventory.ItemStack;
 import TDA.entities.player.Player;
-import TDA.ui.menus.inventory.InventorySlot;
+import TDA.ui.menus.inventory.itemList.InventorySlot;
 import woareXengine.ui.components.UiComponent;
 
 public class HotbarSlotWrapper extends UiComponent {
+    private final ItemStack[] hotbarItems;
 
+    public HotbarSlotWrapper() {
+        this.hotbarItems = Player.hotbar.getHotbarItems();
+    }
 
     @Override
     protected void init() {
         setTransform(4);
 
-        Hotbar hotbar = Player.hotbar;
-        for (int i = 0; i < hotbar.getHotbarItems().length; i++) {
-            add(new InventorySlot(hotbar.getHotbarItems(), i, 10));
+        for (int i = 0; i < hotbarItems.length; i++) {
+            add(new InventorySlot(i, 10));
         }
     }
 
@@ -23,12 +26,23 @@ public class HotbarSlotWrapper extends UiComponent {
         for (UiComponent c : children) {
             if (!(c instanceof InventorySlot)) continue;
             InventorySlot i = (InventorySlot) c;
+            i.setBorderWidth(i.getIndex() == Player.hotbar.getSelectedIndex() ? 4 : 2);
+        }
+    }
 
-            if (Player.hotbar.getSelectedItem() != null && Player.hotbar.getSelectedItem().equals(i.itemUi.getItemStack())) {
-                i.setSelected(true);
-            } else {
-                i.setSelected(false);
+    public ItemStack getItemStack(int index) {
+        return hotbarItems[index];
+    }
+
+    private InventorySlot getSlot(int index) {
+        for (UiComponent c : children) {
+            if (!(c instanceof InventorySlot)) continue;
+            InventorySlot i = (InventorySlot) c;
+
+            if (i.getIndex() == index) {
+                return i;
             }
         }
+        return null;
     }
 }
