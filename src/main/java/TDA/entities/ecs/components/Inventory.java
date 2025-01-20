@@ -8,12 +8,15 @@ import woareXengine.util.Logger;
 import java.util.Arrays;
 
 public class Inventory extends Component {
-    private final ItemStack[] inventoryItems;
+    public final ItemStack[] inventoryItems;
 
     public Inventory(int size) {
         this.inventoryItems = new ItemStack[size];
     }
 
+    @Override
+    public void update() {
+    }
 
     public void addItem(ItemStack item) {
         for (int i = 0; i < inventoryItems.length; i++) {
@@ -31,10 +34,4 @@ public class Inventory extends Component {
             }
         }
     }
-
-    public ItemStack[] getInventoryItems() {
-        return inventoryItems;
-    }
-
-
 }

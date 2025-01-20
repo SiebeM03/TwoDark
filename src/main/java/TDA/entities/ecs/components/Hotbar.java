@@ -12,7 +12,7 @@ public class Hotbar extends Component {
 
     @Override
     public void init() {
-        hotbar[2] = new ItemStack(new Tree(), 20);
+        hotbar[2] = new ItemStack(new Tree(), 100);
         hotbar[4] = new ItemStack(new Stone(), 40);
     }
 

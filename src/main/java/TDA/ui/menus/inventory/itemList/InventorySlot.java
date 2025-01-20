@@ -47,14 +47,38 @@ public class InventorySlot extends UiBorderedBlock {
     @Override
     protected void updateSelf() {
         super.updateSelf();
+        selected = parent instanceof HotbarSlotWrapper && index == Player.hotbar.getSelectedIndex();
 
         setBorderWidth(selected || isMouseOver() ? 4 : 2);
 
+        if (getItemStack() != null && getInventoryItem() == null && !InventoryManager.getFromCurrentScene().isHolding()) {
+            add(new InventoryItemUi());
+        }
+
+        handleHolding();
+    }
+
+    /**
+     * Handles the placing/swapping of items between inventories. Also works across multiple inventories (e.g. PlayerInventory <-> Hotbar)
+     * <ul>
+     * <li>Slot is clicked while {@link InventoryManager} is holding an item:
+     * <ul>
+     *     <li>Clicked slot is empty? The item is placed on the clicked slot</li>
+     *     <li>Clicked slot is not empty? Both items swap places</li>
+     * </ul></li>
+     * <li>Slot is clicked while {@link InventoryManager} is not holding an item:
+     * <ul>
+     *     <li>The item inside the slot is picked up</li>
+     *     <li>If there is no item, nothing happens</li>
+     * </ul></li></ul>
+     */
+    private void handleHolding() {
         if (isMouseOver() && GameManager.gameControls.inventoryControls.isClicked()) {
-            if (InventoryManager.getFromCurrentScene().getHolding() == null) {
-                InventoryManager.getFromCurrentScene().setHolding(getInventoryItem());
+            if (InventoryManager.getFromCurrentScene().isHolding()) {
+                InventoryManager.getFromCurrentScene().placeHolding(getIndex(), this);
             } else {
-                InventoryManager.getFromCurrentScene().swapSlot(this);
+                if (getInventoryItem() == null) return;
+                InventoryManager.getFromCurrentScene().setHolding(getIndex(), this);
             }
         }
     }

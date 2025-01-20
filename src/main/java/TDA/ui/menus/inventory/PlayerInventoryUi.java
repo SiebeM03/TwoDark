@@ -19,8 +19,9 @@ public class PlayerInventoryUi extends UiComponent {
         color = new Color("#0061a6");
         color.setAlpha(0.7f);
 
-        UiComponent inventory1 = new InventoryItemList(inventory);
-        add(inventory1);
+        InventoryItemList playerInventory = new InventoryItemList(inventory);
+        playerInventory.isPlayerInventory(true);
+        add(playerInventory);
     }
 
     @Override
