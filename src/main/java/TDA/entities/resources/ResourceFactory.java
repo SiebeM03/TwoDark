@@ -12,7 +12,7 @@ import woareXengine.util.Layer;
 import woareXengine.util.Transform;
 
 public class ResourceFactory {
-    public static Entity createResourceOfType(Class<? extends Resource> resourceType) {
+    public static Entity createResourceOfType(Class<? extends Resource<?>> resourceType) {
         if (resourceType.equals(Tree.class)) {
             return new Entity(new Transform(new Vector2f(1300, 300), new Vector2f(400, 400)))
                            .addComponent(new QuadComponent(Assets.getTexture("src/assets/images/seperateImages/tree2.png"), Layer.FOREGROUND))

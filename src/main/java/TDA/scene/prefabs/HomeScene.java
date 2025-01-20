@@ -29,7 +29,6 @@ public class HomeScene {
         scene.addEntity(ResourceFactory.createResourceOfType(Tree.class));
         scene.addEntity(ResourceFactory.createResourceOfType(Stone.class));
         scene.addEntity(ResourceFactory.createResourceOfType(Metal.class));
-
         scene.addEntity(Dino.createEntity());
 
 
