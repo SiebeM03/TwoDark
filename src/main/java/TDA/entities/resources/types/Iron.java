@@ -4,14 +4,14 @@ import TDA.entities.resources.Resource;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.util.Assets;
 
-public class Stone extends Resource<Stone> {
+public class Iron extends Resource<Iron> {
 
-    public Stone() {
-        super(Stone.class);
+    public Iron() {
+        super(Iron.class);
     }
 
     @Override
     public Texture getTexture() {
-        return Assets.getTexture("src/assets/images/seperateImages/stone2.png");
+        return Assets.getTexture("src/assets/images/seperateImages/iron_ore.png");
     }
 }

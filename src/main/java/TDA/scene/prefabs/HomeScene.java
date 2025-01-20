@@ -5,6 +5,7 @@ import TDA.entities.inventory.InventoryManager;
 import TDA.entities.inventory.ItemStack;
 import TDA.entities.player.Player;
 import TDA.entities.resources.ResourceFactory;
+import TDA.entities.resources.types.Iron;
 import TDA.entities.resources.types.Metal;
 import TDA.entities.resources.types.Stone;
 import TDA.entities.resources.types.Tree;
@@ -29,7 +30,7 @@ public class HomeScene {
         scene.addEntity(ResourceFactory.createResourceOfType(Tree.class));
         scene.addEntity(ResourceFactory.createResourceOfType(Stone.class));
         scene.addEntity(ResourceFactory.createResourceOfType(Metal.class));
-
+        scene.addEntity(ResourceFactory.createResourceOfType(Iron.class));
         scene.addEntity(Dino.createEntity());
 
 
