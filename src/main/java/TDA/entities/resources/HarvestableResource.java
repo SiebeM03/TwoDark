@@ -3,7 +3,6 @@ package TDA.entities.resources;
 import TDA.entities.ecs.Entity;
 import TDA.entities.ecs.components.Pickup;
 import TDA.entities.ecs.components.QuadComponent;
-import TDA.entities.inventory.CollectableItem;
 import TDA.entities.ecs.Component;
 import TDA.main.GameManager;
 import org.joml.Vector2f;
@@ -13,12 +12,20 @@ import woareXengine.util.Logger;
 import woareXengine.util.MathUtils;
 import woareXengine.util.Transform;
 
-public abstract class Resource<T extends Resource<T>> extends Component implements CollectableItem {
+/**
+ * Represents a resource that can be harvested.
+ * @param <T> - The type of the resource that can be harvested.
+ * @param <R> - The type of the drop.
+ */
+public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R extends DropResource> extends Component {
+
     private int health = 5;
     private final Class<T> resourceType;
+    private final Class<R> drop;
 
-    public Resource(Class<T> resourceType) {
+    public HarvestableResource(Class<T> resourceType, Class<R> drop) {
         this.resourceType = resourceType;
+        this.drop = drop;
     }
 
     public void harvest() {
@@ -33,7 +40,7 @@ public abstract class Resource<T extends Resource<T>> extends Component implemen
 
     protected void spawnItem() {
         try {
-            final T resourceInstance = resourceType.getDeclaredConstructor().newInstance();
+            final R dropClassInstance = drop.getDeclaredConstructor().newInstance();
             final Entity item = new Entity(
                     new Transform(
                             new Vector2f(
@@ -43,14 +50,18 @@ public abstract class Resource<T extends Resource<T>> extends Component implemen
                             new Vector2f(50, 50)
                     )
             )
-                    .addComponent(new QuadComponent(getTexture(), Layer.UI))
-                    .addComponent(new Pickup(resourceInstance, Math.round(MathUtils.randomInRange(1, 5))));
+                    .addComponent(new QuadComponent(dropClassInstance.getTexture(), Layer.UI))
+                    .addComponent(new Pickup(dropClassInstance, Math.round(MathUtils.randomInRange(1, 5))));
 
             GameManager.currentScene.addEntity(item);
         } catch (Exception e) {
             Logger.error("Something went wrong: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public Class<R> getDrop() {
+        return drop;
     }
 
     public abstract Texture getTexture();

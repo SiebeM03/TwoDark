@@ -1,10 +1,12 @@
 package TDA.entities.inventory;
 
+import TDA.entities.resources.DropResource;
+
 public class ItemStack {
-    public CollectableItem item;
+    public IResource item;
     public int amount;
 
-    public ItemStack(CollectableItem item, int amount) {
+    public ItemStack(DropResource item, int amount) {
         this.item = item;
         this.amount = amount;
     }

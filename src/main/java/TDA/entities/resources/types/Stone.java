@@ -1,13 +1,14 @@
 package TDA.entities.resources.types;
 
-import TDA.entities.resources.Resource;
+import TDA.entities.resources.HarvestableResource;
+import TDA.entities.resources.drops.StoneDrop;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.util.Assets;
 
-public class Stone extends Resource<Stone> {
+public class Stone extends HarvestableResource<Stone, StoneDrop> {
 
     public Stone() {
-        super(Stone.class);
+        super(Stone.class, StoneDrop.class);
     }
 
     @Override
