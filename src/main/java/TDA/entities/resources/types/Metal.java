@@ -1,13 +1,14 @@
 package TDA.entities.resources.types;
 
-import TDA.entities.resources.Resource;
+import TDA.entities.resources.HarvestableResource;
+import TDA.entities.resources.drops.MetalDrop;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.util.Assets;
 
-public class Metal extends Resource<Metal> {
+public class Metal extends HarvestableResource<Metal, MetalDrop> {
 
     public Metal() {
-        super(Metal.class);
+        super(Metal.class, MetalDrop.class);
     }
 
     @Override

@@ -1,13 +1,14 @@
 package TDA.entities.resources.types;
 
-import TDA.entities.resources.Resource;
+import TDA.entities.resources.HarvestableResource;
+import TDA.entities.resources.drops.TreeDrop;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.util.Assets;
 
-public class Tree extends Resource<Tree> {
+public class Tree extends HarvestableResource<Tree, TreeDrop> {
 
     public Tree() {
-        super(Tree.class);
+        super(Tree.class, TreeDrop.class);
     }
 
     @Override
