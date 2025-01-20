@@ -23,11 +23,7 @@ public class HotbarSlotWrapper extends UiComponent {
 
     @Override
     protected void updateSelf() {
-        for (UiComponent c : children) {
-            if (!(c instanceof InventorySlot)) continue;
-            InventorySlot i = (InventorySlot) c;
-            i.setBorderWidth(i.getIndex() == Player.hotbar.getSelectedIndex() ? 4 : 2);
-        }
+
     }
 
     public ItemStack getItemStack(int index) {

@@ -5,6 +5,8 @@ import TDA.entities.ecs.components.Inventory;
 import TDA.entities.player.Player;
 import TDA.main.GameManager;
 import TDA.scene.SceneSystem;
+import TDA.ui.hotbar.HotbarSlotWrapper;
+import TDA.ui.menus.inventory.itemList.InventoryItemList;
 import TDA.ui.menus.inventory.itemList.InventoryItemUi;
 import TDA.ui.menus.inventory.itemList.InventorySlot;
 import org.joml.Vector2f;
@@ -16,12 +18,18 @@ import woareXengine.util.Id;
 public class InventoryManager extends SceneSystem {
     private static final Id ID = new Id();
 
-    private InventoryItemUi holding = null;
-    private InventorySlot lastParent;
-
     private Inventory playerInventory;
     private Hotbar hotbarInventory;
     private Inventory externalInventory;
+
+    private ItemStack[] sourceArray;
+    private int sourceIndex;
+    private InventorySlot sourceSlot;
+
+    private ItemStack[] targetArray;
+    private int targetIndex;
+
+    private InventoryItemUi holdingUi;
 
     public InventoryManager() {
         super(ID);
@@ -32,13 +40,87 @@ public class InventoryManager extends SceneSystem {
 
     @Override
     protected void update() {
-        if (holding == null) return;
+        if (sourceArray == null) return;
 
         snapToMouse();
 
         if (Engine.mouse().isClickEvent(MouseButton.RIGHT)) {
             resetHolding();
         }
+    }
+
+    public void setHolding(int index, InventorySlot slotUi) {
+        sourceArray = getInventoryRelatedToSlot(slotUi);
+        if (sourceArray == null) return;
+        sourceIndex = index;
+
+        sourceSlot = slotUi;
+        holdingUi = slotUi.getInventoryItem();
+        holdingUi.show(false);
+
+        Vector2f size = holdingUi.transform.getDimensions().mul(1.3f, new Vector2f());
+        holdingUi.setParent(Ui.getContainer());
+        holdingUi.transform.setDimensions(size);
+        snapToMouse();
+
+        holdingUi.show(true);
+    }
+
+    public void placeHolding(int index, InventorySlot targetSlot) {
+        targetArray = getInventoryRelatedToSlot(targetSlot);
+        if (targetArray == null) {
+            resetHolding();
+            return;
+        }
+        targetIndex = index;
+
+        ItemStack tempStack = targetArray[targetIndex];
+        targetArray[targetIndex] = sourceArray[sourceIndex];
+        sourceArray[sourceIndex] = tempStack;
+
+        if (targetSlot.getInventoryItem() != null) {
+            targetSlot.getInventoryItem().setParent(sourceSlot);
+        }
+        holdingUi.setParent(targetSlot);
+
+        sourceArray = null;
+        sourceIndex = -1;
+        targetArray = null;
+        targetIndex = -1;
+        holdingUi = null;
+    }
+
+    private ItemStack[] getInventoryRelatedToSlot(InventorySlot slot) {
+        if (slot.getParent() instanceof HotbarSlotWrapper) {
+            return hotbarInventory.hotbar;
+        } else if (slot.getParent() instanceof InventoryItemList && ((InventoryItemList) slot.getParent()).isPlayerInventory()) {
+            return playerInventory.inventoryItems;
+        } else {
+            if (externalInventory == null) return null;
+            return externalInventory.inventoryItems;
+        }
+    }
+
+    public void resetHolding() {
+        sourceArray = null;
+        sourceIndex = -1;
+        if (holdingUi != null) {
+            holdingUi.setParent(sourceSlot);
+            holdingUi = null;
+        }
+    }
+
+    private void snapToMouse() {
+        holdingUi.transform.setX(Engine.mouse().getX() * Ui.getContainer().transform.getWidth() - holdingUi.transform.getWidth() / 2);
+        holdingUi.transform.setY(Engine.mouse().getY() * Ui.getContainer().transform.getHeight() - holdingUi.transform.getHeight() / 2);
+    }
+
+    public boolean isHolding() {
+        return sourceArray != null;
+    }
+
+    public static InventoryManager getFromCurrentScene() {
+        return (InventoryManager) GameManager.currentScene.getSystem(ID);
     }
 
     @Override
@@ -48,57 +130,6 @@ public class InventoryManager extends SceneSystem {
 
     @Override
     protected void cleanUp() {
-
-    }
-
-    public static InventoryManager getFromCurrentScene() {
-        return (InventoryManager) GameManager.currentScene.getSystem(ID);
-    }
-
-    public void setHolding(InventoryItemUi item) {
-        if (holding != null) {
-            resetHolding();
-        }
-        System.out.println("set holding");
-        Vector2f size = item.transform.getDimensions().mul(1.5f, new Vector2f());
-
-        holding = item;
-
-        holding.show(false);
-        lastParent = (InventorySlot) item.getParent();
-        lastParent.children.remove(item);
-        Ui.getContainer().add(item);
-        holding.transform.setDimensions(size);
-        snapToMouse();
-
-        holding.show(true);
-    }
-
-    public void resetHolding() {
-        System.out.println("Reset");
-        holding.setParent(lastParent);
-        holding = null;
-    }
-
-    private void snapToMouse() {
-        holding.transform.setPosition(
-                Engine.mouse().getX() * Ui.getContainer().transform.getWidth() - holding.transform.getWidth() / 2,
-                Engine.mouse().getY() * Ui.getContainer().transform.getHeight() - holding.transform.getHeight() / 2
-        );
-    }
-
-    public InventoryItemUi getHolding() {
-        return holding;
-    }
-
-
-    public void swapSlot(InventorySlot target) {
-        if (target.getInventoryItem() == null) {
-            target.add(holding);
-        } else {
-            target.getInventoryItem().setParent(lastParent);
-            holding.setParent(target);
-        }
-        holding = null;
+        resetHolding();
     }
 }
