@@ -3,7 +3,7 @@ package TDA.entities.ecs.components;
 import TDA.entities.ecs.Component;
 import TDA.entities.ecs.Entity;
 import TDA.entities.inventory.ItemStack;
-import TDA.entities.resources.Resource;
+import TDA.entities.resources.DropResource;
 import TDA.main.GameManager;
 import org.joml.Vector2f;
 import woareXengine.mainEngine.Engine;
@@ -16,10 +16,10 @@ public class Pickup extends Component {
     public final static int PULL_SPEED = 1000;
     public final static int PICKUP_RANGE = 20;
 
-    private final Resource item;
+    private final DropResource item;
     private final int amount;
 
-    public Pickup(Resource item, int amount) {
+    public Pickup(DropResource item, int amount) {
         this.item = item;
         this.amount = amount;
     }

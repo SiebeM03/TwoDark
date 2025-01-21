@@ -1,8 +1,9 @@
 package TDA.entities.inventory;
 
-
 import woareXengine.openglWrapper.textures.Texture;
 
-public interface CollectableItem {
+public interface IResource {
+
     Texture getTexture();
+
 }
