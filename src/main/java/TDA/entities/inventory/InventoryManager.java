@@ -14,6 +14,9 @@ import woareXengine.io.userInputs.MouseButton;
 import woareXengine.mainEngine.Engine;
 import woareXengine.ui.main.Ui;
 import woareXengine.util.Id;
+import woareXengine.util.Logger;
+
+import java.util.Arrays;
 
 public class InventoryManager extends SceneSystem {
     private static final Id ID = new Id();
@@ -40,6 +43,7 @@ public class InventoryManager extends SceneSystem {
 
     @Override
     protected void update() {
+        Logger.debug(Arrays.toString(hotbarInventory.hotbar));
         if (sourceArray == null) return;
 
         snapToMouse();

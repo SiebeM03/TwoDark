@@ -9,8 +9,6 @@ public class ClickableEntity extends Component {
 
     private PickingRenderer pickingRenderer;
 
-    private boolean isMouseOver = false;
-
     @Override
     public void init() {
         this.pickingRenderer = (PickingRenderer) TDARenderSystem.get().renderer.getPickingRenderer();
