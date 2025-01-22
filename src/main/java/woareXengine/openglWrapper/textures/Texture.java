@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL30.GL_RGB32F;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -36,7 +37,7 @@ public class Texture {
 
         setFilters(GL_LINEAR, GL_LINEAR);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
     }
 
     public Texture(String filepath, int width, int height) {

@@ -4,11 +4,12 @@ import TDA.entities.ecs.Component;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
 import woareXengine.mainEngine.Engine;
 import woareXengine.rendering.pickingRenderer.PickingRenderer;
-import woareXengine.util.Logger;
 
 public class ClickableEntity extends Component {
 
     private PickingRenderer pickingRenderer;
+
+    private boolean isMouseOver = false;
 
     @Override
     public void init() {
@@ -19,13 +20,14 @@ public class ClickableEntity extends Component {
 
     @Override
     public void update() {
-        int x = (int) (Engine.mouse().getX() * Engine.window().getPixelWidth());
-        int y = (int) (Engine.mouse().getY() * Engine.window().getPixelHeight());
-//        int x = (int) GameManager.currentScene.camera.getMouseWorldX(),
-//        int y = (int) GameManager.currentScene.camera.getMouseWorldY()
 
-        Logger.log("Reading pixel " + x + " " + y + ": " + pickingRenderer.readPixel(x, y) + "");
     }
 
-
+    /** @return whether the mouse is currently hovering the entity. Ignores alpha values below 0.5 (configured in picking.glsl) */
+    public boolean isMouseOver() {
+        return entity.getId() == pickingRenderer.readPixel(
+                               (int) (Engine.mouse().getX() * Engine.window().getPixelWidth()),
+                               (int) (Engine.mouse().getY() * Engine.window().getPixelHeight())
+                       );
+    }
 }
