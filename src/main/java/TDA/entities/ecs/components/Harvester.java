@@ -12,6 +12,7 @@ public class Harvester extends Component {
 
     @Override
     public void update() {
+        if (true) return;
         DebugDraw.addCircle(entity.transform.getCenter(), HARVEST_RADIUS);
 
         if (GameManager.gameControls.playerControls.isHarvestPressed()) {

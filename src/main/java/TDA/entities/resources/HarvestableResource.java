@@ -1,6 +1,7 @@
 package TDA.entities.resources;
 
 import TDA.entities.ecs.Entity;
+import TDA.entities.ecs.components.ClickableEntity;
 import TDA.entities.ecs.components.Pickup;
 import TDA.entities.ecs.components.QuadComponent;
 import TDA.entities.ecs.Component;
@@ -17,7 +18,7 @@ import woareXengine.util.Transform;
  * @param <T> - The type of the resource that can be harvested.
  * @param <R> - The type of the drop.
  */
-public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R extends DropResource> extends Component {
+public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R extends DropResource> extends ClickableEntity {
 
     private int health = 5;
     private final Class<T> resourceType;

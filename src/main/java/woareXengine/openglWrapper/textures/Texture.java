@@ -1,14 +1,17 @@
 package woareXengine.openglWrapper.textures;
 
+import kotlin.jvm.internal.PropertyReference0Impl;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Texture {
     public final String filepath;
@@ -24,6 +27,18 @@ public class Texture {
         init();
     }
 
+    /** Only used by {@link woareXengine.openglWrapper.framebuffer.Framebuffer Framebuffer} to attach a Texture. */
+    public Texture(int width, int height) {
+        this.filepath = "Generated_Texture";
+
+        textureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureID);
+
+        setFilters(GL_LINEAR, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    }
+
     public Texture(String filepath, int width, int height) {
         this.width = width;
         this.height = height;
@@ -33,13 +48,11 @@ public class Texture {
 
     public void init() {
         textureID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        bind();
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        setClampedEdges(false);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        setFilters(GL_NEAREST, GL_NEAREST);
 
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
@@ -81,5 +94,23 @@ public class Texture {
 
     public static Texture getTexture(String filepath) {
         return new Texture(filepath);
+    }
+
+
+    // =============================================== Parameter setters ===============================================
+    public void setFilters(int minFilterType, int magFilterType) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterType);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterType);
+    }
+
+    /**
+     * Set the texture to repeat or clamp to edge.
+     *
+     * @param clamp True to clamp to edge, false to repeat.
+     */
+    public void setClampedEdges(boolean clamp) {
+        int wrapType = clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT;
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapType);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapType);
     }
 }

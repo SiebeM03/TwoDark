@@ -22,6 +22,7 @@ public class QuadComponent extends Component {
                 entity.transform.getPosition(),
                 Layer.FOREGROUND
         );
+        this.quad.setEntityID(entity.getId());
         this.quad.texture = texture;
         TDARenderSystem.get().renderer.getRenderer(Quad.class).add(this.quad);
     }
