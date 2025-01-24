@@ -5,6 +5,7 @@ package TDA.entities.inventory;
  */
 public class ItemStack {
     public InventoryObject item;
+    // TODO add getter and setter for amount to prevent negative amounts and amounts above the stack limit (for non-stackable items), maybe consider using a stack limit instead of a boolean for stackable
     public int amount;
 
     public ItemStack(InventoryObject item, int amount) {

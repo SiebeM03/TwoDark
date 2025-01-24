@@ -8,6 +8,8 @@ import TDA.entities.resources.tools.Axe;
 import TDA.entities.resources.tools.Pickaxe;
 import TDA.main.GameManager;
 
+import java.util.Arrays;
+
 public class Hotbar extends Component {
     public ItemStack[] inventoryItems = new ItemStack[10];
     private int selected = 0;

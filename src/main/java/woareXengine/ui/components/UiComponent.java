@@ -107,7 +107,7 @@ public abstract class UiComponent extends RenderObject {
         if (!Ui.isMouseEnabled() || !isShown()) return false;
         Mouse mouse = Ui.mouse;
 
-        return getAbsoluteTransform().contains(mouse.getX() * Engine.window().getPixelWidth(), mouse.getY() * Engine.window().getPixelHeight());
+        return getAbsoluteTransform().contains(mouse.getScreenX(), mouse.getScreenY());
     }
 
     public void setTransform(int margin) {

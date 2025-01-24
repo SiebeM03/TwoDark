@@ -88,6 +88,16 @@ public class Mouse {
         return 1 - y;
     }
 
+    /** @return A whole number showing the x-coordinate of the mouse's current pixel location. */
+    public int getScreenX() {
+        return (int) (getX() * window.getPixelWidth());
+    }
+
+    /** @return A whole number showing the y-coordinate of the mouse's current pixel location. */
+    public int getScreenY() {
+        return (int) (getY() * window.getPixelHeight());
+    }
+
     /** @return The change in x position since the last frame. Positive is right, using screen coordinates (0,0 top left, 1,1 bottom right). */
     public float getDx() {
         return dx;

@@ -3,6 +3,7 @@ package TDA.scene;
 import TDA.entities.ecs.Component;
 import TDA.entities.ecs.Entity;
 import TDA.entities.ecs.EntityManager;
+import TDA.entities.ecs.components.ClickableEntity;
 import TDA.entities.ecs.components.Collider;
 import TDA.rendering.SceneRenderSystem;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
@@ -84,10 +85,11 @@ public class Scene {
 
     public Entity getClickableEntityAtMouse() {
         int pixelId = TDARenderSystem.get().renderer.getPickingRenderer().readPixel(
-                (int) (Engine.mouse().getX() * Engine.window().getPixelWidth()),
-                (int) (Engine.mouse().getY() * Engine.window().getPixelHeight())
+                Engine.mouse().getScreenX(),
+                Engine.mouse().getScreenY()
         );
-        return entityManager.entities.stream()
+        return getEntitiesWithComponents(ClickableEntity.class)
+                       .stream()
                        .filter(e -> e.getId() == pixelId)
                        .findFirst()
                        .orElse(null);

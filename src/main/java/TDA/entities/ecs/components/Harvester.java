@@ -6,14 +6,7 @@ import TDA.entities.player.Player;
 import TDA.entities.resources.HarvestableResource;
 import TDA.entities.resources.tools.Tool;
 import TDA.main.GameManager;
-import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
-import TDA.scene.Scene;
 import woareXengine.rendering.debug.DebugDraw;
-import woareXengine.rendering.pickingRenderer.PickingRenderer;
-import woareXengine.util.Color;
-import woareXengine.util.Logger;
-import woareXengine.util.MathUtils;
-import woareXengine.util.Transform;
 
 public class Harvester extends Component {
     public final static int HARVEST_RADIUS = 200;
@@ -23,18 +16,30 @@ public class Harvester extends Component {
     public void update() {
         DebugDraw.addCircle(entity.transform.getCenter(), HARVEST_RADIUS);
 
+        Entity hoveredEntity = getHoveredHarvestableEntity();
+        if (hoveredEntity == null) return;
+
         if (GameManager.gameControls.playerControls.isHarvestPressed()) {
-            Entity hoveredEntity = GameManager.currentScene.getClickableEntityAtMouse();
-            if (hoveredEntity == null) return;
-
-            HarvestableResource<?, ?> harvestableResource = hoveredEntity.getComponent(HarvestableResource.class);
-            if (harvestableResource == null) return;
-
-            if (hotbar.getSelectedItem() != null && hotbar.getSelectedItem().item instanceof Tool tool) {
-                harvestableResource.harvest(tool);
-            } else {
-                harvestableResource.harvest(null);
-            }
+            harvest(hoveredEntity.getComponent(HarvestableResource.class));
         }
+    }
+
+    /** Harvests the hovered entity using the hotbar item that is currently selected. */
+    private void harvest(HarvestableResource<?, ?> harvestableResource) {
+        if (harvestableResource == null) return;
+
+        if (hotbar.getSelectedItem() != null && hotbar.getSelectedItem().item instanceof Tool tool) {
+            harvestableResource.harvest(tool);
+        } else {
+            harvestableResource.harvest(null);
+        }
+    }
+
+    /** Returns an entity that is currently hovered by the mouse and has a {@link HarvestableResource} component. Otherwise, returns null. */
+    private Entity getHoveredHarvestableEntity() {
+        Entity hoveredEntity = GameManager.currentScene.getClickableEntityAtMouse();
+        if (hoveredEntity == null) return null;
+        if (hoveredEntity.getComponent(HarvestableResource.class) == null) return null;
+        return hoveredEntity;
     }
 }
