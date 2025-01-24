@@ -82,6 +82,14 @@ public class InventoryManager extends SceneSystem {
         targetArray[targetIndex] = sourceArray[sourceIndex];
         sourceArray[sourceIndex] = tempStack;
 
+        if (targetArray == hotbarInventory.hotbar) {
+            hotbarInventory.updateAtSlot(targetIndex, targetArray[targetIndex]);
+        }
+
+        if (sourceArray == hotbarInventory.hotbar) {
+            hotbarInventory.updateAtSlot(sourceIndex, null);
+        }
+
         if (targetSlot.getInventoryItem() != null) {
             targetSlot.getInventoryItem().setParent(sourceSlot);
         }

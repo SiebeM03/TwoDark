@@ -5,7 +5,9 @@ import TDA.entities.ecs.components.ClickableEntity;
 import TDA.entities.ecs.components.Pickup;
 import TDA.entities.ecs.components.QuadComponent;
 import TDA.entities.ecs.Component;
+import TDA.entities.resources.tools.Tool;
 import TDA.main.GameManager;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.util.Layer;
@@ -15,6 +17,7 @@ import woareXengine.util.Transform;
 
 /**
  * Represents a resource that can be harvested.
+ *
  * @param <T> - The type of the resource that can be harvested.
  * @param <R> - The type of the drop.
  */
@@ -29,10 +32,13 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
         this.drop = drop;
     }
 
-    public void harvest() {
+    public void harvest(final @Nullable Tool tool) {
         Logger.debug("Harvested " + this.getClass().getSimpleName() + "!");
         spawnItem();
-        health--;
+
+        final int damage = tool == null ? 1 : tool.getDamage(resourceType);
+
+        health -= damage;
 
         if (health <= 0) {
             entity.destroy();
