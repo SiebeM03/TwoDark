@@ -14,9 +14,6 @@ import woareXengine.io.userInputs.MouseButton;
 import woareXengine.mainEngine.Engine;
 import woareXengine.ui.main.Ui;
 import woareXengine.util.Id;
-import woareXengine.util.Logger;
-
-import java.util.Arrays;
 
 public class InventoryManager extends SceneSystem {
     private static final Id ID = new Id();
@@ -43,7 +40,6 @@ public class InventoryManager extends SceneSystem {
 
     @Override
     protected void update() {
-        Logger.debug(Arrays.toString(hotbarInventory.hotbar));
         if (sourceArray == null) return;
 
         snapToMouse();
@@ -82,14 +78,6 @@ public class InventoryManager extends SceneSystem {
         targetArray[targetIndex] = sourceArray[sourceIndex];
         sourceArray[sourceIndex] = tempStack;
 
-        if (targetArray == hotbarInventory.hotbar) {
-            hotbarInventory.updateAtSlot(targetIndex, targetArray[targetIndex]);
-        }
-
-        if (sourceArray == hotbarInventory.hotbar) {
-            hotbarInventory.updateAtSlot(sourceIndex, null);
-        }
-
         if (targetSlot.getInventoryItem() != null) {
             targetSlot.getInventoryItem().setParent(sourceSlot);
         }
@@ -104,7 +92,7 @@ public class InventoryManager extends SceneSystem {
 
     private ItemStack[] getInventoryRelatedToSlot(InventorySlot slot) {
         if (slot.getParent() instanceof HotbarSlotWrapper) {
-            return hotbarInventory.hotbar;
+            return hotbarInventory.inventoryItems;
         } else if (slot.getParent() instanceof InventoryItemList && ((InventoryItemList) slot.getParent()).isPlayerInventory()) {
             return playerInventory.inventoryItems;
         } else {

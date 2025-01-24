@@ -65,7 +65,7 @@ public class PickingRenderer extends Renderer<Quad> {
 
                 batch.pushVec2(quad.textureCoords[i]);
 
-                batch.pushInt(quad.getEntityID());
+                batch.pushInt(quad.getEntityID() + 1);
             }
         }
     }
@@ -111,6 +111,6 @@ public class PickingRenderer extends Renderer<Quad> {
 
         float[] pixels = new float[3];
         glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, pixels);
-        return (int) (pixels[0]);
+        return (int) (pixels[0]) - 1;
     }
 }

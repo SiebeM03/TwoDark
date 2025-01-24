@@ -6,42 +6,35 @@ import TDA.entities.player.Player;
 import TDA.entities.resources.HarvestableResource;
 import TDA.entities.resources.tools.Tool;
 import TDA.main.GameManager;
+import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
+import TDA.scene.Scene;
 import woareXengine.rendering.debug.DebugDraw;
+import woareXengine.rendering.pickingRenderer.PickingRenderer;
+import woareXengine.util.Color;
+import woareXengine.util.Logger;
 import woareXengine.util.MathUtils;
+import woareXengine.util.Transform;
 
 public class Harvester extends Component {
-    public final static int HARVEST_RADIUS = 150;
+    public final static int HARVEST_RADIUS = 200;
+    private final Hotbar hotbar = Player.hotbar;
 
     @Override
     public void update() {
         DebugDraw.addCircle(entity.transform.getCenter(), HARVEST_RADIUS);
 
         if (GameManager.gameControls.playerControls.isHarvestPressed()) {
-            HarvestableResource<?, ?> closestResource = getClosestResource(entity);
+            Entity hoveredEntity = GameManager.currentScene.getClickableEntityAtMouse();
+            if (hoveredEntity == null) return;
 
-            final Hotbar inventory = Player.hotbar;
-            if (inventory.hotbar.length == 0) return;
+            HarvestableResource<?, ?> harvestableResource = hoveredEntity.getComponent(HarvestableResource.class);
+            if (harvestableResource == null) return;
 
-            final var tool = inventory.hotbar[0] == null ? null : inventory.hotbar[0].item ;
-            if (closestResource == null) return;
-
-            closestResource.harvest(tool instanceof Tool t ? t : null);
-        }
-    }
-
-    private HarvestableResource<?, ?> getClosestResource(Entity harvester) {
-        float closestDistance = Harvester.HARVEST_RADIUS;
-        HarvestableResource<?, ?> closestResource = null;
-        for (Entity eResource : GameManager.currentScene.getEntitiesWithComponents(HarvestableResource.class)) {
-            HarvestableResource<?, ?> cResource = eResource.getComponent(HarvestableResource.class);
-            if (cResource == null) continue;
-
-            float distance = MathUtils.dist(harvester.transform.getCenter(), eResource.transform.getCenter());
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestResource = cResource;
+            if (hotbar.getSelectedItem() != null && hotbar.getSelectedItem().item instanceof Tool tool) {
+                harvestableResource.harvest(tool);
+            } else {
+                harvestableResource.harvest(null);
             }
         }
-        return closestResource;
     }
 }

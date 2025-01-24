@@ -23,8 +23,11 @@ import woareXengine.util.Transform;
  */
 public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R extends DropResource> extends ClickableEntity {
 
+    /** Health of the resource, decreases when harvested. The resource gets destroyed when health reaches 0 **/
     private int health = 5;
+    /** Actual resource node that is spawned across the world **/
     private final Class<T> resourceType;
+    /** The item that drops when the resource is harvested **/
     private final Class<R> drop;
 
     public HarvestableResource(Class<T> resourceType, Class<R> drop) {
@@ -32,8 +35,16 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
         this.drop = drop;
     }
 
+    /**
+     * Harvests the resource, decreases the health of the resource and spawns the {@link #drop}.
+     * @param tool The tool equipped by the player, damage applied to the resource scales depending on what tool is used. If null, the resource will be harvested with a damage of 1.
+     */
     public void harvest(final @Nullable Tool tool) {
-        Logger.debug("Harvested " + this.getClass().getSimpleName() + "!");
+        if (tool != null) {
+            Logger.debug("Harvested " + this.getClass().getSimpleName() + " with " + tool.getClass().getSimpleName() + "!");
+        } else {
+            Logger.debug("Harvested " + this.getClass().getSimpleName() + "!");
+        }
         spawnItem();
 
         final int damage = tool == null ? 1 : tool.getDamage(resourceType);

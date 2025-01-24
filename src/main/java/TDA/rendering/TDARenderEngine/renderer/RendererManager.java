@@ -49,7 +49,7 @@ public class RendererManager {
         quadRenderer.cleanUp();
     }
 
-    public Renderer<Quad> getPickingRenderer() {
-        return pickingRenderer;
+    public PickingRenderer getPickingRenderer() {
+        return (PickingRenderer) pickingRenderer;
     }
 }
