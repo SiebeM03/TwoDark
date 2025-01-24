@@ -24,7 +24,6 @@ public class TDARenderSystem implements SceneRenderSystem {
         this.renderer.cleanUp();
     }
 
-
     @Override
     public void registerTile(Tile tile) {
         this.renderer.getRenderer(Quad.class).add(tile.renderObject);

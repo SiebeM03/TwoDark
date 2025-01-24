@@ -7,41 +7,39 @@ import TDA.entities.resources.HarvestableResource;
 import TDA.entities.resources.tools.Tool;
 import TDA.main.GameManager;
 import woareXengine.rendering.debug.DebugDraw;
-import woareXengine.util.MathUtils;
 
 public class Harvester extends Component {
-    public final static int HARVEST_RADIUS = 150;
+    public final static int HARVEST_RADIUS = 200;
+    private final Hotbar hotbar = Player.hotbar;
 
     @Override
     public void update() {
         DebugDraw.addCircle(entity.transform.getCenter(), HARVEST_RADIUS);
 
+        Entity hoveredEntity = getHoveredHarvestableEntity();
+        if (hoveredEntity == null) return;
+
         if (GameManager.gameControls.playerControls.isHarvestPressed()) {
-            HarvestableResource<?, ?> closestResource = getClosestResource(entity);
-
-            final Hotbar inventory = Player.hotbar;
-            if (inventory.hotbar.length == 0) return;
-
-            final var tool = inventory.hotbar[0] == null ? null : inventory.hotbar[0].item ;
-            if (closestResource == null) return;
-
-            closestResource.harvest(tool instanceof Tool t ? t : null);
+            harvest(hoveredEntity.getComponent(HarvestableResource.class));
         }
     }
 
-    private HarvestableResource<?, ?> getClosestResource(Entity harvester) {
-        float closestDistance = Harvester.HARVEST_RADIUS;
-        HarvestableResource<?, ?> closestResource = null;
-        for (Entity eResource : GameManager.currentScene.getEntitiesWithComponents(HarvestableResource.class)) {
-            HarvestableResource<?, ?> cResource = eResource.getComponent(HarvestableResource.class);
-            if (cResource == null) continue;
+    /** Harvests the hovered entity using the hotbar item that is currently selected. */
+    private void harvest(HarvestableResource<?, ?> harvestableResource) {
+        if (harvestableResource == null) return;
 
-            float distance = MathUtils.dist(harvester.transform.getCenter(), eResource.transform.getCenter());
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestResource = cResource;
-            }
+        if (hotbar.getSelectedItem() != null && hotbar.getSelectedItem().item instanceof Tool tool) {
+            harvestableResource.harvest(tool);
+        } else {
+            harvestableResource.harvest(null);
         }
-        return closestResource;
+    }
+
+    /** Returns an entity that is currently hovered by the mouse and has a {@link HarvestableResource} component. Otherwise, returns null. */
+    private Entity getHoveredHarvestableEntity() {
+        Entity hoveredEntity = GameManager.currentScene.getClickableEntityAtMouse();
+        if (hoveredEntity == null) return null;
+        if (hoveredEntity.getComponent(HarvestableResource.class) == null) return null;
+        return hoveredEntity;
     }
 }

@@ -1,5 +1,7 @@
 package woareXengine.rendering;
 
+import woareXengine.openglWrapper.OpenGlUtils;
+import woareXengine.openglWrapper.framebuffer.Framebuffer;
 import woareXengine.openglWrapper.shaders.Shader;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.rendering.renderData.RenderObject;
@@ -17,19 +19,29 @@ public abstract class Renderer<T extends RenderObject> {
 
     protected List<RenderBatch> batches;
     public List<T> data;
+
     protected Shader currentShader;
+    protected Framebuffer framebuffer;
+
     protected final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
     public Renderer() {
+        this.data = new ArrayList<>();
         this.batches = new ArrayList<>();
         init();
     }
 
-    public abstract void add(T object);
+    public void add(T object) {
+        data.add(object);
+    }
 
-    public abstract void remove(T object);
+    public void remove(T object) {
+        data.remove(object);
+    }
 
     protected abstract Shader createShader();
+
+    protected abstract Framebuffer createFramebuffer();
 
     protected abstract RenderBatch createBatch(int zIndex);
 
@@ -37,6 +49,7 @@ public abstract class Renderer<T extends RenderObject> {
 
 
     private void init() {
+        framebuffer = createFramebuffer();
         currentShader = createShader();
     }
 
@@ -74,6 +87,8 @@ public abstract class Renderer<T extends RenderObject> {
     }
 
     public void render() {
+        framebuffer.bind();
+//        Logger.log("Bound to framebuffer (id " + framebuffer.getFboID() + ") in " + this.getClass().getSimpleName() + ".render()");
         prepare();
         currentShader.use();
         uploadUniforms();
@@ -84,14 +99,16 @@ public abstract class Renderer<T extends RenderObject> {
 
         for (RenderBatch batch : batches) {
             batch.bind();
-            // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // render wireframe
+            OpenGlUtils.showWireframe(false);
             glDrawElements(batch.primitive.openglPrimitive, batch.getVertexCount(), GL_UNSIGNED_INT, 0);
             batch.unbind();
         }
         currentShader.detach();
+        framebuffer.unbind();
     }
 
     public void cleanUp() {
+        framebuffer.cleanUp();
         currentShader.cleanUp();
     }
 

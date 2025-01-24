@@ -1,6 +1,7 @@
 package woareXengine.rendering.uiRenderer;
 
 import org.joml.Vector2f;
+import woareXengine.openglWrapper.framebuffer.Framebuffer;
 import woareXengine.openglWrapper.shaders.Shader;
 import woareXengine.rendering.RenderBatch;
 import woareXengine.rendering.Renderer;
@@ -14,30 +15,20 @@ import java.util.ArrayList;
 
 public class UiRenderer extends Renderer<UiComponent> {
 
-    public UiRenderer() {
-        this.data = new ArrayList<>();
-        this.currentShader = createShader();
-    }
-
     @Override
     protected Shader createShader() {
         return new UiShader();
     }
 
     @Override
+    public Framebuffer createFramebuffer() {
+        return Framebuffer.createDefault();
+    }
+
+    @Override
     protected RenderBatch createBatch(int zIndex) {
         return new RenderBatch(MAX_BATCH_SIZE, zIndex, Quad.primitive,
                 ShaderDataType.FLOAT2, ShaderDataType.FLOAT4, ShaderDataType.FLOAT, ShaderDataType.FLOAT2);
-    }
-
-    @Override
-    public void add(UiComponent object) {
-        data.add(object);
-    }
-
-    @Override
-    public void remove(UiComponent object) {
-        data.remove(object);
     }
 
     @Override

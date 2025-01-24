@@ -27,7 +27,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     /** Array of shader data types that define the structure of a vertex. */
     private final ShaderDataType[] attributes;
     /** Type of primitive this batch will render (e.g., TRIANGLES, QUADS). */
-    protected final Primitive primitive;
+    public final Primitive primitive;
 
     /** Buffer for storing vertex data to be sent to the GPU. */
     public float[] vertexArray;

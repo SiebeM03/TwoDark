@@ -2,24 +2,24 @@ package woareXengine.rendering.quadRenderer;
 
 import TDA.main.GameManager;
 import org.joml.Vector2f;
+import woareXengine.mainEngine.Engine;
+import woareXengine.openglWrapper.framebuffer.Framebuffer;
 import woareXengine.openglWrapper.shaders.Shader;
 import woareXengine.rendering.RenderBatch;
 import woareXengine.rendering.Renderer;
 import woareXengine.rendering.renderData.ShaderDataType;
 
-import java.util.ArrayList;
-
 
 public class QuadRenderer extends Renderer<Quad> {
-
-    public QuadRenderer() {
-        this.data = new ArrayList<>();
-        this.currentShader = createShader();
-    }
-
     @Override
     public Shader createShader() {
         return new QuadShader();
+    }
+
+    @Override
+    public Framebuffer createFramebuffer() {
+//        return new Framebuffer(Engine.window().getPixelWidth(), Engine.window().getPixelHeight());
+        return Framebuffer.createDefault();
     }
 
     @Override
@@ -27,16 +27,6 @@ public class QuadRenderer extends Renderer<Quad> {
         return new RenderBatch(MAX_BATCH_SIZE, zIndex, Quad.primitive,
                 ShaderDataType.FLOAT2, ShaderDataType.FLOAT4, ShaderDataType.FLOAT, ShaderDataType.FLOAT2
         );
-    }
-
-    @Override
-    public void add(Quad quad) {
-        data.add(quad);
-    }
-
-    @Override
-    public void remove(Quad quad) {
-        data.remove(quad);
     }
 
     @Override
