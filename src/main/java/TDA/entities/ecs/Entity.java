@@ -60,4 +60,8 @@ public class Entity {
         }
         GameManager.currentScene.entityManager.entities.remove(this);
     }
+
+    public int getId() {
+        return id.getId();
+    }
 }

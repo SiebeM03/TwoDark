@@ -78,14 +78,6 @@ public class InventoryManager extends SceneSystem {
         targetArray[targetIndex] = sourceArray[sourceIndex];
         sourceArray[sourceIndex] = tempStack;
 
-        if (targetArray == hotbarInventory.hotbar) {
-            hotbarInventory.updateAtSlot(targetIndex, targetArray[targetIndex]);
-        }
-
-        if (sourceArray == hotbarInventory.hotbar) {
-            hotbarInventory.updateAtSlot(sourceIndex, null);
-        }
-
         if (targetSlot.getInventoryItem() != null) {
             targetSlot.getInventoryItem().setParent(sourceSlot);
         }
@@ -100,7 +92,7 @@ public class InventoryManager extends SceneSystem {
 
     private ItemStack[] getInventoryRelatedToSlot(InventorySlot slot) {
         if (slot.getParent() instanceof HotbarSlotWrapper) {
-            return hotbarInventory.hotbar;
+            return hotbarInventory.inventoryItems;
         } else if (slot.getParent() instanceof InventoryItemList && ((InventoryItemList) slot.getParent()).isPlayerInventory()) {
             return playerInventory.inventoryItems;
         } else {

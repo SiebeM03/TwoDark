@@ -11,6 +11,8 @@ public class Quad extends RenderObject {
 
     public Transform transform;
 
+    // TODO feels wrong that Quad knows about entity data / implementation
+    private int entityID;
 
     public Quad(float width, float height, Vector2f position, int zIndex) {
         this(width, height, Color.WHITE, position, zIndex);
@@ -32,5 +34,13 @@ public class Quad extends RenderObject {
                 textureCoords[1],
                 textureCoords[0]
         };
+    }
+
+    public void setEntityID(int id) {
+        this.entityID = id;
+    }
+
+    public int getEntityID() {
+        return entityID;
     }
 }

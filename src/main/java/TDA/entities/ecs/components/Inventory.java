@@ -18,20 +18,39 @@ public class Inventory extends Component {
     public void update() {
     }
 
-    public void addItem(ItemStack item) {
+    public void addItem(ItemStack itemStack) {
+        boolean added = false;
+
+        if (itemStack.item.isStackable()) {
+            added = addToExistingStack(itemStack);
+        }
+
+        if (!added) {
+            added = addToNewStack(itemStack);
+        }
+
+        if (!added) {
+            Logger.error("Inventory is full, could not add item: " + itemStack.item.getClass().getSimpleName());
+        }
+    }
+
+    private boolean addToExistingStack(ItemStack itemStack) {
         for (int i = 0; i < inventoryItems.length; i++) {
-            if (inventoryItems[i] != null && inventoryItems[i].item.getClass().equals(item.item.getClass())) {
-                inventoryItems[i].amount += item.amount;
-                Logger.debug("Inventory: " + Arrays.toString(inventoryItems));
-                return;
+            if (inventoryItems[i] != null && inventoryItems[i].item.getClass().equals(itemStack.item.getClass())) {
+                inventoryItems[i].amount += itemStack.amount;
+                return true;
             }
         }
+        return false;
+    }
+
+    private boolean addToNewStack(ItemStack itemStack) {
         for (int i = 0; i < inventoryItems.length; i++) {
             if (inventoryItems[i] == null) {
-                inventoryItems[i] = item;
-                Logger.debug("Inventory: " + Arrays.toString(inventoryItems));
-                return;
+                inventoryItems[i] = itemStack;
+                return true;
             }
         }
+        return false;
     }
 }

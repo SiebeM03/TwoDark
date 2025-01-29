@@ -3,10 +3,15 @@ package TDA.scene;
 import TDA.entities.ecs.Component;
 import TDA.entities.ecs.Entity;
 import TDA.entities.ecs.EntityManager;
+import TDA.entities.ecs.components.ClickableEntity;
 import TDA.entities.ecs.components.Collider;
 import TDA.rendering.SceneRenderSystem;
+import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
+import woareXengine.io.userInputs.Mouse;
+import woareXengine.mainEngine.Engine;
 import woareXengine.mainEngine.gameObjects.Camera;
 import woareXengine.util.Id;
+import woareXengine.util.Logger;
 
 import java.util.*;
 
@@ -32,6 +37,7 @@ public class Scene {
         for (SceneSystem system : sceneSystems.values()) {
             system.update();
         }
+
         entityManager.update();
     }
 
@@ -75,5 +81,17 @@ public class Scene {
             }
         }
         return entities;
+    }
+
+    public Entity getClickableEntityAtMouse() {
+        int pixelId = TDARenderSystem.get().renderer.getPickingRenderer().readPixel(
+                Engine.mouse().getScreenX(),
+                Engine.mouse().getScreenY()
+        );
+        return getEntitiesWithComponents(ClickableEntity.class)
+                       .stream()
+                       .filter(e -> e.getId() == pixelId)
+                       .findFirst()
+                       .orElse(null);
     }
 }
