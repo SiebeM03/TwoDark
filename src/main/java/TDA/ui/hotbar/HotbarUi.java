@@ -1,7 +1,7 @@
 package TDA.ui.hotbar;
 
 import TDA.entities.ecs.components.Hotbar;
-import TDA.entities.player.Player;
+import TDA.entities.ecs.prefabs.PlayerPrefab;
 import woareXengine.mainEngine.Engine;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.util.Color;
@@ -15,7 +15,7 @@ public class HotbarUi extends UiComponent {
 
     @Override
     protected void init() {
-        this.hotbar = Player.hotbar;
+        this.hotbar = PlayerPrefab.getHotbar();
 
         setTransform(0);
         transform.setHeight(HEIGHT + SPACING);

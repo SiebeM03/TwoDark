@@ -19,9 +19,6 @@ public class ItemStack {
 
     @Override
     public String toString() {
-        return "{" +
-                       "item=" + item.getClass().getSimpleName() +
-                       ", amount=" + amount +
-                       '}';
+        return item.getClass().getSimpleName() + " x" + amount;
     }
 }

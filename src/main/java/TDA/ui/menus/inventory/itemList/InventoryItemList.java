@@ -17,6 +17,9 @@ public class InventoryItemList extends UiComponent {
         setTransform(0);
         setPadding(16);
         transform.setWidth(302 + 32); // Children are 302px wide, add padding (16px) twice
+        if (!isPlayerInventory) {
+            transform.setX(parent.transform.getWidth() -transform.getWidth());
+        }
 
         for (int i = 0; i < inventoryItems.length; i++) {
             add(new InventorySlot(i, 5));

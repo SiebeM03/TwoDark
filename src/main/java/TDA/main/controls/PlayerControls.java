@@ -35,7 +35,11 @@ public class PlayerControls extends InputController {
         return isKeyboardEnabled && keyboard.isKeyDown(GLFW_KEY_LEFT_SHIFT);
     }
 
-    public boolean isHarvestPressed() {
+    public boolean isAttackPressed() {
         return isMouseEnabled && mouse.isClickEvent(MouseButton.LEFT);
+    }
+
+    public boolean isInteractPressed() {
+        return isMouseEnabled && mouse.isClickEvent(MouseButton.RIGHT);
     }
 }

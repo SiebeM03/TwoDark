@@ -1,15 +1,13 @@
 package TDA.scene.prefabs;
 
 import TDA.entities.dinos.Dino;
+import TDA.entities.ecs.prefabs.PlayerPrefab;
+import TDA.entities.ecs.prefabs.ResourceNodePrefabs;
+import TDA.entities.ecs.prefabs.StoragePrefab;
 import TDA.entities.inventory.InventoryManager;
 import TDA.entities.inventory.ItemStack;
-import TDA.entities.player.Player;
-import TDA.entities.resources.ResourceFactory;
 import TDA.entities.resources.drops.StoneDrop;
 import TDA.entities.resources.drops.TreeDrop;
-import TDA.entities.resources.types.Metal;
-import TDA.entities.resources.types.Stone;
-import TDA.entities.resources.types.Tree;
 import TDA.rendering.SceneRenderSystem;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
 import TDA.scene.Scene;
@@ -24,19 +22,27 @@ public class HomeScene {
         SceneRenderSystem renderSystem = TDARenderSystem.get();
         Scene scene = new Scene(renderSystem, camera);
 
-        scene.addEntity(Player.createEntity(camera));
-        Player.inventory.addItem(new ItemStack(new StoneDrop(), 100));
-        Player.inventory.addItem(new ItemStack(new TreeDrop(), 100));
-
-        scene.addEntity(ResourceFactory.createResourceOfType(Tree.class));
-        scene.addEntity(ResourceFactory.createResourceOfType(Stone.class));
-        scene.addEntity(ResourceFactory.createResourceOfType(Metal.class));
-        scene.addEntity(Dino.createEntity());
-
-
-        scene.addSystem(new InventoryManager());
+        createEntities(scene);
+        addSystems(scene);
 
         Logger.success("Home Scene initialized");
         return scene;
+    }
+
+    private static void createEntities(Scene scene) {
+        scene.addEntity(PlayerPrefab.createPlayer(1000, 500, scene.camera));
+        PlayerPrefab.getInventory().addItem(new ItemStack(new StoneDrop(), 30));
+        PlayerPrefab.getInventory().addItem(new ItemStack(new TreeDrop(), 10));
+
+        scene.addEntity(ResourceNodePrefabs.createTree(1300, 300));
+        scene.addEntity(ResourceNodePrefabs.createStone(1000, 300));
+        scene.addEntity(ResourceNodePrefabs.createMetal(1600, 300));
+        scene.addEntity(Dino.createEntity());
+
+        scene.addEntity(StoragePrefab.createBarrel(1000, 100));
+    }
+
+    private static void addSystems(Scene scene) {
+        scene.addSystem(new InventoryManager());
     }
 }

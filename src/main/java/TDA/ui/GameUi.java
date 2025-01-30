@@ -1,15 +1,17 @@
 package TDA.ui;
 
-import TDA.entities.player.Player;
+import TDA.entities.ecs.components.Storage;
+import TDA.entities.inventory.InventoryManager;
 import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarUi;
 import TDA.ui.menus.inventory.PlayerInventoryUi;
+import TDA.ui.menus.inventory.itemList.InventoryItemList;
 import TDA.ui.menus.pause.PauseUi;
 import woareXengine.ui.components.UiComponent;
 
 public class GameUi extends UiComponent {
 
-    private PlayerInventoryUi playerInventoryUi = new PlayerInventoryUi(Player.inventory);
+    private PlayerInventoryUi playerInventoryUi = new PlayerInventoryUi();
     private HotbarUi hotbarUi = new HotbarUi();
 
     private PauseUi pauseUi = new PauseUi();
@@ -30,7 +32,8 @@ public class GameUi extends UiComponent {
     }
 
     public void update() {
-        if (GameManager.gameControls.windowControls.isEscapeKeyPressed() && !playerInventoryUi.isVisible()) showPauseMenu(!pauseUi.isShown());
+        if (GameManager.gameControls.windowControls.isEscapeKeyPressed() && !playerInventoryUi.isVisible())
+            showPauseMenu(!pauseUi.isShown());
 
         if (GameManager.gameControls.inventoryControls.shouldOpenInventory()) showInventory(true);
         if (GameManager.gameControls.inventoryControls.shouldCloseInventory()) showInventory(false);
@@ -55,6 +58,17 @@ public class GameUi extends UiComponent {
         GameManager.gameControls.playerControls.enableMouseUse(!show);
         GameManager.gameControls.windowControls.enableKeyboardUse(!show);
         GameManager.gameControls.windowControls.enableMouseUse(!show);
+
+        if (!show) {
+            InventoryManager.getFromCurrentScene().setExternalInventory(null);
+        }
         playerInventoryUi.show(show);
+    }
+
+    public void showStorage(boolean show, Storage storage) {
+        playerInventoryUi.storageInventoryItemList = new InventoryItemList(storage.getInventory());
+        InventoryManager.getFromCurrentScene().setExternalInventory(storage.getInventory());
+
+        showInventory(show);
     }
 }

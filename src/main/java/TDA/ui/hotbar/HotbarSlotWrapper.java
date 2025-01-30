@@ -1,7 +1,7 @@
 package TDA.ui.hotbar;
 
+import TDA.entities.ecs.prefabs.PlayerPrefab;
 import TDA.entities.inventory.ItemStack;
-import TDA.entities.player.Player;
 import TDA.ui.menus.inventory.itemList.InventorySlot;
 import woareXengine.ui.components.UiComponent;
 
@@ -9,7 +9,7 @@ public class HotbarSlotWrapper extends UiComponent {
     private final ItemStack[] hotbarItems;
 
     public HotbarSlotWrapper() {
-        this.hotbarItems = Player.hotbar.getHotbarItems();
+        this.hotbarItems = PlayerPrefab.getHotbar().getHotbarItems();
     }
 
     @Override

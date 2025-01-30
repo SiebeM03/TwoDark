@@ -37,6 +37,7 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
 
     /**
      * Harvests the resource, decreases the health of the resource and spawns the {@link #drop}.
+     *
      * @param tool The tool equipped by the player, damage applied to the resource scales depending on what tool is used. If null, the resource will be harvested with a damage of 1.
      */
     public void harvest(final @Nullable Tool tool) {
@@ -68,12 +69,12 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
                             new Vector2f(50, 50)
                     )
             )
-                    .addComponent(new QuadComponent(dropClassInstance.getTexture(), Layer.UI))
-                    .addComponent(new Pickup(dropClassInstance, Math.round(MathUtils.randomInRange(1, 5))));
+                                        .addComponent(new QuadComponent(dropClassInstance.getTexture(), Layer.UI))
+                                        .addComponent(new Pickup(dropClassInstance, Math.round(MathUtils.randomInRange(1, 5))));
 
             GameManager.currentScene.addEntity(item);
         } catch (Exception e) {
-            Logger.error("Something went wrong: " + e.getMessage());
+            Logger.error("(SpawnItem) Something went wrong: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -81,6 +82,4 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
     public Class<R> getDrop() {
         return drop;
     }
-
-    public abstract Texture getTexture();
 }
