@@ -19,8 +19,8 @@ public class Pickaxe extends Tool {
     @Override
     protected Map<Class<? extends HarvestableResource<?, ?>>, Integer> toolStats() {
         return Map.of(
-                Stone.class, 3,
-                Metal.class, 2
+                Stone.class, 4,
+                Metal.class, 3
         );
     }
 }
