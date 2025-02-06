@@ -34,7 +34,7 @@ def generate_toc(content):
 
         indent = "    " * (len(level) - 2)  # Indent based on header level
         anchor = generate_anchor(title)
-        toc_lines.append(f"{indent}- [{title}](#{anchor})")
+        toc_lines.append(f"{indent}- [{title.replace("*", "")}](#{anchor})")
 
     return "\n".join(toc_lines) + "\n"
 

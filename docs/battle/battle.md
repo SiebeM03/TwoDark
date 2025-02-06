@@ -1,5 +1,18 @@
 # Battle
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Battle Flow](#battle-flow)
+- [Combat Mechanics](#combat-mechanics)
+    - [Basic Attacks](#basic-attacks)
+    - [Energy and Active Skills](#energy-and-active-skills)
+    - [Passive Skills](#passive-skills)
+    - [Status Effects](#status-effects)
+- [Team Composition Strategy](#team-composition-strategy)
+- [Mechanics](#mechanics)
+- [Other ideas](#other-ideas)
+
 ## Overview
 
 The battle system will be a **turn-based** combat system where two teams of (up to 6) dinosaurs fight.  
@@ -13,7 +26,7 @@ The battle progresses automatically with each dinosaur taking turns to attack.
    the next fastest, and so on.
 3. **Basic Attacks & Energy Gain**: Every dino starts the battle by performing a [Basic Attack](#basic-attacks), which
    grants **Energy**.
-4. **Skill Activation**: When a dino reaches 100 Energy, it unleashes its [Active Skill](#energy--active-skills), which
+4. **Skill Activation**: When a dino reaches 100 Energy, it unleashes its [Active Skill](#energy-and-active-skills), which
    has unique effects like damage, crowd control, healing, or buffs.
 5. **Rounds**: Each round consists of **one attack per dinosaur** (excluding [Passive Skills](#passive-skills)).
 6. **Victory Conditions**: The battle ends when all dinosaurs on one team are defeated.
@@ -25,7 +38,7 @@ The battle progresses automatically with each dinosaur taking turns to attack.
 - Each dinosaur has a **basic attack** that deals normal damage and generates **Energy**.
 - Basic attacks do not apply special effects (unless modified by passive skills).
 
-### **Energy & Active Skills**
+### **Energy and Active Skills**
 
 - Every attack grants **Energy**.
 - When a dino reaches 100 Energy, it unleashes its **Active Skill** on their next turn.
