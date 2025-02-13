@@ -108,7 +108,7 @@ public class WindowBuilder {
 
     private void setWindowHints(GLFWVidMode vidMode) {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_SAMPLES, samples);
         glfwWindowHint(GLFW_REFRESH_RATE, vidMode.refreshRate());
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

@@ -113,4 +113,9 @@ public class Color {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Color(" + col.x + ", " + col.y + ", " + col.z + ", " + a + ")";
+    }
 }

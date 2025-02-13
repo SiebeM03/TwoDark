@@ -4,16 +4,16 @@ import TDA.entities.ecs.Component;
 import TDA.entities.ecs.Entity;
 import TDA.entities.ecs.EntityManager;
 import TDA.entities.ecs.components.ClickableEntity;
-import TDA.entities.ecs.components.Collider;
 import TDA.rendering.SceneRenderSystem;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
-import woareXengine.io.userInputs.Mouse;
 import woareXengine.mainEngine.Engine;
 import woareXengine.mainEngine.gameObjects.Camera;
 import woareXengine.util.Id;
-import woareXengine.util.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Scene {
 

@@ -9,6 +9,7 @@ import woareXengine.rendering.quadRenderer.Quad;
 import woareXengine.rendering.renderData.ShaderDataType;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.main.Ui;
+import woareXengine.ui.text.basics.Text;
 import woareXengine.util.Transform;
 
 import java.util.ArrayList;
@@ -43,7 +44,9 @@ public class UiRenderer extends Renderer<UiComponent> {
     }
 
     private void bufferUiComponent(UiComponent component) {
+        if (component instanceof Text) return;
         if (!component.isVisible()) return;
+
         RenderBatch batch = getAvailableBatch(component.texture, component.zIndex);
 
         int texID = batch.addTexture(component.texture);

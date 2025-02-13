@@ -9,7 +9,10 @@ import TDA.ui.TDAUi;
 import woareXengine.io.window.DisplayMode;
 import woareXengine.io.window.Window;
 import woareXengine.mainEngine.Engine;
+import woareXengine.mainEngine.GameSettings;
 import woareXengine.util.Logger;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_I;
 
 public class GameManager {
     private static Engine engine;
@@ -36,11 +39,14 @@ public class GameManager {
 
     public static void update() {
         if (gameControls.windowControls.isDisplayModeSwitchPressed()) {
-            Window window = Engine.window();
-            switch (window.getDisplayMode()) {
-                case FULLSCREEN -> window.changeDisplayMode(DisplayMode.WINDOWED);
-                case WINDOWED -> window.changeDisplayMode(DisplayMode.FULLSCREEN);
+            switch (GameSettings.getDisplayMode()) {
+                case FULLSCREEN -> GameSettings.setDisplayMode(DisplayMode.WINDOWED);
+                case WINDOWED -> GameSettings.setDisplayMode(DisplayMode.FULLSCREEN);
             }
+        }
+
+        if (Engine.keyboard().isKeyDown(GLFW_KEY_I)) {
+            GameSettings.setViewportSize(1920, 1080);
         }
 
         if (gameControls.developerControls.isDevModeToggled()) {

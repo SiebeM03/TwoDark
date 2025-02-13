@@ -8,10 +8,10 @@ public class EngineConfigs {
     public int windowWidth = 1280;
     public int windowHeight = 720;
 
-    public Color backgroundColor = new Color(0.3f, 0.3f, 0.3f);
+    public Color backgroundColor = new Color(Color.BLACK);
 
     public DisplayMode displayMode = DisplayMode.FULLSCREEN;
-    public String windowTitle = "Idle Ark";
+    public String windowTitle;
     public boolean vsync = true;
     public boolean msaa = true;
 

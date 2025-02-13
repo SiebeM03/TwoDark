@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 
 public abstract class Renderer<T extends RenderObject> {
-    protected final int MAX_BATCH_SIZE = 2;
+    protected final int MAX_BATCH_SIZE = 500;
     protected double start, end;
 
     protected List<RenderBatch> batches;
@@ -88,7 +88,6 @@ public abstract class Renderer<T extends RenderObject> {
 
     public void render() {
         framebuffer.bind();
-//        Logger.log("Bound to framebuffer (id " + framebuffer.getFboID() + ") in " + this.getClass().getSimpleName() + ".render()");
         prepare();
         currentShader.use();
         uploadUniforms();

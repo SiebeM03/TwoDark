@@ -9,7 +9,7 @@ public class EventData {
     private final boolean eventState;
     private final boolean isDoubleClick;
 
-    protected EventData(MouseButton button, boolean eventState) {
+    public EventData(MouseButton button, boolean eventState) {
         this.button = button;
         this.eventState = eventState;
         this.isDoubleClick = false;

@@ -1,6 +1,5 @@
 package woareXengine.openglWrapper.textures;
 
-import kotlin.jvm.internal.PropertyReference0Impl;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -53,7 +52,7 @@ public class Texture {
 
         setClampedEdges(false);
 
-        setFilters(GL_NEAREST, GL_NEAREST);
+        setFilters(GL_LINEAR, GL_LINEAR);
 
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
