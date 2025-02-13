@@ -27,7 +27,10 @@ public class Ui {
     public static void init(Window window, Mouse mouse, Keyboard keyboard) {
         fontRenderer = new FontRenderer();
         Ui.uiRenderer = new UiRenderer();
+
         Ui.uiRenderer.add(CONTAINER);
+        CONTAINER.init();
+
         Ui.displayWidthPixels = window.getPixelWidth();
         Ui.displayHeightPixels = window.getPixelHeight();
         Ui.mouse = mouse;
@@ -49,7 +52,7 @@ public class Ui {
     public static void notifyScreenSizeChange(int width, int height) {
         displayWidthPixels = width;
         displayHeightPixels = height;
-        Ui.CONTAINER.transform = new Transform(new Vector2f(0, 0), new Vector2f(width, height));
+        CONTAINER.transform.setDimensions(width, height);
     }
 
     public static UiContainer getContainer() {

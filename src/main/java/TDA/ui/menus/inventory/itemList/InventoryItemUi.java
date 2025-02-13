@@ -1,37 +1,33 @@
 package TDA.ui.menus.inventory.itemList;
 
 import TDA.entities.inventory.ItemStack;
-import TDA.entities.player.Player;
-import TDA.entities.resources.drops.TreeDrop;
-import woareXengine.io.userInputs.MouseButton;
 import woareXengine.mainEngine.Engine;
-import woareXengine.ui.components.UiBlock;
 import woareXengine.ui.components.UiComponent;
+import woareXengine.ui.constraints.PixelConstraint;
+import woareXengine.ui.constraints.Position;
+import woareXengine.ui.constraints.PositionConstraint;
+import woareXengine.ui.constraints.UiConstraints;
 import woareXengine.ui.text.basics.Text;
 import woareXengine.util.Assets;
 import woareXengine.util.Color;
 
-import java.util.Objects;
-
 public class InventoryItemUi extends UiComponent {
     public Text amountText = null;
 
-    UiBlock block = new UiBlock();
-
-    public InventoryItemUi() {
-    }
-
     @Override
     protected void init() {
-        setTransform(0);
-
         if (getItemStack() != null) {
             texture = getItemStack().item.getTexture();
             color = Color.WHITE;
 
             if (amountText == null) {
                 amountText = Assets.getFont("src/assets/fonts/rounded.fnt").createText(getItemStack().amount + "", 0.5f);
-                add(amountText);
+                add(amountText, new UiConstraints(
+                        new PositionConstraint(Position.RIGHT, 4),
+                        new PositionConstraint(Position.BOTTOM, 4),
+                        new PixelConstraint((int) amountText.calculateWidth()),
+                        new PixelConstraint((int) amountText.calculateHeight())
+                ));
                 updateTextTransform();
             }
         }
@@ -57,10 +53,9 @@ public class InventoryItemUi extends UiComponent {
     }
 
     private void updateTextTransform() {
-        amountText.transform.setWidth(amountText.calculateWidth());
-        amountText.transform.setHeight(amountText.calculateHeight());
-        amountText.transform.setX(parent.transform.getWidth() - amountText.calculateWidth() - 4);
-        amountText.transform.setY(4);
+        amountText.getConstraints().getWidth().setPixelValue((int) amountText.calculateWidth());
+        amountText.getConstraints().getHeight().setPixelValue((int) amountText.calculateHeight());
+        amountText.getConstraints().apply();
     }
 
     public ItemStack getItemStack() {

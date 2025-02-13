@@ -1,31 +1,17 @@
 package TDA.ui.hotbar;
 
-import TDA.entities.ecs.components.Hotbar;
-import TDA.entities.ecs.prefabs.PlayerPrefab;
-import woareXengine.mainEngine.Engine;
 import woareXengine.ui.components.UiComponent;
+import woareXengine.ui.constraints.ConstraintUtils;
 import woareXengine.util.Color;
 
 public class HotbarUi extends UiComponent {
-    private static final int WIDTH = 54;
-    private static final int HEIGHT = 54;
-    private static final int SPACING = 8;
-
-    private Hotbar hotbar;
 
     @Override
     protected void init() {
-        this.hotbar = PlayerPrefab.getHotbar();
-
-        setTransform(0);
-        transform.setHeight(HEIGHT + SPACING);
-        transform.setWidth(hotbar.getHotbarItems().length * (WIDTH + SPACING));
-        transform.setX((Engine.window().getPixelWidth() - transform.getWidth()) / 2);
-
         color = new Color("#0061a6");
         color.setAlpha(0.8f);
 
-        add(new HotbarSlotWrapper());
+        add(new HotbarSlotWrapper(), ConstraintUtils.margin(4, 4));
     }
 
     @Override

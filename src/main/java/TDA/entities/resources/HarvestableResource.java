@@ -30,7 +30,7 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
     /**
      * Health of the resource, decreases when harvested. The resource gets destroyed when health reaches 0
      **/
-    private int health = 500;
+    private int health = 50;
     /**
      * Actual resource node that is spawned across the world
      **/
@@ -80,6 +80,7 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
                                     entity.transform.getCenter().y - 150
                             ),
                             new Vector2f(50, 50)
+                    ))
                     .addComponent(new QuadComponent(dropClassInstance.getTexture(), Layer.FOREGROUND))
                     .addComponent(new Pickup(dropClassInstance, spawnAmount));
 

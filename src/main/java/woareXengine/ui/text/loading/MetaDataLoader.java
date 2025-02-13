@@ -173,11 +173,6 @@ public class MetaDataLoader {
         double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * scaleConversion;
         double centerOffset = yAdjustment * scaleConversion;
 
-
-        if (id == (int) 'g') {
-            System.out.println(yOff);
-        }
-
         return new Glyph(id, xTex, yTex, texWidth, texHeight, xOff, yOff - centerOffset, quadWidth, quadHeight, xAdvance);
     }
 }
