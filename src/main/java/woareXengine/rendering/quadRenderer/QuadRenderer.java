@@ -18,7 +18,6 @@ public class QuadRenderer extends Renderer<Quad> {
 
     @Override
     public Framebuffer createFramebuffer() {
-//        return new Framebuffer(Engine.window().getPixelWidth(), Engine.window().getPixelHeight());
         return Framebuffer.createDefault();
     }
 

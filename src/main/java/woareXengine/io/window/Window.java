@@ -2,6 +2,8 @@ package woareXengine.io.window;
 
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
+import woareXengine.mainEngine.EngineConfigs;
+import woareXengine.mainEngine.GameSettings;
 import woareXengine.rendering.debug.DebugDraw;
 
 import java.nio.IntBuffer;
@@ -108,6 +110,8 @@ public class Window {
     public void changeDisplayMode(DisplayMode displayMode) {
         long monitor = glfwGetPrimaryMonitor();
         GLFWVidMode vidMode = glfwGetVideoMode(monitor);
+        assert vidMode != null : "Video mode is null";
+
         if (displayMode == DisplayMode.FULLSCREEN) {
             switchToFullScreen(monitor, vidMode);
         } else if (displayMode == DisplayMode.WINDOWED) {
@@ -122,13 +126,26 @@ public class Window {
     private void switchToFullScreen(long monitor, GLFWVidMode vidMode) {
         this.desiredWidth = widthScreenCoords;
         this.desiredHeight = heightScreenCoords;
-        glfwSetWindowMonitor(id, monitor, 0, 0, vidMode.width(), vidMode.height(), vidMode.refreshRate());
+        glfwSetWindowMonitor(id, monitor, 0, 0, desiredWidth, desiredHeight, vidMode.refreshRate());
         glfwSwapInterval(vsync ? 1 : 0);
     }
 
     private void switchToWindowed(GLFWVidMode vidMode) {
         glfwSetWindowMonitor(id, NULL, 0, 0, desiredWidth, desiredHeight, vidMode.refreshRate());
         glfwSetWindowPos(id, (vidMode.width() - desiredWidth) / 2, (vidMode.height() - desiredHeight) / 2);
+    }
+
+    public void setScreenSize(int width, int height) {
+        long monitor = glfwGetPrimaryMonitor();
+        GLFWVidMode vidMode = glfwGetVideoMode(monitor);
+        assert vidMode != null : "Video mode is null";
+
+        if (GameSettings.getDisplayMode() == DisplayMode.WINDOWED) {
+            desiredWidth = width;
+            desiredHeight = height;
+            switchToWindowed(vidMode);
+        }
+        glViewport(0, 0, width, height);
     }
 
     private void addScreenSizeListener() {
@@ -145,8 +162,7 @@ public class Window {
             if (validSizeChange(width, height, pixelWidth, pixelHeight)) {
                 this.pixelWidth = width;
                 this.pixelHeight = height;
-                // Update the viewport and notify listeners (e.g. cameras)
-                glViewport(0, 0, pixelWidth, pixelHeight);
+                // Notify listeners (e.g. cameras, viewport)
                 windowSizeListeners.forEach(listener -> listener.sizeChanged(pixelWidth, pixelHeight));
             }
         });

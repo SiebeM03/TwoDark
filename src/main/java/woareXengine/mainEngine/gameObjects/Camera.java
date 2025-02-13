@@ -27,7 +27,7 @@ public abstract class Camera {
         this.nearPlane = nearPlane;
         this.farPlane = farPlane;
         Engine.window().addSizeChangeListener((width, height) -> {
-            projectionSize.set(width, height);
+            projectionSize.set(1280, 720);
             dirtyProjection = true;
         });
     }

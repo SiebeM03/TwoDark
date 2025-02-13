@@ -7,6 +7,10 @@ import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarSlotWrapper;
 import woareXengine.ui.common.UiBorderedBlock;
 import woareXengine.ui.components.UiComponent;
+import woareXengine.ui.text.basics.Font;
+import woareXengine.ui.text.basics.Text;
+import woareXengine.util.Assets;
+import woareXengine.util.Color;
 
 public class InventorySlot extends UiBorderedBlock {
     private final int COLS;
@@ -50,11 +54,24 @@ public class InventorySlot extends UiBorderedBlock {
         selected = parent instanceof HotbarSlotWrapper && index == Player.hotbar.getSelectedIndex();
 
         setBorderWidth(selected || isMouseOver() ? 4 : 2);
+        if (isMouseOver()) {
+            System.out.println(getInventoryItem());
+        }
 
+        // If a new item is found that is not yet added to the UI, add it
         if (getItemStack() != null && getInventoryItem() == null && !InventoryManager.getFromCurrentScene().isHolding()) {
+            System.out.println(index + " has a new item");
             add(new InventoryItemUi());
         }
 
+        // If an item's amount reaches 0, remove it from the UI
+        if (getItemStack() == null && getInventoryItem() != null) {
+            System.out.println(index + " removed item");
+            InventoryItemUi itemUi = getInventoryItem();
+            Text amountText = itemUi.amountText;
+            Font.texts.get(amountText.font).remove(amountText);
+            remove(getInventoryItem());
+        }
         handleHolding();
     }
 

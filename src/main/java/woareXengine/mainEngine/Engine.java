@@ -26,7 +26,6 @@ public class Engine {
 
     public boolean debugging = false;
 
-
     public Engine(EngineConfigs configs, Window window, Mouse mouse, Keyboard keyboard, Timer timer) {
         this.configs = configs;
         this.window = window;
@@ -34,6 +33,11 @@ public class Engine {
         this.keyboard = keyboard;
         this.timer = timer;
         defaultFboId = glGenFramebuffers();
+
+        GameSettings.viewportWidth = window.getPixelWidth();
+        GameSettings.viewportHeight = window.getPixelHeight();
+        GameSettings.displayMode = window.getDisplayMode();
+
         Logger.success("Engine initialized");
     }
 
@@ -86,6 +90,10 @@ public class Engine {
 
     public static float getDelta() {
         return instance().timer.getDeltaTime();
+    }
+
+    public static float getFps() {
+        return 1 / getDelta();
     }
 
     public static Window window() {

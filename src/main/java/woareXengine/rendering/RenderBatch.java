@@ -94,7 +94,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     public void start() {
         currentVertexArrayIndex = 0;
-//        boundTextures.clear();
+        boundTextures.clear();
     }
 
     public void finish() {

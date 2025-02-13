@@ -5,7 +5,10 @@ import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarUi;
 import TDA.ui.menus.inventory.PlayerInventoryUi;
 import TDA.ui.menus.pause.PauseUi;
+import woareXengine.mainEngine.Engine;
 import woareXengine.ui.components.UiComponent;
+import woareXengine.ui.text.basics.Text;
+import woareXengine.util.Assets;
 
 public class GameUi extends UiComponent {
 
@@ -13,28 +16,43 @@ public class GameUi extends UiComponent {
     private HotbarUi hotbarUi = new HotbarUi();
 
     private PauseUi pauseUi = new PauseUi();
+    private Text fps = Assets.getFont("src/assets/fonts/rounded.fnt").createText(Engine.getFps() + "", 0.8f);
+    private double timeSinceFpsUpdate = 0;
+    private double delayForFpsUpdate = 0.1f;
 
     @Override
     protected void init() {
+        Assets.getFont("src/assets/fonts/rounded.fnt");
         setTransform(0);
         add(hotbarUi);
         add(playerInventoryUi);
         playerInventoryUi.show(false);
         add(pauseUi);
         pauseUi.show(false);
+
+        add(fps);
+        fps.setTransform(0);
     }
 
     @Override
     protected void updateSelf() {
-
+        if (timeSinceFpsUpdate >= delayForFpsUpdate) {
+            fps.setTransform(10);
+            fps.transform.setX(parent.transform.getWidth() - fps.transform.getWidth());
+            fps.transform.setY(parent.transform.getHeight() - fps.transform.getHeight());
+            fps.textString = (int) Engine.getFps() + "";
+            timeSinceFpsUpdate = 0;
+        } else {
+            timeSinceFpsUpdate += Engine.getDelta();
+        }
     }
 
     public void update() {
-        if (GameManager.gameControls.windowControls.isEscapeKeyPressed() && !playerInventoryUi.isVisible()) showPauseMenu(!pauseUi.isShown());
+        if (GameManager.gameControls.windowControls.isEscapeKeyPressed() && !playerInventoryUi.isVisible())
+            showPauseMenu(!pauseUi.isShown());
 
         if (GameManager.gameControls.inventoryControls.shouldOpenInventory()) showInventory(true);
         if (GameManager.gameControls.inventoryControls.shouldCloseInventory()) showInventory(false);
-
     }
 
     /** Used to check if there is UI that should close when ESC is pressed */

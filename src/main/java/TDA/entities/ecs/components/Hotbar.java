@@ -18,12 +18,21 @@ public class Hotbar extends Component {
     public void init() {
         inventoryItems[0] = new ItemStack(new Pickaxe(), 1);
         inventoryItems[1] = new ItemStack(new Axe(), 1);
-        inventoryItems[2] = new ItemStack(new TreeDrop(), 20);
+        inventoryItems[2] = new ItemStack(new TreeDrop(), 200);
         inventoryItems[4] = new ItemStack(new StoneDrop(), 40);
     }
 
     @Override
     public void update() {
+        for (int i = 0; i < inventoryItems.length; i++) {
+            ItemStack itemStack = inventoryItems[i];
+            if (itemStack == null) continue;
+
+            if (itemStack.amount == 0) {
+                inventoryItems[i] = null;
+            }
+        }
+
         int buttonPressed = GameManager.gameControls.inventoryControls.isHotbarItemSelected();
         if (buttonPressed == -1) return;
 

@@ -6,6 +6,7 @@ import woareXengine.mainEngine.Engine;
 import woareXengine.rendering.renderData.RenderObject;
 import woareXengine.ui.main.Ui;
 import woareXengine.util.Color;
+import woareXengine.util.Logger;
 import woareXengine.util.SafeList;
 import woareXengine.util.Transform;
 
@@ -34,9 +35,11 @@ public abstract class UiComponent extends RenderObject {
         component.parent = this;
         children.add(component);
         component.init();
+        component.show(true);
     }
 
     public void remove(UiComponent component) {
+        component.show(false);
         component.parent = null;
         children.remove(component);
     }
@@ -75,7 +78,10 @@ public abstract class UiComponent extends RenderObject {
      * the limits of the screen (as it will still be sent to the renderer).
      */
     public boolean isVisible() {
-        return visible;
+        if (parent == null) {
+            return visible;
+        }
+        return visible && parent.isVisible();
     }
 
     public final void update(float dt, boolean parentDisplayed) {

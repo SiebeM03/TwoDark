@@ -16,6 +16,14 @@ public class Inventory extends Component {
 
     @Override
     public void update() {
+        for (int i = 0; i < inventoryItems.length; i++) {
+            ItemStack itemStack = inventoryItems[i];
+            if (itemStack == null) continue;
+
+            if (itemStack.amount == 0) {
+                inventoryItems[i] = null;
+            }
+        }
     }
 
     public void addItem(ItemStack itemStack) {
