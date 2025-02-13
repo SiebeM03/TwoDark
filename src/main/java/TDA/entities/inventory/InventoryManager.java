@@ -2,7 +2,7 @@ package TDA.entities.inventory;
 
 import TDA.entities.ecs.components.Hotbar;
 import TDA.entities.ecs.components.Inventory;
-import TDA.entities.player.Player;
+import TDA.entities.ecs.prefabs.PlayerPrefab;
 import TDA.main.GameManager;
 import TDA.scene.SceneSystem;
 import TDA.ui.hotbar.HotbarSlotWrapper;
@@ -33,8 +33,8 @@ public class InventoryManager extends SceneSystem {
 
     public InventoryManager() {
         super(ID);
-        playerInventory = Player.inventory;
-        hotbarInventory = Player.hotbar;
+        playerInventory = PlayerPrefab.getInventory();
+        hotbarInventory = PlayerPrefab.getHotbar();
         externalInventory = null;
     }
 
@@ -123,6 +123,10 @@ public class InventoryManager extends SceneSystem {
         return (InventoryManager) GameManager.currentScene.getSystem(ID);
     }
 
+    public void setExternalInventory(Inventory inventory) {
+        this.externalInventory = inventory;
+    }
+
     @Override
     protected void end() {
 
@@ -132,4 +136,6 @@ public class InventoryManager extends SceneSystem {
     protected void cleanUp() {
         resetHolding();
     }
+
+
 }

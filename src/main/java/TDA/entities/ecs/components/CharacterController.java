@@ -7,7 +7,7 @@ import org.joml.Math;
 import org.joml.Vector2f;
 import woareXengine.mainEngine.Engine;
 
-import static TDA.entities.player.PlayerConfigs.*;
+import static TDA.main.configs.PlayerConfigs.*;
 
 public class CharacterController extends Component {
     private static final PlayerControls playerControls = GameManager.gameControls.playerControls;

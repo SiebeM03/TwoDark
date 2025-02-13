@@ -1,4 +1,4 @@
-package TDA.entities.player;
+package TDA.main.configs;
 
 
 import TDA.scene.prefabs.HomeCamera.Deadzone;

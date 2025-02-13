@@ -80,13 +80,12 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
                                     entity.transform.getCenter().y - 150
                             ),
                             new Vector2f(50, 50)
-                    ))
                     .addComponent(new QuadComponent(dropClassInstance.getTexture(), Layer.FOREGROUND))
                     .addComponent(new Pickup(dropClassInstance, spawnAmount));
 
             GameManager.currentScene.addEntity(item);
         } catch (Exception e) {
-            Logger.error("Something went wrong: " + e.getMessage());
+            Logger.error("(SpawnItem) Something went wrong: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -94,6 +93,4 @@ public abstract class HarvestableResource<T extends HarvestableResource<T, R>, R
     public Class<R> getDrop() {
         return drop;
     }
-
-    public abstract Texture getTexture();
 }

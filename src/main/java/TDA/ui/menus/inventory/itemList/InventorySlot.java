@@ -1,8 +1,8 @@
 package TDA.ui.menus.inventory.itemList;
 
+import TDA.entities.ecs.prefabs.PlayerPrefab;
 import TDA.entities.inventory.InventoryManager;
 import TDA.entities.inventory.ItemStack;
-import TDA.entities.player.Player;
 import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarSlotWrapper;
 import woareXengine.ui.common.UiBorderedBlock;
@@ -40,14 +40,14 @@ public class InventorySlot extends UiBorderedBlock {
         }
 
         if (parent instanceof HotbarSlotWrapper) {
-            selected = index == Player.hotbar.getSelectedIndex();
+            selected = index == PlayerPrefab.getHotbar().getSelectedIndex();
         }
     }
 
     @Override
     protected void updateSelf() {
         super.updateSelf();
-        selected = parent instanceof HotbarSlotWrapper && index == Player.hotbar.getSelectedIndex();
+        selected = parent instanceof HotbarSlotWrapper && index == PlayerPrefab.getHotbar().getSelectedIndex();
 
         setBorderWidth(selected || isMouseOver() ? 4 : 2);
 
