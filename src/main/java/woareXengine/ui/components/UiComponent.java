@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import woareXengine.io.userInputs.Mouse;
 import woareXengine.mainEngine.Engine;
 import woareXengine.rendering.renderData.RenderObject;
+import woareXengine.ui.constraints.UiConstraints;
 import woareXengine.ui.main.Ui;
 import woareXengine.util.Color;
 import woareXengine.util.Logger;
@@ -23,16 +24,16 @@ public abstract class UiComponent extends RenderObject {
     /** Whether the component is visible, affected by all parents' shown state */
     private boolean visible = true;
 
+    protected UiConstraints constraints;
+
     private int level = 0;
     private int padding = 0;
 
-    public UiComponent() {
-
-    }
-
-
-    public void add(UiComponent component) {
+    public void add(UiComponent component, UiConstraints constraints) {
         component.parent = this;
+        component.constraints = constraints;
+        component.constraints.notifyAdded(component, component.parent);
+
         children.add(component);
         component.init();
         component.show(true);
@@ -123,20 +124,16 @@ public abstract class UiComponent extends RenderObject {
         );
     }
 
-    public void setPadding(int padding) {
-        this.padding = padding;
-    }
-
-    public int getPadding() {
-        return padding;
-    }
-
     public UiComponent getParent() {
         return parent;
     }
 
     public void setParent(UiComponent newParent) {
         parent.remove(this);
-        newParent.add(this);
+        newParent.add(this, constraints);
+    }
+
+    public UiConstraints getConstraints() {
+        return constraints;
     }
 }

@@ -1,6 +1,9 @@
 package woareXengine.ui.common;
 
 import woareXengine.ui.components.ClickableUi;
+import woareXengine.ui.constraints.CenterConstraint;
+import woareXengine.ui.constraints.PixelConstraint;
+import woareXengine.ui.constraints.UiConstraints;
 import woareXengine.ui.text.basics.Text;
 import woareXengine.util.Color;
 
@@ -9,9 +12,7 @@ public class Button extends ClickableUi {
     protected Color hoveredColor;
     protected Text text;
 
-    public Button(float width, float height, Color defaultColor, Color hoveredColor, Text text) {
-        this.transform.setDimensions(width, height);
-
+    public Button(Color defaultColor, Color hoveredColor, Text text) {
         this.defaultColor = defaultColor;
         this.hoveredColor = hoveredColor;
         this.color = defaultColor;
@@ -23,14 +24,18 @@ public class Button extends ClickableUi {
                 this.color = defaultColor;
             }
         });
-
         this.text = text;
-        add(text);
-        text.setTransform(0);
-        text.centerInParent();
     }
 
     @Override
     protected void init() {
+        constraints.apply();
+
+        add(text, new UiConstraints(
+                new CenterConstraint(),
+                new CenterConstraint(),
+                new PixelConstraint((int) text.calculateWidth()),
+                new PixelConstraint((int) text.calculateHeight())
+        ));
     }
 }

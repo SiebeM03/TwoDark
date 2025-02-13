@@ -1,6 +1,7 @@
 package woareXengine.ui.common;
 
 import woareXengine.ui.components.UiBlock;
+import woareXengine.ui.constraints.ConstraintUtils;
 import woareXengine.util.Color;
 import woareXengine.util.Transform;
 
@@ -15,13 +16,11 @@ public class UiBorderedBlock extends UiBlock {
 
     @Override
     protected void init() {
-        super.setTransform(0);
         color = BORDER_COLOR;
 
         contentBlock = new UiBlock();
-        add(contentBlock);
-        contentBlock.setTransform(BORDER_WIDTH);
         contentBlock.color = FILL_COLOR;
+        add(contentBlock, ConstraintUtils.margin(BORDER_WIDTH));
     }
 
     @Override
@@ -34,6 +33,11 @@ public class UiBorderedBlock extends UiBlock {
     }
 
     public void setBorderWidth(int width) {
-        contentBlock.setTransform(width);
+//        contentBlock.setTransform(width);
+        contentBlock.getConstraints().getX().setPixelValue(width);
+        contentBlock.getConstraints().getY().setPixelValue(width);
+        contentBlock.getConstraints().getWidth().setPixelValue(width * 2);
+        contentBlock.getConstraints().getHeight().setPixelValue(width * 2);
+        contentBlock.getConstraints().apply();
     }
 }

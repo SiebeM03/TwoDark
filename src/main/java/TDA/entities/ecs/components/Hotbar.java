@@ -18,7 +18,7 @@ public class Hotbar extends Component {
     public void init() {
         inventoryItems[0] = new ItemStack(new Pickaxe(), 1);
         inventoryItems[1] = new ItemStack(new Axe(), 1);
-        inventoryItems[2] = new ItemStack(new TreeDrop(), 200);
+        inventoryItems[2] = new ItemStack(new TreeDrop(), 120);
         inventoryItems[4] = new ItemStack(new StoneDrop(), 40);
     }
 

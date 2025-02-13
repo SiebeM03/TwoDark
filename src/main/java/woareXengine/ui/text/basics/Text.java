@@ -62,16 +62,4 @@ public class Text extends UiComponent {
     public float getScale() {
         return scale;
     }
-
-    @Override
-    public void setTransform(int margin) {
-        super.setTransform(margin);
-        this.transform.setDimensions(calculateWidth() + 2 * margin, calculateHeight() + 2 * margin);
-    }
-
-    public void centerInParent() {
-        this.transform.setDimensions(calculateWidth(), calculateHeight());
-        this.transform.setX((parent.transform.getWidth() - calculateWidth()) / 2);
-        this.transform.setY((parent.transform.getHeight() - calculateHeight()) / 2);
-    }
 }

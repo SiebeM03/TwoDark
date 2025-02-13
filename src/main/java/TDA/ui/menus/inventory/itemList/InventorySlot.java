@@ -7,40 +7,29 @@ import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarSlotWrapper;
 import woareXengine.ui.common.UiBorderedBlock;
 import woareXengine.ui.components.UiComponent;
+import woareXengine.ui.constraints.ConstraintUtils;
 import woareXengine.ui.text.basics.Font;
 import woareXengine.ui.text.basics.Text;
-import woareXengine.util.Assets;
-import woareXengine.util.Color;
 
 public class InventorySlot extends UiBorderedBlock {
-    private final int COLS;
-    private final int SPACING = 8;
-    private float WIDTH = 54;
-    private float HEIGHT = 54;
+    public static final int SLOT_WIDTH = 54;
+    public static final int SLOT_HEIGHT = 54;
+    public static final int SLOT_SPACING = 8;
 
     private boolean selected = false;
 
     private int index;
 
-    public InventorySlot(int index, int numCols) {
+    public InventorySlot(int index) {
         this.index = index;
-        COLS = numCols;
     }
 
     @Override
     protected void init() {
-        int column = this.index % COLS;
-        int row = this.index / COLS;
-
         super.init();
 
-        transform.setX(column * (SPACING + WIDTH) + parent.getPadding());
-        transform.setY(parent.transform.getHeight() - HEIGHT - row * (HEIGHT + SPACING) - parent.getPadding());
-        transform.setWidth(WIDTH);
-        transform.setHeight(HEIGHT);
-
         if (getItemStack() != null) {
-            add(new InventoryItemUi());
+            add(new InventoryItemUi(), ConstraintUtils.fill());
         }
 
         if (parent instanceof HotbarSlotWrapper) {
@@ -54,14 +43,11 @@ public class InventorySlot extends UiBorderedBlock {
         selected = parent instanceof HotbarSlotWrapper && index == PlayerPrefab.getHotbar().getSelectedIndex();
 
         setBorderWidth(selected || isMouseOver() ? 4 : 2);
-        if (isMouseOver()) {
-            System.out.println(getInventoryItem());
-        }
 
         // If a new item is found that is not yet added to the UI, add it
         if (getItemStack() != null && getInventoryItem() == null && !InventoryManager.getFromCurrentScene().isHolding()) {
             System.out.println(index + " has a new item");
-            add(new InventoryItemUi());
+            add(new InventoryItemUi(), ConstraintUtils.fill());
         }
 
         // If an item's amount reaches 0, remove it from the UI
