@@ -22,6 +22,7 @@ public class Pickup extends Component {
     public Pickup(DropResource item, int amount) {
         this.item = item;
         this.amount = amount;
+        Logger.debug("Pickup " + item + " with amount " + amount);
     }
 
     @Override
