@@ -1,9 +1,9 @@
 package TDA.scene;
 
-import TDA.entities.ecs.Component;
-import TDA.entities.ecs.Entity;
-import TDA.entities.ecs.EntityManager;
-import TDA.entities.ecs.components.ClickableEntity;
+import TDA.entities.main.Component;
+import TDA.entities.main.Entity;
+import TDA.entities.main.EntityManager;
+import TDA.entities.components.interactions.ClickableComp;
 import TDA.rendering.SceneRenderSystem;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
 import woareXengine.mainEngine.Engine;
@@ -88,7 +88,7 @@ public class Scene {
                 Engine.mouse().getScreenX(),
                 Engine.mouse().getScreenY()
         );
-        return getEntitiesWithComponents(ClickableEntity.class)
+        return getEntitiesWithComponents(ClickableComp.class)
                        .stream()
                        .filter(e -> e.getId() == pixelId)
                        .findFirst()

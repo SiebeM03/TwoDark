@@ -1,7 +1,7 @@
 package TDA.ui.menus.inventory;
 
-import TDA.entities.ecs.components.Inventory;
-import TDA.entities.ecs.prefabs.PlayerPrefab;
+import TDA.entities.components.inventory.InventoryComp;
+import TDA.entities.prefabs.PlayerPrefab;
 import TDA.ui.menus.inventory.itemList.InventoryItemList;
 import TDA.ui.menus.inventory.itemList.InventorySlot;
 import woareXengine.ui.components.UiComponent;
@@ -10,7 +10,7 @@ import woareXengine.util.Color;
 
 public class PlayerInventoryUi extends UiComponent {
 
-    public Inventory inventory;
+    public InventoryComp inventory;
     public InventoryItemList storageInventoryItemList;
 
     public PlayerInventoryUi() {

@@ -1,6 +1,6 @@
 package TDA.ui.menus.inventory.itemList;
 
-import TDA.entities.inventory.ItemStack;
+import TDA.entities.components.inventory.items.ItemStack;
 import woareXengine.mainEngine.Engine;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.constraints.PixelConstraint;

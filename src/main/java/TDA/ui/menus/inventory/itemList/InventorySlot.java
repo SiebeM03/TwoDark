@@ -1,8 +1,8 @@
 package TDA.ui.menus.inventory.itemList;
 
-import TDA.entities.ecs.prefabs.PlayerPrefab;
-import TDA.entities.inventory.InventoryManager;
-import TDA.entities.inventory.ItemStack;
+import TDA.entities.prefabs.PlayerPrefab;
+import TDA.entities.components.inventory.InventoryManager;
+import TDA.entities.components.inventory.items.ItemStack;
 import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarSlotWrapper;
 import woareXengine.ui.common.UiBorderedBlock;
@@ -78,8 +78,10 @@ public class InventorySlot extends UiBorderedBlock {
     private void handleHolding() {
         if (isMouseOver() && GameManager.gameControls.inventoryControls.isClicked()) {
             if (InventoryManager.getFromCurrentScene().isHolding()) {
+                // If holding an item, place it on the clicked slot
                 InventoryManager.getFromCurrentScene().placeHolding(getIndex(), this);
             } else {
+                // If not holding an item, pick up the item in the slot (if any)
                 if (getInventoryItem() == null) return;
                 InventoryManager.getFromCurrentScene().setHolding(getIndex(), this);
             }
