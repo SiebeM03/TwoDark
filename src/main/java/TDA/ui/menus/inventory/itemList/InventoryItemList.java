@@ -1,7 +1,7 @@
 package TDA.ui.menus.inventory.itemList;
 
-import TDA.entities.ecs.components.Inventory;
-import TDA.entities.inventory.ItemStack;
+import TDA.entities.components.inventory.InventoryComp;
+import TDA.entities.components.inventory.items.ItemStack;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.constraints.PixelConstraint;
 import woareXengine.ui.constraints.UiConstraints;
@@ -14,7 +14,7 @@ public class InventoryItemList extends UiComponent {
     private final ItemStack[] inventoryItems;
     private boolean isPlayerInventory = false;
 
-    public InventoryItemList(Inventory inventory) {
+    public InventoryItemList(InventoryComp inventory) {
         this.inventoryItems = inventory.inventoryItems;
     }
 

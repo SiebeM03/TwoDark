@@ -1,8 +1,8 @@
 package TDA.ui;
 
-import TDA.entities.ecs.components.Storage;
-import TDA.entities.ecs.prefabs.PlayerPrefab;
-import TDA.entities.inventory.InventoryManager;
+import TDA.entities.components.storage.StorageComp;
+import TDA.entities.prefabs.PlayerPrefab;
+import TDA.entities.components.inventory.InventoryManager;
 import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarUi;
 import TDA.ui.menus.inventory.PlayerInventoryUi;
@@ -95,7 +95,7 @@ public class GameUi extends UiComponent {
         playerInventoryUi.show(show);
     }
 
-    public void showStorage(boolean show, Storage storage) {
+    public void showStorage(boolean show, StorageComp storage) {
         playerInventoryUi.storageInventoryItemList = new InventoryItemList(storage.getInventory());
         InventoryManager.getFromCurrentScene().setExternalInventory(storage.getInventory());
 
