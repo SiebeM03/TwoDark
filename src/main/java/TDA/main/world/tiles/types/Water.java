@@ -1,7 +1,7 @@
 package TDA.main.world.tiles.types;
 
-import TDA.entities.ecs.Entity;
-import TDA.entities.ecs.components.Collider;
+import TDA.entities.main.Entity;
+import TDA.entities.components.interactions.ColliderComp;
 import TDA.main.GameManager;
 import TDA.main.world.World;
 import TDA.main.world.tiles.Tile;
@@ -30,7 +30,7 @@ public class Water extends Tile {
     public void createCollisionBox() {
         if (isSurroundedByWater()) return;
         GameManager.currentScene.addEntity(new Entity(transform)
-                                                   .addComponent(new Collider()));
+                                                   .addComponent(new ColliderComp()));
     }
 
     private boolean isSurroundedByWater() {
