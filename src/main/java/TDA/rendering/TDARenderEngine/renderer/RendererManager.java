@@ -44,9 +44,15 @@ public class RendererManager {
         quadRenderer.render();
     }
 
+    public void clear() {
+        quadRenderer.data.clear();
+        pickingRenderer.data.clear();
+    }
+
     public void cleanUp() {
         // TODO call cleanUp() on all renderers
         quadRenderer.cleanUp();
+        pickingRenderer.cleanUp();
     }
 
     public PickingRenderer getPickingRenderer() {

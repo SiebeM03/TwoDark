@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.windows.User32.*;
 
 public class Window {
     private final long id;
@@ -108,42 +109,37 @@ public class Window {
     }
 
     public void changeDisplayMode(DisplayMode displayMode) {
-        long monitor = glfwGetPrimaryMonitor();
-        GLFWVidMode vidMode = glfwGetVideoMode(monitor);
-        assert vidMode != null : "Video mode is null";
 
         if (displayMode == DisplayMode.FULLSCREEN) {
-            switchToFullScreen(monitor, vidMode);
+            switchToFullScreen();
         } else if (displayMode == DisplayMode.WINDOWED) {
-            switchToWindowed(vidMode);
+            switchToWindowed();
         }
         // TODO implement BORDERLESS mode
 
-        glViewport(0, 0, pixelWidth, pixelHeight);
+        glViewport(0, 0, desiredWidth, desiredHeight);
         this.displayMode = displayMode;
     }
 
-    private void switchToFullScreen(long monitor, GLFWVidMode vidMode) {
+    private void switchToFullScreen() {
         this.desiredWidth = widthScreenCoords;
         this.desiredHeight = heightScreenCoords;
-        glfwSetWindowMonitor(id, monitor, 0, 0, desiredWidth, desiredHeight, vidMode.refreshRate());
+        glfwSetWindowMonitor(id, getMonitor(), 0, 0, desiredWidth, desiredHeight, getVidMode().refreshRate());
         glfwSwapInterval(vsync ? 1 : 0);
     }
 
-    private void switchToWindowed(GLFWVidMode vidMode) {
-        glfwSetWindowMonitor(id, NULL, 0, 0, desiredWidth, desiredHeight, vidMode.refreshRate());
+    private void switchToWindowed() {
+        glfwSetWindowMonitor(id, NULL, 0, 0, desiredWidth, desiredHeight, getVidMode().refreshRate());
+
+        GLFWVidMode vidMode = getVidMode(); // This is required to get the correct monitor width and height
         glfwSetWindowPos(id, (vidMode.width() - desiredWidth) / 2, (vidMode.height() - desiredHeight) / 2);
     }
 
     public void setScreenSize(int width, int height) {
-        long monitor = glfwGetPrimaryMonitor();
-        GLFWVidMode vidMode = glfwGetVideoMode(monitor);
-        assert vidMode != null : "Video mode is null";
-
         if (GameSettings.getDisplayMode() == DisplayMode.WINDOWED) {
             desiredWidth = width;
             desiredHeight = height;
-            switchToWindowed(vidMode);
+            switchToWindowed();
         }
         glViewport(0, 0, width, height);
     }
@@ -202,5 +198,15 @@ public class Window {
 
     public void addSizeChangeListener(WindowSizeListener listener) {
         windowSizeListeners.add(listener);
+    }
+
+
+    private long getMonitor() {
+        return glfwGetPrimaryMonitor();
+    }
+    private GLFWVidMode getVidMode() {
+        GLFWVidMode vidMode = glfwGetVideoMode(getMonitor());
+        assert vidMode != null : "Video mode is null";
+        return vidMode;
     }
 }

@@ -32,7 +32,7 @@
 ## Obtaining
 
 - Nodes can be **harvested**.
-- Harvesting using [tools](crafting/tools.md) or [dinos](dinos/dinos.md) increases the harvesting speed and efficiency.
+- Harvesting using [tools](crafting/tools.md) or [dinoStats](dinoStats/dinoStats.md) increases the harvesting speed and efficiency.
 
 ## Usage
 
@@ -48,7 +48,7 @@
 
 ### Meat
 
-Used to feed dino's
+Used to feed dinoStats's
 
 ### Hide
 

@@ -1,17 +1,12 @@
 package TDA.ui;
 
-import TDA.entities.components.storage.StorageComp;
-import TDA.entities.prefabs.PlayerPrefab;
-import TDA.entities.components.inventory.InventoryManager;
+import TDA.entities.storage.StorageComp;
 import TDA.main.GameManager;
-import TDA.ui.hotbar.HotbarUi;
-import TDA.ui.menus.inventory.PlayerInventoryUi;
-import TDA.ui.menus.inventory.itemList.InventoryItemList;
-import TDA.ui.menus.inventory.itemList.InventorySlot;
-import TDA.ui.menus.pause.PauseUi;
+import TDA.ui.states.InventoryUiState;
+import TDA.ui.states.MainGameUiState;
+import TDA.ui.states.PauseUiState;
 import woareXengine.mainEngine.Engine;
 import woareXengine.ui.components.UiComponent;
-import woareXengine.ui.constraints.CenterConstraint;
 import woareXengine.ui.constraints.ConstraintUtils;
 import woareXengine.ui.constraints.PixelConstraint;
 import woareXengine.ui.constraints.UiConstraints;
@@ -20,30 +15,21 @@ import woareXengine.util.Assets;
 
 public class GameUi extends UiComponent {
 
-    private PlayerInventoryUi playerInventoryUi = new PlayerInventoryUi();
-    private HotbarUi hotbarUi = new HotbarUi();
+    public final MainGameUiState mainGame = new MainGameUiState();
+    public final InventoryUiState inventory = new InventoryUiState();
+    public final PauseUiState pause = new PauseUiState();
 
-    private PauseUi pauseUi = new PauseUi();
-
-    private Text fps = Assets.getFont("src/assets/fonts/rounded.fnt").createText("000", 0.8f);
+    private Text fps = Assets.getDefaultFont().createText("000", 0.8f);
     private double timeSinceFpsUpdate = 0;
     private double delayForFpsUpdate = 0.1f;
 
     @Override
     protected void init() {
-        Assets.getFont("src/assets/fonts/rounded.fnt");
+        Assets.getDefaultFont();
 
-        int hotbarSize = PlayerPrefab.getHotbar().getHotbarItems().length;
-        add(hotbarUi, new UiConstraints(
-                new CenterConstraint(),
-                new PixelConstraint(0),
-                new PixelConstraint((InventorySlot.SLOT_WIDTH + InventorySlot.SLOT_SPACING) * hotbarSize),
-                new PixelConstraint(InventorySlot.SLOT_HEIGHT + InventorySlot.SLOT_SPACING)
-        ));
-        add(playerInventoryUi, ConstraintUtils.margin(100, 100));
-        playerInventoryUi.show(false);
-        add(pauseUi, ConstraintUtils.fill());
-        pauseUi.show(false);
+        add(mainGame, ConstraintUtils.fill());
+        add(inventory, ConstraintUtils.fill());
+        add(pause, ConstraintUtils.fill());
 
         add(fps, new UiConstraints(
                 new PixelConstraint((int) fps.calculateWidth() + 10, true),
@@ -63,42 +49,23 @@ public class GameUi extends UiComponent {
     }
 
     public void update() {
-        if (GameManager.gameControls.windowControls.isEscapeKeyPressed() && !playerInventoryUi.isVisible())
-            showPauseMenu(!pauseUi.isShown());
-
-        if (GameManager.gameControls.inventoryControls.shouldOpenInventory()) showInventory(true);
-        if (GameManager.gameControls.inventoryControls.shouldCloseInventory()) showInventory(false);
-    }
-
-    /** Used to check if there is UI that should close when ESC is pressed */
-    public boolean isUiShown() {
-        return playerInventoryUi.isShown();
-    }
-
-    public void showPauseMenu(boolean show) {
-        GameManager.gameControls.playerControls.enableKeyboardUse(!show);
-        GameManager.gameControls.playerControls.enableMouseUse(!show);
-        GameManager.gameControls.inventoryControls.enableKeyboardUse(!show);
-        GameManager.gameControls.inventoryControls.enableMouseUse(!show);
-        pauseUi.show(show);
-    }
-
-    public void showInventory(boolean show) {
-        GameManager.gameControls.playerControls.enableKeyboardUse(!show);
-        GameManager.gameControls.playerControls.enableMouseUse(!show);
-        GameManager.gameControls.windowControls.enableKeyboardUse(!show);
-        GameManager.gameControls.windowControls.enableMouseUse(!show);
-
-        if (!show) {
-            InventoryManager.getFromCurrentScene().setExternalInventory(null);
+        if (GameManager.gameControls.windowControls.isEscapeKeyPressed()) {
+            pause.enableState(!pause.isVisible());
         }
-        playerInventoryUi.show(show);
+
+        if (GameManager.gameControls.inventoryControls.shouldToggleInventory()) {
+            inventory.enableState(!inventory.isVisible());
+        }
+        if (GameManager.gameControls.inventoryControls.shouldCloseInventory()) {
+            inventory.enableState(false);
+        }
     }
+
 
     public void showStorage(boolean show, StorageComp storage) {
-        playerInventoryUi.storageInventoryItemList = new InventoryItemList(storage.getInventory());
-        InventoryManager.getFromCurrentScene().setExternalInventory(storage.getInventory());
-
-        showInventory(show);
+//        playerInventoryUi.storageInventoryItemList = new InventoryItemList(storage.getInventory());
+//        InventoryManager.getFromCurrentScene().setExternalInventory(storage.getInventory());
+//
+//        showInventory(show);
     }
 }

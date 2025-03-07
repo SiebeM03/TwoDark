@@ -1,17 +1,22 @@
 package TDA.ui.menus.inventory;
 
-import TDA.entities.components.inventory.InventoryComp;
-import TDA.entities.prefabs.PlayerPrefab;
+import TDA.entities.inventory.InventoryComp;
+import TDA.entities.player.PlayerPrefab;
 import TDA.ui.menus.inventory.itemList.InventoryItemList;
-import TDA.ui.menus.inventory.itemList.InventorySlot;
+import woareXengine.ui.components.UiBlock;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.constraints.*;
+import woareXengine.util.Assets;
 import woareXengine.util.Color;
 
 public class PlayerInventoryUi extends UiComponent {
 
     public InventoryComp inventory;
     public InventoryItemList storageInventoryItemList;
+
+    public final UiBlock leftSegment = new UiBlock();
+    public final UiBlock middleSegment = new UiBlock();
+    public final UiBlock rightSegment = new UiBlock();
 
     public PlayerInventoryUi() {
         this.inventory = PlayerPrefab.getInventory();
@@ -22,10 +27,37 @@ public class PlayerInventoryUi extends UiComponent {
         color = new Color("#0061a6");
         color.setAlpha(0.7f);
 
+        UiBlock container = new UiBlock();
+        add(container, ConstraintUtils.margin(16));
+
+        createPlayerInventory(container);
+        createMiddleSegment(container);
+        createRightSegment(container);
+    }
+
+    private void createPlayerInventory(UiBlock container) {
+        container.add(leftSegment, ConstraintUtils.fill().setWidth(new RelativeConstraint(1 / 3f)));
+
         InventoryItemList playerInventory = new InventoryItemList(inventory);
         playerInventory.isPlayerInventory(true);
-        int width = InventoryItemList.COLS * (InventorySlot.SLOT_WIDTH + InventorySlot.SLOT_SPACING) - InventorySlot.SLOT_SPACING;
-        add(playerInventory, ConstraintUtils.margin(16).setWidth(new PixelConstraint(width)));
+
+        leftSegment.add(playerInventory, ConstraintUtils.fill(341, 457));
+
+
+        leftSegment.add(Assets.getDefaultFont().createText("Player inventory", 0.7f), new UiConstraints(
+                new PositionConstraint(Position.LEFT),
+                new PixelConstraint(0, true),
+                new PixelConstraint(341),
+                new PixelConstraint(24)
+        ));
+    }
+
+    private void createMiddleSegment(UiBlock container) {
+        container.add(middleSegment, ConstraintUtils.fill().setWidth(new RelativeConstraint(1 / 3f)).setX(new RelativeConstraint(1 / 3f)));
+    }
+
+    private void createRightSegment(UiBlock container) {
+        container.add(rightSegment, ConstraintUtils.fill().setWidth(new RelativeConstraint(1 / 3f)).setX(new RelativeConstraint(2 / 3f)));
     }
 
     @Override
@@ -33,20 +65,15 @@ public class PlayerInventoryUi extends UiComponent {
 
     }
 
-    @Override
-    public void show(boolean show) {
-        if (show && storageInventoryItemList != null) {
-            int width = InventoryItemList.COLS * (InventorySlot.SLOT_WIDTH + InventorySlot.SLOT_SPACING) - InventorySlot.SLOT_SPACING;
-            add(storageInventoryItemList, new UiConstraints(
-                    new PositionConstraint(Position.RIGHT, 16),
-                    new MarginConstraint(16),
-                    new PixelConstraint(width),
-                    new MarginConstraint(16)
-            ));
-        } else if (storageInventoryItemList != null) {
-            remove(storageInventoryItemList);
-            storageInventoryItemList = null;
-        }
-        super.show(show);
+    public void showStorageInventory(InventoryItemList storageInventoryItemList, String storageName) {
+        this.storageInventoryItemList = storageInventoryItemList;
+        rightSegment.add(storageInventoryItemList, ConstraintUtils.fill(341, 457).setX(new PositionConstraint(Position.RIGHT)));
+
+        rightSegment.add(Assets.getDefaultFont().createText(storageName + " inventory", 0.7f), new UiConstraints(
+                new PositionConstraint(Position.RIGHT),
+                new PixelConstraint(0, true),
+                new PixelConstraint(341),
+                new PixelConstraint(24)
+        ));
     }
 }

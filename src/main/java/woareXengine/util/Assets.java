@@ -43,4 +43,8 @@ public class Assets {
             return font;
         }
     }
+
+    public static Font getDefaultFont() {
+        return getFont("src/assets/fonts/rounded.fnt");
+    }
 }

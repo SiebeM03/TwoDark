@@ -26,14 +26,13 @@ public class UiBorderedBlock extends UiBlock {
     @Override
     protected void updateSelf() {
         if (!transform.equals(lastTransform)) {
-            contentBlock.setTransform(BORDER_WIDTH);
+            setBorderWidth(BORDER_WIDTH);
         }
 
         lastTransform = transform.copy();
     }
 
     public void setBorderWidth(int width) {
-//        contentBlock.setTransform(width);
         contentBlock.getConstraints().getX().setPixelValue(width);
         contentBlock.getConstraints().getY().setPixelValue(width);
         contentBlock.getConstraints().getWidth().setPixelValue(width * 2);

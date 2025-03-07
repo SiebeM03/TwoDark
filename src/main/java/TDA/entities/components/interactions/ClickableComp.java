@@ -12,7 +12,7 @@ public class ClickableComp extends Component {
     private PickingRenderer pickingRenderer;
 
     public void init() {
-        this.pickingRenderer = TDARenderSystem.get().renderer.getPickingRenderer();
+        this.pickingRenderer = GameManager.currentScene.renderer.getPickingRenderer();
 
         this.pickingRenderer.add(entity.getComponent(QuadComp.class).quad);
     }

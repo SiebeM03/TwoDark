@@ -3,6 +3,7 @@ package woareXengine.ui.constraints;
 public class PixelConstraint extends UiConstraint {
     private int value;
     private final boolean flipAxis;
+    private UiConstraint sizeConstraint;
 
     public PixelConstraint(int value) {
         this.value = value;
@@ -16,7 +17,9 @@ public class PixelConstraint extends UiConstraint {
 
     @Override
     public void completeSetUp(UiConstraints otherConstraints) {
-
+        if (isPosValue()) {
+            this.sizeConstraint = isXAxis() ? otherConstraints.getWidth() : otherConstraints.getHeight();
+        }
     }
 
     @Override
@@ -24,6 +27,9 @@ public class PixelConstraint extends UiConstraint {
         float parentSizePixels = super.getParentPixelSize();
         float relValue = value / parentSizePixels;
         if (flipAxis) {
+            if (isPosValue()) {
+                relValue += sizeConstraint.getRelativeValue();
+            }
             return 1 - relValue;
         }
         return relValue;

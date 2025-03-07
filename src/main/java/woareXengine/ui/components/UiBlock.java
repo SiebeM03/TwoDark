@@ -8,6 +8,14 @@ public class UiBlock extends UiComponent {
     public UiBlock() {
     }
 
+    public UiBlock(Transform transform) {
+        this.transform = transform;
+    }
+
+    public UiBlock(Color color) {
+        this.color = color;
+    }
+
     public UiBlock(Transform transform, Color color) {
         this.transform = transform;
         this.color = color;

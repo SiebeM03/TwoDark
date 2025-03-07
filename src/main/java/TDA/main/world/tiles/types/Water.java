@@ -34,7 +34,7 @@ public class Water extends Tile {
     }
 
     private boolean isSurroundedByWater() {
-        World world = GameManager.world;
+        World world = GameManager.homeScene.world;
 
         return world.getTile((int) normalizedCoordinates.x, (int) normalizedCoordinates.y - 1) instanceof Water
                        && world.getTile((int) normalizedCoordinates.x, (int) normalizedCoordinates.y + 1) instanceof Water

@@ -17,7 +17,7 @@ public class Dropdown extends Button {
     private UiBlock optionsBlock;
 
     public Dropdown(Option... options) {
-        super(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getFont("src/assets/fonts/rounded.fnt").createText(options[0].text, 0.8f));
+        super(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getDefaultFont().createText(options[0].text, 0.8f));
         this.options = options;
         this.selected = options[0];
     }
@@ -33,7 +33,7 @@ public class Dropdown extends Button {
         ));
 
         for (int i = 0; i < options.length; i++) {
-            Button button = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getFont("src/assets/fonts/rounded.fnt").createText(options[i].text, 0.8f));
+            Button button = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getDefaultFont().createText(options[i].text, 0.8f));
             optionsBlock.add(button, new UiConstraints(
                     new PixelConstraint(0),
                     new PixelConstraint((int) (optionsBlock.transform.getHeight() - 40 * (i + 1))),
