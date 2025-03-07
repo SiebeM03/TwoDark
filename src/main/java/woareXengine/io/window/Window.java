@@ -109,7 +109,6 @@ public class Window {
     }
 
     public void changeDisplayMode(DisplayMode displayMode) {
-
         if (displayMode == DisplayMode.FULLSCREEN) {
             switchToFullScreen();
         } else if (displayMode == DisplayMode.WINDOWED) {
@@ -117,18 +116,21 @@ public class Window {
         }
         // TODO implement BORDERLESS mode
 
+        System.out.println("Changing viewport to " + desiredWidth + "x" + desiredHeight);
         glViewport(0, 0, desiredWidth, desiredHeight);
         this.displayMode = displayMode;
     }
 
     private void switchToFullScreen() {
-        this.desiredWidth = widthScreenCoords;
-        this.desiredHeight = heightScreenCoords;
+        this.desiredWidth = 2560;
+        this.desiredHeight = 1440;
         glfwSetWindowMonitor(id, getMonitor(), 0, 0, desiredWidth, desiredHeight, getVidMode().refreshRate());
         glfwSwapInterval(vsync ? 1 : 0);
     }
 
     private void switchToWindowed() {
+        this.desiredWidth = EngineConfigs.getDefaultConfigs().windowWidth;
+        this.desiredHeight = EngineConfigs.getDefaultConfigs().windowHeight;
         glfwSetWindowMonitor(id, NULL, 0, 0, desiredWidth, desiredHeight, getVidMode().refreshRate());
 
         GLFWVidMode vidMode = getVidMode(); // This is required to get the correct monitor width and height
@@ -156,8 +158,8 @@ public class Window {
     private void addPixelSizeListener() {
         glfwSetFramebufferSizeCallback(id, (window, width, height) -> {
             if (validSizeChange(width, height, pixelWidth, pixelHeight)) {
-                this.pixelWidth = width;
-                this.pixelHeight = height;
+                this.pixelWidth = EngineConfigs.getDefaultConfigs().windowWidth;
+                this.pixelHeight = EngineConfigs.getDefaultConfigs().windowHeight;
                 // Notify listeners (e.g. cameras, viewport)
                 windowSizeListeners.forEach(listener -> listener.sizeChanged(pixelWidth, pixelHeight));
             }
@@ -204,6 +206,7 @@ public class Window {
     private long getMonitor() {
         return glfwGetPrimaryMonitor();
     }
+
     private GLFWVidMode getVidMode() {
         GLFWVidMode vidMode = glfwGetVideoMode(getMonitor());
         assert vidMode != null : "Video mode is null";
