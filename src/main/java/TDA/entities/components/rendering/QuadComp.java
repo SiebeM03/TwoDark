@@ -1,6 +1,7 @@
 package TDA.entities.components.rendering;
 
 import TDA.entities.main.Component;
+import TDA.main.GameManager;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
 import woareXengine.openglWrapper.textures.Texture;
 import woareXengine.rendering.quadRenderer.Quad;
@@ -23,11 +24,10 @@ public class QuadComp extends Component {
         );
         this.quad.setEntityID(entity.getId());
         this.quad.texture = texture;
-        TDARenderSystem.get().renderer.getRenderer(Quad.class).add(this.quad);
     }
 
     @Override
     public void destroy() {
-        TDARenderSystem.get().renderer.getRenderer(Quad.class).remove(quad);
+        GameManager.currentScene.renderer.removeQuad(quad);
     }
 }

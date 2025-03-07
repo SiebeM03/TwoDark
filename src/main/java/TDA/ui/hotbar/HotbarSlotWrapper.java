@@ -1,7 +1,7 @@
 package TDA.ui.hotbar;
 
-import TDA.entities.prefabs.PlayerPrefab;
-import TDA.entities.components.inventory.items.ItemStack;
+import TDA.entities.player.PlayerPrefab;
+import TDA.entities.inventory.items.ItemStack;
 import TDA.ui.menus.inventory.itemList.InventorySlot;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.constraints.PixelConstraint;

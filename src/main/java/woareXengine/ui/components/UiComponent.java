@@ -6,6 +6,8 @@ import woareXengine.mainEngine.Engine;
 import woareXengine.rendering.renderData.RenderObject;
 import woareXengine.ui.constraints.UiConstraints;
 import woareXengine.ui.main.Ui;
+import woareXengine.ui.text.basics.Font;
+import woareXengine.ui.text.basics.Text;
 import woareXengine.util.Color;
 import woareXengine.util.Logger;
 import woareXengine.util.SafeList;
@@ -35,14 +37,18 @@ public abstract class UiComponent extends RenderObject {
         component.constraints.notifyAdded(component, component.parent);
 
         children.add(component);
-        component.init();
         component.show(true);
+        component.init();
     }
 
     public void remove(UiComponent component) {
         component.show(false);
         component.parent = null;
         children.remove(component);
+
+        if (component instanceof Text) {
+            Font.removeText((Text) component);
+        }
     }
 
     public void show(boolean show) {
@@ -115,13 +121,6 @@ public abstract class UiComponent extends RenderObject {
         Mouse mouse = Ui.mouse;
 
         return getAbsoluteTransform().contains(mouse.getScreenX(), mouse.getScreenY());
-    }
-
-    public void setTransform(int margin) {
-        transform = new Transform(
-                new Vector2f(margin + parent.padding, margin + parent.padding),
-                new Vector2f(parent.transform.getWidth() - (margin + parent.padding) * 2, parent.transform.getHeight() - (margin + parent.padding) * 2)
-        );
     }
 
     public UiComponent getParent() {

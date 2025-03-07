@@ -15,9 +15,9 @@ public class PauseButtons extends UiComponent {
     protected static final int BUTTON_SPACING = 10;
 
     protected static final int BUTTON_COUNT = 3;
-    Button continueButton = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getFont("src/assets/fonts/rounded.fnt").createText("Continue", 0.8f));
-    Button settingsButton = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getFont("src/assets/fonts/rounded.fnt").createText("Settings", 0.8f));
-    Button exitButton = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getFont("src/assets/fonts/rounded.fnt").createText("Exit", 0.8f));
+    Button continueButton = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getDefaultFont().createText("Continue", 0.8f));
+    Button settingsButton = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getDefaultFont().createText("Settings", 0.8f));
+    Button exitButton = new Button(Color.WHITE, new Color(0.8f, 0.8f, 0.8f), Assets.getDefaultFont().createText("Exit", 0.8f));
 
     private final PauseUi pauseUi;
 
@@ -30,7 +30,7 @@ public class PauseButtons extends UiComponent {
         continueButton.color = new Color(Color.WHITE);
         continueButton.addMouseListener(data -> {
             if (data.isClick(MouseButton.LEFT)) {
-                TDAUi.get().gameUi.showPauseMenu(false);
+                TDAUi.get().gameUi.pause.enableState(false);
             }
         });
         add(continueButton, new UiConstraints(

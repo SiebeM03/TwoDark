@@ -1,6 +1,7 @@
 package TDA.entities.main;
 
 import TDA.main.GameManager;
+import TDA.scene.Scene;
 import woareXengine.util.Id;
 import woareXengine.util.Transform;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 public class Entity {
     private final Id id = new Id();
+    public Scene scene;
     private boolean updateWhenOutOfView = false;
 
     private List<Component> components = new ArrayList<>();

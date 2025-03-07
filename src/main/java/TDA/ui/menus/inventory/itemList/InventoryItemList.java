@@ -1,7 +1,7 @@
 package TDA.ui.menus.inventory.itemList;
 
-import TDA.entities.components.inventory.InventoryComp;
-import TDA.entities.components.inventory.items.ItemStack;
+import TDA.entities.inventory.InventoryComp;
+import TDA.entities.inventory.items.ItemStack;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.constraints.PixelConstraint;
 import woareXengine.ui.constraints.UiConstraints;
@@ -9,7 +9,7 @@ import woareXengine.ui.constraints.UiConstraints;
 import static TDA.ui.menus.inventory.itemList.InventorySlot.*;
 
 public class InventoryItemList extends UiComponent {
-    public static final int COLS = 5;
+    public static final int COLS = 6;
 
     private final ItemStack[] inventoryItems;
     private boolean isPlayerInventory = false;
@@ -26,7 +26,7 @@ public class InventoryItemList extends UiComponent {
 
             add(new InventorySlot(i), new UiConstraints(
                     new PixelConstraint(column * (SLOT_WIDTH + SLOT_SPACING)),
-                    new PixelConstraint(row * (SLOT_HEIGHT + SLOT_SPACING) + SLOT_HEIGHT, true),
+                    new PixelConstraint(row * (SLOT_HEIGHT + SLOT_SPACING), true),
                     new PixelConstraint(SLOT_WIDTH),
                     new PixelConstraint(SLOT_HEIGHT)
             ));

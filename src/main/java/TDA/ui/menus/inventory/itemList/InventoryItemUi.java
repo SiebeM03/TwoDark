@@ -1,6 +1,6 @@
 package TDA.ui.menus.inventory.itemList;
 
-import TDA.entities.components.inventory.items.ItemStack;
+import TDA.entities.inventory.items.ItemStack;
 import woareXengine.mainEngine.Engine;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.constraints.PixelConstraint;
@@ -21,7 +21,7 @@ public class InventoryItemUi extends UiComponent {
             color = Color.WHITE;
 
             if (amountText == null) {
-                amountText = Assets.getFont("src/assets/fonts/rounded.fnt").createText(getItemStack().amount + "", 0.5f);
+                amountText = Assets.getDefaultFont().createText(getItemStack().amount + "", 0.5f);
                 add(amountText, new UiConstraints(
                         new PositionConstraint(Position.RIGHT, 4),
                         new PositionConstraint(Position.BOTTOM, 4),
@@ -52,7 +52,7 @@ public class InventoryItemUi extends UiComponent {
         }
     }
 
-    private void updateTextTransform() {
+    public void updateTextTransform() {
         amountText.getConstraints().getWidth().setPixelValue((int) amountText.calculateWidth());
         amountText.getConstraints().getHeight().setPixelValue((int) amountText.calculateHeight());
         amountText.getConstraints().apply();

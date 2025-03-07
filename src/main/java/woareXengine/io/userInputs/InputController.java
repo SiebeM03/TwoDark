@@ -22,6 +22,11 @@ public class InputController {
         }
     }
 
+    public void enableInput(boolean enable) {
+        enableMouseUse(enable);
+        enableKeyboardUse(enable);
+    }
+
     public void enableMouseUse(boolean enable) {
         isMouseEnabled = enable;
     }

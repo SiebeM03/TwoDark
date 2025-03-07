@@ -3,6 +3,7 @@ package woareXengine.ui.text.basics;
 import woareXengine.ui.components.UiComponent;
 import woareXengine.ui.text.loading.Glyph;
 import woareXengine.util.Color;
+import woareXengine.util.Layer;
 
 public class Text extends UiComponent {
     /** Height of a line of text at font size 1 (UI scale 1) */

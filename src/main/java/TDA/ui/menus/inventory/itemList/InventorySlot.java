@@ -1,8 +1,8 @@
 package TDA.ui.menus.inventory.itemList;
 
-import TDA.entities.prefabs.PlayerPrefab;
-import TDA.entities.components.inventory.InventoryManager;
-import TDA.entities.components.inventory.items.ItemStack;
+import TDA.entities.player.PlayerPrefab;
+import TDA.scene.systems.InventoryManager;
+import TDA.entities.inventory.items.ItemStack;
 import TDA.main.GameManager;
 import TDA.ui.hotbar.HotbarSlotWrapper;
 import woareXengine.ui.common.UiBorderedBlock;
@@ -12,9 +12,9 @@ import woareXengine.ui.text.basics.Font;
 import woareXengine.ui.text.basics.Text;
 
 public class InventorySlot extends UiBorderedBlock {
-    public static final int SLOT_WIDTH = 54;
-    public static final int SLOT_HEIGHT = 54;
-    public static final int SLOT_SPACING = 8;
+    public static final int SLOT_WIDTH = 51;
+    public static final int SLOT_HEIGHT = 51;
+    public static final int SLOT_SPACING = 7;
 
     private boolean selected = false;
 

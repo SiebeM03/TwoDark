@@ -1,9 +1,11 @@
 package TDA.scene;
 
+import TDA.entities.components.rendering.QuadComp;
 import TDA.entities.main.Component;
 import TDA.entities.main.Entity;
 import TDA.entities.main.EntityManager;
 import TDA.entities.components.interactions.ClickableComp;
+import TDA.main.GameManager;
 import TDA.rendering.SceneRenderSystem;
 import TDA.rendering.TDARenderEngine.renderSystem.TDARenderSystem;
 import woareXengine.mainEngine.Engine;
@@ -15,21 +17,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Scene {
+public abstract class Scene {
 
     public final Camera camera;
 
     public final SceneRenderSystem renderer;
     public final EntityManager entityManager;
 
-
     private Map<Id, SceneSystem> sceneSystems = new LinkedHashMap<>();
 
-
-    public Scene(SceneRenderSystem renderSystem, Camera camera) {
-        this.renderer = renderSystem;
+    protected Scene(SceneRenderSystem renderer, Camera camera) {
+        this.renderer = renderer;
         this.camera = camera;
-
         this.entityManager = new EntityManager();
     }
 
@@ -42,7 +41,11 @@ public class Scene {
     }
 
     public void addEntity(Entity entity) {
+        entity.scene = this;
         entityManager.entities.add(entity);
+        if (entity.getComponent(QuadComp.class) != null) {
+            renderer.registerQuad(entity.getComponent(QuadComp.class).quad);
+        }
     }
 
     public void addSystem(SceneSystem system) {
@@ -65,6 +68,11 @@ public class Scene {
         renderer.cleanUp();
     }
 
+    /** Clears the renderer data */
+    public void clearRenderer() {
+        renderer.clear();
+    }
+
     @SafeVarargs
     public final List<Entity> getEntitiesWithComponents(Class<? extends Component>... component) {
         List<Entity> entities = new ArrayList<>();
@@ -84,7 +92,7 @@ public class Scene {
     }
 
     public Entity getClickableEntityAtMouse() {
-        int pixelId = TDARenderSystem.get().renderer.getPickingRenderer().readPixel(
+        int pixelId = GameManager.currentScene.renderer.getPickingRenderer().readPixel(
                 Engine.mouse().getScreenX(),
                 Engine.mouse().getScreenY()
         );
@@ -94,4 +102,13 @@ public class Scene {
                        .findFirst()
                        .orElse(null);
     }
+
+    public void fill() {
+        createEntities();
+        addSystems();
+    }
+
+    protected abstract void createEntities();
+
+    protected abstract void addSystems();
 }

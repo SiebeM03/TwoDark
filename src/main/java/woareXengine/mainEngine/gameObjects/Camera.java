@@ -79,10 +79,15 @@ public abstract class Camera {
         this.dirtyView = false;
     }
 
-    public abstract float getMouseWorldX();
+    public float getMouseWorldX() {
+        float currentX = Engine.mouse().getX() * 2.0f - 1.0f;
+        return transformScreenToWorld(currentX, 0).x;
+    }
 
-    public abstract float getMouseWorldY();
-
+    public float getMouseWorldY() {
+        float currentY = Engine.mouse().getY() * 2.0f - 1.0f;
+        return transformScreenToWorld(0, currentY).y;
+    }
 
     protected Vector4f transformScreenToWorld(float x, float y) {
         Vector4f tmp = new Vector4f(x, y, 0, 1);

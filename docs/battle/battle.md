@@ -22,11 +22,11 @@ The battle progresses automatically with each dinosaur taking turns to attack.
 
 1. **Team Setup**: The player selects **up to 6 dinosaurs** to fight in the battle. Dinosaurs are positioned
    strategically based on their role (high HP on front-line, support on back-line)
-2. **Turn Order**: Turns are determined by each dinosaur’s **Speed** stat. The fastest dino attacks first, followed by
+2. **Turn Order**: Turns are determined by each dinosaur’s **Speed** stat. The fastest dinoStats attacks first, followed by
    the next fastest, and so on.
-3. **Basic Attacks & Energy Gain**: Every dino starts the battle by performing a [Basic Attack](#basic-attacks), which
+3. **Basic Attacks & Energy Gain**: Every dinoStats starts the battle by performing a [Basic Attack](#basic-attacks), which
    grants **Energy**.
-4. **Skill Activation**: When a dino reaches 100 Energy, it unleashes its [Active Skill](#energy-and-active-skills), which
+4. **Skill Activation**: When a dinoStats reaches 100 Energy, it unleashes its [Active Skill](#energy-and-active-skills), which
    has unique effects like damage, crowd control, healing, or buffs.
 5. **Rounds**: Each round consists of **one attack per dinosaur** (excluding [Passive Skills](#passive-skills)).
 6. **Victory Conditions**: The battle ends when all dinosaurs on one team are defeated.
@@ -41,7 +41,7 @@ The battle progresses automatically with each dinosaur taking turns to attack.
 ### **Energy and Active Skills**
 
 - Every attack grants **Energy**.
-- When a dino reaches 100 Energy, it unleashes its **Active Skill** on their next turn.
+- When a dinoStats reaches 100 Energy, it unleashes its **Active Skill** on their next turn.
 - Active Skills can have various effects:
     - **High damage** to single or multiple enemies.
     - **Debuffs** like stun, poison, bleed, or accuracy reduction.
@@ -56,13 +56,13 @@ The battle progresses automatically with each dinosaur taking turns to attack.
 
 ### **Status Effects**
 
-- **Stun**: The dino skips its turn.
+- **Stun**: The dinoStats skips its turn.
 - **Bleed**: Deals damage over time based on target’s HP.
 - **Poison**: Similar to Bleed but can stack.
 - **Burn**: Deals flat damage each round.
 - **Slow**: Reduces Speed, delaying turns.
-- **Taunt**: Forces enemies to attack the taunting dino (e.g. an allied Kentrosaurus might have a special state in which
-  it uses its spikes to reflect all enemies' attack, to any allied dino).
+- **Taunt**: Forces enemies to attack the taunting dinoStats (e.g. an allied Kentrosaurus might have a special state in which
+  it uses its spikes to reflect all enemies' attack, to any allied dinoStats).
 - **Dodge**: A chance to completely avoid an attack.
 
 ## Team Composition Strategy
@@ -72,11 +72,11 @@ The battle progresses automatically with each dinosaur taking turns to attack.
 
 ## Mechanics
 
-- Front-line dinos have a higher chance of getting attacked
+- Front-line dinoStats have a higher chance of getting attacked
 
 ## Other ideas
 
 1. **([Passive skills](#passive-skills)) Circumstantial boosts**:
-    - Some dinos might have passive abilities which give them boosts in certain circumstances, e.g.:
+    - Some dinoStats might have passive abilities which give them boosts in certain circumstances, e.g.:
       - Spinosaurus: has a water boost when the battle takes place in a water-rich environment
-      - Velociraptor: has a buff when there are multiple dinos of the same species on your team lineup (pack bonus)
+      - Velociraptor: has a buff when there are multiple dinoStats of the same species on your team lineup (pack bonus)

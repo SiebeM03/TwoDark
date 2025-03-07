@@ -32,7 +32,7 @@ The game focuses on resource management, exploration, and gradual progression. P
 3. **Experience and Leveling System**  
    Gathering resources and completing tasks grant experience, leveling up the player and unlocking new tools, equipment, and dinosaurs.
 
-    - **Leveling Rewards:** Unlock new tools, dinos, or efficiency upgrades with each level.
+    - **Leveling Rewards:** Unlock new tools, dinoStats, or efficiency upgrades with each level.
     - **Milestone Unlocks:** Access to new biomes, resources, and powerful dinosaurs at key levels.
 
 4. **Blueprints for Enhanced Tools and Equipment**  

@@ -15,26 +15,26 @@ public class SettingsUi extends UiComponent {
     @Override
     protected void init() {
 
-        Dropdown displayModeDropdown = new Dropdown(
-                new Option("Fullscreen", data -> {
-                    if (data.isClick(MouseButton.LEFT)) {
-                        GameSettings.setDisplayMode(DisplayMode.FULLSCREEN);
-                    }
-                }),
-                new Option("Windowed", data -> {
-                    if (data.isClick(MouseButton.LEFT)) {
-                        GameSettings.setDisplayMode(DisplayMode.WINDOWED);
-                    }
-                })
-        );
-        displayModeDropdown.setSelected(GameSettings.getDisplayMode() == DisplayMode.FULLSCREEN ? 0 : 1);
-
-        add(displayModeDropdown, new UiConstraints(
-                new CenterConstraint(),
-                new CenterConstraint(),
-                new PixelConstraint(200),
-                new PixelConstraint(40)
-        ));
+//        Dropdown displayModeDropdown = new Dropdown(
+//                new Option("Fullscreen", data -> {
+//                    if (data.isClick(MouseButton.LEFT)) {
+//                        GameSettings.setDisplayMode(DisplayMode.FULLSCREEN);
+//                    }
+//                }),
+//                new Option("Windowed", data -> {
+//                    if (data.isClick(MouseButton.LEFT)) {
+//                        GameSettings.setDisplayMode(DisplayMode.WINDOWED);
+//                    }
+//                })
+//        );
+//        displayModeDropdown.setSelected(GameSettings.getDisplayMode() == DisplayMode.FULLSCREEN ? 0 : 1);
+//
+//        add(displayModeDropdown, new UiConstraints(
+//                new CenterConstraint(),
+//                new CenterConstraint(),
+//                new PixelConstraint(200),
+//                new PixelConstraint(40)
+//        ));
     }
 
     @Override

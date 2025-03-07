@@ -1,5 +1,6 @@
 package TDA.main.controls;
 
+import TDA.ui.TDAUi;
 import woareXengine.io.userInputs.InputController;
 import woareXengine.io.userInputs.MouseButton;
 
@@ -27,7 +28,7 @@ public class InventoryControls extends InputController {
         return -1;
     }
 
-    public boolean shouldOpenInventory() {
+    public boolean shouldToggleInventory() {
         return isKeyboardEnabled && keyboard.keyPressEvent(GLFW_KEY_J);
     }
 

@@ -9,7 +9,6 @@ public class TDAUi {
     private static TDAUi instance;
 
     public GameUi gameUi;
-    public Font font = Assets.getFont("src/assets/fonts/test.fnt");
 
     private TDAUi() {
         this.gameUi = new GameUi();

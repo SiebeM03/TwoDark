@@ -27,4 +27,19 @@ public class ConstraintUtils {
                 new DefaultScaleConstraint()
         );
     }
+
+    /**
+     * Creates a UiConstraints object that fills the given size.
+     *
+     * @param width  The width of the object.
+     * @param height The height of the object.
+     */
+    public static UiConstraints fill(int width, int height) {
+        return new UiConstraints(
+                new PixelConstraint(0),
+                new PixelConstraint(0),
+                new PixelConstraint(width),
+                new PixelConstraint(height)
+        );
+    }
 }

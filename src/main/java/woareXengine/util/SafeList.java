@@ -23,6 +23,7 @@ public class SafeList<E> extends AbstractList<E> {
 
     @Override
     public boolean add(E e) {
+        if (e == null) return false;
         toAdd.add(e);
         return true;
     }

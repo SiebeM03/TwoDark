@@ -1,7 +1,7 @@
 package TDA.main.configs;
 
 
-import TDA.scene.prefabs.HomeCamera.Deadzone;
+import TDA.scene.prefabs.homeScene.HomeCamera.Deadzone;
 
 public class PlayerConfigs {
     // MOVEMENT

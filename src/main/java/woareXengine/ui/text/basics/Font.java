@@ -38,4 +38,8 @@ public class Font {
         Font.texts.computeIfAbsent(this, k -> new ArrayList<>()).add(t);
         return t;
     }
+
+    public static void removeText(Text text) {
+        Font.texts.get(text.font).remove(text);
+    }
 }

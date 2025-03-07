@@ -14,6 +14,6 @@
     - Breeding requires certain structures (e.g. egg hatchery, breeding pen, ...)
     - Setting a respawn point
     - Maybe teleports in late-game
-    - Healing station to heal injured dino's
-    - Statues to increase dino strengths
+    - Healing station to heal injured dinoStats's
+    - Statues to increase dinoStats strengths
     - ...
